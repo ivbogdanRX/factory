@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ad Factory — Manage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">AF</span>
+      <div>
+        <h1>Ad Factory</h1>
+        <p class="sub">generate daily &middot; post to Meta &middot; live next day 5am PT</p>
+      </div>
+    </div>
+    <nav class="links">
+      <a href="/">← Glance</a>
+      <span id="studio-pill" class="pill">studio: …</span>
+      <span id="mode-pill" class="pill">…</span>
+      <a id="studio-link" href="#" target="_blank" rel="noopener">Creative Studio</a>
+      <a href="#" id="uploader-link" title="Run `npm run uploader` in ad-factory, then open http://localhost:5190">Manual Uploader</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card schedule-card" id="schedule-card">
+      <div class="schedule-main">
+        <div>
+          <div class="label">Next daily run</div>
+          <div class="big" id="next-run">—</div>
+          <div class="muted" id="next-run-countdown"></div>
+        </div>
+        <div class="schedule-actions">
+          <button id="run-now" class="btn primary">Run now</button>
+          <label class="inline">
+            Run hour (PT)
+            <input type="number" id="run-hour" min="0" max="23" />
+          </label>
+          <label class="inline toggle">
+            <input type="checkbox" id="global-pause" /> Global pause
+          </label>
+          <label class="inline toggle">
+            <input type="checkbox" id="skip-next" /> Skip next run
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Health</h2>
+      <div class="card" id="health-card">
+        <div class="health-head">
+          <span class="muted" id="health-when">No healthcheck run yet.</span>
+          <button id="run-health" class="btn small">Run healthcheck</button>
+        </div>
+        <div id="health-checks" class="health-checks"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Angles</h2>
+      <div class="card" id="angles-card">
+        <div class="muted">Performance by creative angle (finished flights). Tomorrow's mix is weighted toward the leaders.</div>
+        <div id="angle-stats" class="angle-stats"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Runs</h2>
+      <div id="runs"></div>
+    </section>
+
+    <section>
+      <h2>Verticals</h2>
+      <div id="verticals"></div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

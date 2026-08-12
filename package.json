@@ -1,0 +1,30 @@
+{
+  "name": "ad-factory",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Daily ad factory: generate creatives (vendor/l_automation), post to Meta scheduled for next-day 5am PT, portal + Slack control.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "orchestrator": "tsx apps/orchestrator/src/main.ts",
+    "slack-bot": "tsx apps/slack-bot/src/main.ts",
+    "studio": "npm --prefix vendor/l_automation run web",
+    "uploader": "npm --prefix vendor/ads-uploader run dev",
+    "run-now": "tsx apps/orchestrator/src/cli.ts run",
+    "dry-run": "DRY_RUN=1 tsx apps/orchestrator/src/cli.ts run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.2.1",
+    "better-sqlite3": "^11.8.1",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

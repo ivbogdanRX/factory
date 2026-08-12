@@ -1,0 +1,66 @@
+{
+  "note": "Hooks/variants parked 2026-08-12 while production runs a single locked script (user request: one script, pretty-women + male-veteran avatars only). Restore by copying entries back into config.json campaigns[va-loans-veterans].",
+  "lockedScript": "VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
+  "va-loans-veterans": {
+    "parkedVariants": [
+      {
+        "id": "older-vet",
+        "name": "Older Veteran",
+        "creatorPrompt": "Candid photo of a US military veteran man around 60 years old, gray hair, reading glasses pushed up, wearing a plaid shirt or veteran cap, sitting at a kitchen table with a coffee mug in the morning light, phone propped up in front of him, calm serious expression, shot on an older smartphone, slightly soft, natural window light.",
+        "scenePrompt": "An older veteran at his kitchen table with morning coffee, talking calmly but urgently to the camera like he is warning fellow vets not to miss out.",
+        "cameraPrompt": "",
+        "hooks": [
+          "If you served and you still have your DD 214, listen — the VA is giving out stimulus grants for the next two weeks and most veterans get around $70,000.",
+          "I served twenty years and nobody told me about this — veterans with a DD 214 are getting grant paychecks this month, and it takes a few minutes to check."
+        ],
+        "bubbleHooks": [
+          "Veterans are getting DD-214 grants for the next two weeks"
+        ]
+      },
+      {
+        "id": "spouse",
+        "name": "Military Spouse",
+        "creatorPrompt": "Candid selfie-style photo of a woman in her late 30s, natural everyday makeup, hair in a loose ponytail, wearing a casual sweater, standing in a bright kitchen or living room, holding the phone at arm's length, surprised happy expression, shot on an older smartphone front camera, slightly soft, natural light.",
+        "scenePrompt": "A military spouse in her kitchen excitedly sharing what just happened when her husband checked his VA grant eligibility, girl-talk energy, like telling her best friend.",
+        "cameraPrompt": "",
+        "hooks": [
+          "My husband is a veteran and I made him check this — the VA is giving DD 214 stimulus grants for two weeks and his came back at $70,000.",
+          "If your husband or dad served, send them this right now — veterans are getting DD 214 grant paychecks and it only takes a few minutes to check."
+        ],
+        "bubbleHooks": [
+          "Veterans are getting DD-214 grants for the next two weeks"
+        ]
+      },
+      {
+        "id": "outrage",
+        "name": "Outrage",
+        "creatorPrompt": "Candid selfie-style photo of a US military veteran man in his mid 50s, weathered lined face with gray beard stubble, wearing a veteran cap with a service pin and a canvas work jacket, sitting at a plain kitchen table with a few groceries and paper receipts in front of him, holding the phone at arm's length, frustrated fed up expression, shot on an older smartphone front camera, slightly soft, natural light.",
+        "scenePrompt": "A middle aged male veteran at his kitchen table, genuinely fed up, calling out how veterans are skipping groceries while grant money sits unclaimed. Emotional delivery: real outrage and frustration, shaking his head, voice raised but controlled, angry on behalf of every vet being left behind, ending with a firm warning to check before the window closes. Raw and heartfelt, not a polished ad.",
+        "cameraPrompt": "",
+        "hooks": [
+          "Veterans are out here skipping groceries while $70,000 in grant money just sits unclaimed. Check yours before the two weeks are up."
+        ],
+        "bubbleHooks": [
+          "Millions in veteran grant money is sitting unclaimed"
+        ]
+      }
+    ],
+    "parkedHooksByVariant": {
+      "ugc-selfie": [
+        "I just checked my DD 214 and the VA approved me in like two minutes — they are giving veterans stimulus grants for the next two weeks.",
+        "If you're a veteran and money is tight right now, listen to me. The VA is handing out DD 214 stimulus grants for two weeks and mine came back at $70,000."
+      ],
+      "rent-vet": [
+        "I was about to miss rent when my buddy told me to check my DD 214. Two minutes later I was approved for $70,000. Veterans, you have two weeks."
+      ],
+      "debt-vet": [
+        "This wiped out my credit card debt in one shot. Veterans are getting DD 214 stimulus grants for two more weeks and it takes two minutes to check."
+      ]
+    },
+    "originalUgcSelfiePersona": {
+      "name": "UGC Selfie Vet",
+      "creatorPrompt": "Candid selfie-style photo of a US military veteran man in his early 30s, short haircut, wearing a plain t-shirt or hoodie, sitting in the driver's seat of a parked car in daylight, holding the phone at arm's length, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+      "scenePrompt": "A young veteran sitting in his parked car, just found out the news, excitedly sharing it selfie-style like a TikTok story time."
+    }
+  }
+}

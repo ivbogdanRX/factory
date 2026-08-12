@@ -1,0 +1,81 @@
+verticals:
+  - id: va-loans
+    label: VA Loans
+    enabled: true
+    creativeCampaignId: va-loans-veterans
+    dailyCount: 6
+    # Daily angle mix: ~80% of creatives come from the UGC selfie-style
+    # angles below; the rest (older-vet / spouse / outrage) share the
+    # remaining ~20%. Split is deterministic (largest remainder), and
+    # performance weighting still applies within each group.
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds:
+        - ugc-selfie
+        - rent-vet
+        - debt-vet
+    meta:
+      # Mirrors the manually-created "(IB) LNV" campaign in act_2091984668023103.
+      adAccountId: act_2091984668023103
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      # Launch step of the budget ladder — guardrail Rule D scales this up
+      # (see guardrails.scaleSteps) once the campaign proves profitable.
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      # $25 bid cap, applied as bid_amount on the ad set (CBO campaign
+      # carries the LOWEST_COST_WITH_BID_CAP strategy).
+      bidCapCents: 2500
+      # Loans pixel
+      pixelId: "1033187746256419"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "vets need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://visit.instfunds.com/6a7637e09275ed0cb84381e0?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) LNV AF {date}"
+        adSet: "(IB) LNV AF {date}"
+        ad: "(IB) LNV AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      # Auto-pause the campaign after this many days live.
+      flightDays: 3
+    # Automated kill/extend rules. Spend comes from Meta; conversions/revenue
+    # come from RedTrack (attributed via sub1/sub3 in the ad links above).
+    guardrails:
+      enabled: true
+      # Rule A: pause a single ad once its Meta spend reaches this with zero
+      # RedTrack conversions.
+      adKillSpendUsd: 50
+      # Rule B: once campaign Meta spend reaches this, pause the whole
+      # campaign if RedTrack CPA (Meta spend / RedTrack conversions) exceeds
+      # maxCpaUsd.
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      # Rule C: at flight end, extend by 1 day (instead of pausing) while
+      # RedTrack CPA is under this. Capped at maxExtensionDays total.
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 2
+      # Rule D: budget ladder. Once flight-to-date Meta spend reaches
+      # scaleMinSpendUsd AND RedTrack revenue / Meta spend >= scaleAtRoas,
+      # raise the campaign daily budget to the next step (max one step per
+      # 24h). Manual budget changes off the ladder disarm autoscaling for
+      # that campaign.
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500

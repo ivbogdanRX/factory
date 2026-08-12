@@ -1,0 +1,726 @@
+{
+  "pinterest": {
+    "query": "cinematic mountain landscape",
+    "imageUrl": "",
+    "resultIndex": 0
+  },
+  "imageSource": {
+    "mode": "openai",
+    "nanoBanana": {
+      "model": "gemini-3-pro-image-preview",
+      "aspectRatio": "9:16",
+      "imageSize": "2K",
+      "promptOverride": ""
+    },
+    "openai": {
+      "model": "gpt-image-2",
+      "size": "1024x1536",
+      "quality": "high",
+      "promptOverride": ""
+    },
+    "chatgpt": {
+      "url": "https://chatgpt.com/",
+      "timeoutSec": 300,
+      "promptOverride": ""
+    }
+  },
+  "flow": {
+    "backend": "api",
+    "browserFallback": true,
+    "url": "https://labs.google/fx/tools/flow",
+    "prompt": "Slow cinematic camera push-in, gentle parallax, soft natural light",
+    "generationTimeoutMs": 600000,
+    "model": "Veo 3.1 - Lite",
+    "mode": "Ingredients",
+    "aspectRatio": "9:16",
+    "apiModel": "veo-3.1-generate-preview",
+    "apiModelFallbacks": [
+      "veo-3.1-fast-generate-preview",
+      "veo-3.1-lite-generate-preview"
+    ],
+    "resolution": "720p"
+  },
+  "video": {
+    "targetVideo": "./assets/body.mp4",
+    "outputDir": "./output",
+    "trimSeconds": 0.5,
+    "name": "VA Loans"
+  },
+  "campaigns": [
+    {
+      "id": "va-loans-veterans",
+      "name": "VA Loans",
+      "vertical": "VA loans / veteran grants",
+      "angle": "U.S. veterans with DD214 paperwork who may qualify for a short-term grant",
+      "bodyVideo": "./assets/body.mp4",
+      "outputName": "VA Loans",
+      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial.",
+      "promptTemplate": "",
+      "hooks": [
+        "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
+        "If you have a DD 214, you need to check this before the VA grant window closes.",
+        "Most veterans have no idea this DD 214 grant is still open, and it only takes a few minutes to check."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85
+    },
+    {
+      "id": "bathroom-remodel-seniors",
+      "name": "Bathroom Remodel",
+      "vertical": "bathroom remodel / walk-in shower upgrades",
+      "angle": "seniors and older homeowners who want a safer bathroom and easier mobility",
+      "bodyVideo": "./assets/body.mp4",
+      "outputName": "Bathroom Remodel",
+      "promptContext": "Speak to seniors and older homeowners about safer bathrooms, replacing old tubs, walk-in showers, avoiding slips and falls, and aging in place. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "cameraPrompts": [
+        "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+        "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+        "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+        "Natural bathroom showroom: a medium shot of a licensed contractor in a work polo standing beside a walk-in shower display, talking directly and bluntly like he is explaining something important to a homeowner. Real showroom lighting, casual and believable.",
+        "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable—not hidden-camera POV."
+      ],
+      "creatorPrompts": [
+        "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+        "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+        "A vertical 9:16 photo of a mature female consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+        "A vertical 9:16 photo of a blunt licensed contractor in a work polo standing in a bathroom showroom beside a walk-in shower display, gesturing as he explains something to the camera. Real showroom lighting, tile displays in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+        "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos."
+      ],
+      "scenePrompts": [
+        "Courtroom order style: the judge sounds firm and official, as if ordering that seniors be given access to a bathroom remodel program.",
+        "Podcast expose style: the host sounds annoyed and skeptical, calling out agencies for not telling seniors about remodel assistance—like a real podcast rant.",
+        "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert seniors need to see today—delivered like a real news segment.",
+        "Contractor warning style: the contractor sounds blunt and experienced, like he has seen too many seniors fall because of old tubs.",
+        "Insider explanation style: the speaker sounds like someone who knows how assistance programs work and is explaining the shortcut in plain English."
+      ],
+      "promptTemplate": "",
+      "hooks": [
+        "I am ordering the full release of this bathroom remodel program to all seniors above 55.",
+        "Those clowns at the SSA will not tell you this, but if you're a senior, you can get your bathroom fully remodeled by the senior assistance program.",
+        "If you're over 55, stop paying out of pocket before you check this senior bathroom remodel program.",
+        "Seniors are replacing dangerous old tubs with walk-in showers, and most people still have no idea this program exists.",
+        "This is your warning: if your bathtub feels unsafe, check the senior remodel program before the deadline moves again.",
+        "A lot of seniors are getting walk-in showers installed, and the part nobody tells you is that assistance may cover more than you think."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-seniors",
+      "name": "Debt Seniors",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "seniors and retirees on a fixed income carrying credit card balances, unsecured debt, or tax debt",
+      "bodyVideo": "./assets/debt-body.mp4",
+      "outputName": "Debt Seniors",
+      "promptContext": "Speak to seniors and retirees on a fixed income who are stressed by credit card balances, unsecured debt, IRS or tax debt, and constant collection calls. Mention checking debt relief, consolidation, or settlement options that could lower monthly payments, without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you are a senior on a fixed income, there is a new way to check what debt relief options you may qualify for.",
+        "Seniors are reducing their credit card balances without taking out a single new loan, and many had no idea this was possible.",
+        "Most retirees never find out their debt can be settled or consolidated until after they have overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert seniors need to hear today—clear, direct, professional.",
+          "hooks": [
+            "If you are a senior on a fixed income, there is a new way to check what debt relief you may qualify for.",
+            "Seniors are reducing their credit card balances without taking out a single new loan, and many had no idea they could.",
+            "A new consumer alert for retirees: those collection calls may stop sooner than you think once you check your options.",
+            "Thousands of seniors carrying credit card and tax debt are reviewing relief programs right now, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "SENIORS ON FIXED INCOME CHECK YOUR DEBT RELIEF OPTIONS TODAY",
+            "RETIREES YOU MAY QUALIFY TO LOWER YOUR CREDIT CARD DEBT",
+            "CONSUMER ALERT SENIORS DEBT RELIEF OPTIONS JUST OPENED UP",
+            "OVER 60 AND IN DEBT? CHECK THIS BEFORE YOUR NEXT PAYMENT",
+            "SENIORS THOSE COLLECTION CALLS MAY STOP SOONER THAN YOU THINK",
+            "RETIREES STOP OVERPAYING ON CREDIT CARDS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from seniors—raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling seniors on a fixed income they may not have to keep drowning in credit card debt.",
+            "If you are retired and buried in debt, stop making minimum payments before you check this.",
+            "They do not want seniors knowing those balances can be settled for less than what is owed.",
+            "I cannot believe how many retirees are missing the debt relief options sitting right in front of them."
+          ],
+          "bubbleHooks": [
+            "SENIORS STOP PAYING MINIMUMS YOUR DEBT MAY BE SETTLEABLE",
+            "IF YOU'RE RETIRED AND IN DEBT WATCH THIS FIRST",
+            "THEY DON'T WANT SENIORS KNOWING ABOUT THIS DEBT OPTION",
+            "RETIREES YOUR CREDIT CARD BALANCE MIGHT BE NEGOTIABLE",
+            "PODCAST ALERT SENIORS DEBT RELIEF IS REAL CHECK IT",
+            "OVER 60? THE DEBT LOOPHOLE THEY KEEP QUIET ABOUT"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable—not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut in plain English—calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most seniors never hear about the options they actually qualify for.",
+            "If you are a senior with credit card or tax debt, there is a simple way to check what you can reduce.",
+            "Most retirees never find out their debt can be consolidated until after they have overpaid for years.",
+            "I helped run these programs, and seniors qualify far more often than they are ever told."
+          ],
+          "bubbleHooks": [
+            "INSIDER TIP SENIORS CHECK YOUR DEBT RELIEF OPTIONS NOW",
+            "EX DEBT WORKER TO RETIREES YOU MAY QUALIFY FOR RELIEF",
+            "SENIORS THE DEBT SHORTCUT THE INDUSTRY WON'T EXPLAIN",
+            "IF YOU'RE OVER 60 VERIFY YOUR DEBT OPTIONS BEFORE PAYING",
+            "RETIREES MOST SENIORS MISS THIS DEBT RELIEF STEP",
+            "INSIDER TO SENIORS YOUR BALANCE MAY BE REDUCIBLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Retiree Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of an older retiree sitting at a kitchen table at home, talking candidly to the camera like a real personal story. Natural home lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retiree sitting at a kitchen table in a modest, lived-in home, holding the phone at arm's length and speaking candidly to the camera. Natural window light, homey background, believable and warm. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the retiree sounds genuine and relieved, sharing what helped with their debt like advice to a friend—honest, warm, not salesy.",
+          "hooks": [
+            "I am retired on a fixed income, and checking my debt relief options changed everything for me.",
+            "I was buried in credit card debt until I found out seniors like me had other choices.",
+            "If you are a senior making minimum payments, please check what I wish I had checked sooner.",
+            "I stopped dreading the mail once I looked into debt relief for retirees."
+          ],
+          "bubbleHooks": [
+            "RETIRED AND IN DEBT? HERE'S WHAT I WISH I KNEW SOONER",
+            "SENIOR ON FIXED INCOME I FINALLY CHECKED MY DEBT OPTIONS",
+            "I WAS DROWNING IN CREDIT CARD DEBT UNTIL I CHECKED THIS",
+            "FELLOW SENIORS DON'T KEEP PAYING MINIMUMS CHECK THIS",
+            "RETIREE TO RETIREE YOUR DEBT MAY HAVE OTHER OPTIONS",
+            "I STOPPED DREADING THE MAIL AFTER CHECKING DEBT RELIEF"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-teachers",
+      "name": "Debt Teachers",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "underpaid teachers and school staff carrying credit card debt, unsecured debt, or tax debt",
+      "bodyVideo": "./assets/debt-body.mp4",
+      "outputName": "Debt Teachers",
+      "promptContext": "Speak to teachers and school staff who are underpaid and stretched thin, often covering classroom costs out of pocket and carrying credit card balances, unsecured debt, or tax debt. Mention checking debt relief, consolidation, or lower-payment options without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you are a teacher stretched thin every month, there is a new way to check what debt relief you may qualify for.",
+        "Teachers are consolidating credit card debt into one lower payment, and many had no idea they could.",
+        "A lot of educators never find out this debt relief option even exists until they have overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert teachers need to hear today—clear, direct, professional.",
+          "hooks": [
+            "If you are a teacher stretched thin every month, there is a new way to check what debt relief you may qualify for.",
+            "Teachers are consolidating credit card debt into one lower payment, and many had no idea they could.",
+            "A consumer alert for educators: you may not have to keep carrying that balance into another school year.",
+            "Thousands of underpaid teachers are reviewing debt relief options right now, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "TEACHERS CHECK YOUR DEBT RELIEF OPTIONS BEFORE NEXT TERM",
+            "EDUCATORS YOU MAY QUALIFY TO LOWER YOUR CREDIT CARD DEBT",
+            "CONSUMER ALERT TEACHERS DEBT RELIEF OPTIONS JUST OPENED",
+            "UNDERPAID AND IN DEBT? TEACHERS CHECK THIS TODAY",
+            "TEACHERS STOP CARRYING THAT BALANCE INTO ANOTHER YEAR",
+            "EDUCATORS ONE LOWER PAYMENT MAY BE WITHIN REACH"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from teachers—raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells teachers they may not have to keep drowning in credit card debt on a classroom salary.",
+            "If you are an educator buried in debt, stop making minimum payments before you check this.",
+            "They do not want teachers knowing those balances can be consolidated or settled for less.",
+            "I cannot believe how many teachers are missing the debt relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "TEACHERS STOP PAYING MINIMUMS YOUR DEBT MAY BE REDUCIBLE",
+            "IF YOU'RE AN EDUCATOR IN DEBT WATCH THIS FIRST",
+            "THEY DON'T WANT TEACHERS KNOWING ABOUT THIS OPTION",
+            "EDUCATORS YOUR CREDIT CARD BALANCE MIGHT BE NEGOTIABLE",
+            "PODCAST ALERT TEACHERS DEBT RELIEF IS REAL CHECK IT",
+            "ON A TEACHER SALARY? THE DEBT LOOPHOLE THEY KEEP QUIET"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable—not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for teachers in plain English—calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most teachers never hear about the relief they actually qualify for.",
+            "If you are a teacher with credit card or tax debt, there is a simple way to check what you can reduce.",
+            "Most educators never find out their debt can be consolidated until they have overpaid for years.",
+            "I helped run these programs, and teachers qualify far more often than they are ever told."
+          ],
+          "bubbleHooks": [
+            "INSIDER TIP TEACHERS CHECK YOUR DEBT OPTIONS NOW",
+            "EX DEBT WORKER TO EDUCATORS YOU MAY QUALIFY FOR RELIEF",
+            "TEACHERS THE DEBT SHORTCUT THE INDUSTRY WON'T EXPLAIN",
+            "IF YOU TEACH VERIFY YOUR DEBT OPTIONS BEFORE PAYING",
+            "EDUCATORS MOST TEACHERS MISS THIS DEBT RELIEF STEP",
+            "INSIDER TO TEACHERS YOUR BALANCE MAY BE REDUCIBLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Teacher Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a schoolteacher in an empty classroom after hours, talking candidly to the camera like a real personal story. Natural classroom lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired but warm schoolteacher standing in an empty classroom after hours with desks and a whiteboard behind them, holding the phone at arm's length and speaking candidly. Natural fluorescent classroom light, believable and relatable. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the teacher sounds genuine and a little frustrated, sharing how they handled their debt like advice to a fellow teacher—honest, real, not salesy.",
+          "hooks": [
+            "I teach full time, and checking my debt relief options finally gave me breathing room.",
+            "I was buried in credit card debt on a teacher salary until I found out I had other choices.",
+            "If you are an educator making minimum payments, please check what I wish I had checked sooner.",
+            "I stopped stressing every payday once I looked into debt relief for teachers."
+          ],
+          "bubbleHooks": [
+            "TEACHER IN DEBT? HERE'S WHAT I WISH I KNEW SOONER",
+            "ON A CLASSROOM SALARY I FINALLY CHECKED MY DEBT OPTIONS",
+            "I WAS DROWNING IN DEBT TEACHING UNTIL I CHECKED THIS",
+            "FELLOW TEACHERS DON'T KEEP PAYING MINIMUMS CHECK THIS",
+            "EDUCATOR TO EDUCATOR YOUR DEBT MAY HAVE OPTIONS",
+            "I STOPPED DREADING PAYDAY AFTER CHECKING DEBT RELIEF"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-union-workers",
+      "name": "Debt Union Workers",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "union and blue-collar workers with income swings carrying credit card debt, unsecured debt, or IRS tax debt",
+      "bodyVideo": "./assets/debt-body.mp4",
+      "outputName": "Debt Union Workers",
+      "promptContext": "Speak to union and blue-collar workers—trades, labor, manufacturing—whose income swings with overtime and layoffs, leaving them with credit card balances, unsecured debt, or IRS tax debt. Mention checking debt relief, consolidation, or settlement options that could lower monthly payments, without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you are a union worker whose hours swing with overtime and layoffs, there is a new way to check your debt relief options.",
+        "Tradespeople are consolidating credit card debt into one lower payment, and many had no idea they could.",
+        "A lot of blue-collar families never find out their debt can be settled for less until they have overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert blue-collar workers need to hear today—clear, direct, professional.",
+          "hooks": [
+            "If you are a union worker whose hours swing with overtime and layoffs, there is a new way to check your debt relief options.",
+            "Tradespeople are consolidating credit card debt into one lower payment, and many had no idea they could.",
+            "A consumer alert for blue-collar families: those balances may not have to follow you to the next slow season.",
+            "Thousands of union workers carrying credit card and tax debt are reviewing relief options right now, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS CHECK YOUR DEBT RELIEF OPTIONS TODAY",
+            "TRADESPEOPLE YOU MAY QUALIFY TO LOWER YOUR DEBT",
+            "CONSUMER ALERT BLUE-COLLAR DEBT RELIEF JUST OPENED",
+            "LAYOFFS AND DEBT? UNION WORKERS CHECK THIS NOW",
+            "TRADES FAMILIES ONE LOWER PAYMENT MAY BE WITHIN REACH",
+            "UNION WORKERS STOP CARRYING DEBT INTO THE SLOW SEASON"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from working families—raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells union workers they may not have to keep drowning in credit card debt between jobs.",
+            "If you work the trades and you are buried in debt, stop making minimum payments before you check this.",
+            "They do not want blue-collar families knowing those balances can be settled for less.",
+            "I cannot believe how many union workers are missing the debt relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS STOP PAYING MINIMUMS DEBT MAY BE REDUCIBLE",
+            "IF YOU WORK THE TRADES AND OWE WATCH THIS FIRST",
+            "THEY DON'T WANT BLUE-COLLAR FAMILIES KNOWING THIS",
+            "TRADESPEOPLE YOUR CARD BALANCE MIGHT BE NEGOTIABLE",
+            "PODCAST ALERT UNION DEBT RELIEF IS REAL CHECK IT",
+            "BETWEEN JOBS AND IN DEBT? THE LOOPHOLE THEY KEEP QUIET"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable—not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for working families in plain English—calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most union workers never hear about the relief they actually qualify for.",
+            "If you are a tradesperson with credit card or IRS debt, there is a simple way to check what you can reduce.",
+            "Most blue-collar workers never find out their debt can be consolidated until they have overpaid for years.",
+            "I helped run these programs, and union families qualify far more often than they are ever told."
+          ],
+          "bubbleHooks": [
+            "INSIDER TIP UNION WORKERS CHECK YOUR DEBT OPTIONS NOW",
+            "EX DEBT WORKER TO TRADES YOU MAY QUALIFY FOR RELIEF",
+            "UNION WORKERS THE DEBT SHORTCUT THEY WON'T EXPLAIN",
+            "IF YOU'RE IN THE TRADES VERIFY DEBT OPTIONS BEFORE PAYING",
+            "BLUE-COLLAR FAMILIES MOST MISS THIS DEBT RELIEF STEP",
+            "INSIDER TO UNION WORKERS YOUR BALANCE MAY BE REDUCIBLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Tradesworker Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium shot of a union tradesperson near a job site or in a garage, talking bluntly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a blue-collar union tradesperson in a work jacket or hi-vis standing near a job site or garage, holding the phone at arm's length and speaking candidly to the camera. Natural outdoor or shop lighting, believable and rugged. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the union worker sounds blunt and real, sharing how they dealt with their debt like advice to a buddy on the crew—plain talk, no sales pitch.",
+          "hooks": [
+            "I work the trades, and checking my debt relief options finally got me out from under it.",
+            "I was buried in credit card debt between layoffs until I found out I had other choices.",
+            "If you are a union worker making minimum payments, check what I wish I had checked sooner.",
+            "I stopped sweating every slow season once I looked into debt relief."
+          ],
+          "bubbleHooks": [
+            "UNION WORKER IN DEBT? WHAT I WISH I KNEW SOONER",
+            "BETWEEN LAYOFFS I FINALLY CHECKED MY DEBT OPTIONS",
+            "I WAS DROWNING IN DEBT IN THE TRADES UNTIL I CHECKED THIS",
+            "FELLOW TRADESPEOPLE DON'T KEEP PAYING MINIMUMS",
+            "WORKER TO WORKER YOUR DEBT MAY HAVE OPTIONS",
+            "I STOPPED SWEATING SLOW SEASON AFTER CHECKING RELIEF"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-nurses",
+      "name": "Debt Nurses",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "nurses and healthcare workers carrying credit card debt, unsecured debt, or tax debt after long shifts",
+      "bodyVideo": "./assets/debt-body.mp4",
+      "outputName": "Debt Nurses",
+      "promptContext": "Speak to nurses and healthcare workers worn down by long shifts and burnout who carry credit card balances, unsecured debt, or tax debt. Mention checking debt relief, consolidation, or lower-payment options without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you are a nurse worn down by long shifts and debt, there is a new way to check your relief options.",
+        "Healthcare workers are consolidating credit card debt into one lower payment, and many had no idea they could.",
+        "A lot of nurses never find out their debt can be settled for less until they have overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert nurses need to hear today—clear, direct, professional.",
+          "hooks": [
+            "If you are a nurse worn down by long shifts and debt, there is a new way to check your relief options.",
+            "Healthcare workers are consolidating credit card debt into one lower payment, and many had no idea they could.",
+            "A consumer alert for nurses: those balances may not have to follow you into another stretch of shifts.",
+            "Thousands of nurses carrying credit card and tax debt are reviewing relief options right now, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "NURSES CHECK YOUR DEBT RELIEF OPTIONS TODAY",
+            "HEALTHCARE WORKERS YOU MAY QUALIFY TO LOWER YOUR DEBT",
+            "CONSUMER ALERT NURSES DEBT RELIEF JUST OPENED UP",
+            "BURNED OUT AND IN DEBT? NURSES CHECK THIS NOW",
+            "NURSES ONE LOWER PAYMENT MAY BE WITHIN REACH",
+            "HEALTHCARE WORKERS STOP CARRYING THAT BALANCE"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from healthcare workers—raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells nurses they may not have to keep drowning in credit card debt after every shift.",
+            "If you work in healthcare and you are buried in debt, stop making minimum payments before you check this.",
+            "They do not want nurses knowing those balances can be settled for less.",
+            "I cannot believe how many nurses are missing the debt relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "NURSES STOP PAYING MINIMUMS YOUR DEBT MAY BE REDUCIBLE",
+            "IF YOU'RE A NURSE IN DEBT WATCH THIS FIRST",
+            "THEY DON'T WANT HEALTHCARE WORKERS KNOWING THIS",
+            "NURSES YOUR CREDIT CARD BALANCE MIGHT BE NEGOTIABLE",
+            "PODCAST ALERT NURSE DEBT RELIEF IS REAL CHECK IT",
+            "AFTER EVERY SHIFT AND STILL IN DEBT? CHECK THIS"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable—not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for nurses in plain English—calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most nurses never hear about the relief they actually qualify for.",
+            "If you are a nurse with credit card or tax debt, there is a simple way to check what you can reduce.",
+            "Most healthcare workers never find out their debt can be consolidated until they have overpaid for years.",
+            "I helped run these programs, and nurses qualify far more often than they are ever told."
+          ],
+          "bubbleHooks": [
+            "INSIDER TIP NURSES CHECK YOUR DEBT OPTIONS NOW",
+            "EX DEBT WORKER TO NURSES YOU MAY QUALIFY FOR RELIEF",
+            "NURSES THE DEBT SHORTCUT THE INDUSTRY WON'T EXPLAIN",
+            "IF YOU'RE IN HEALTHCARE VERIFY DEBT OPTIONS FIRST",
+            "HEALTHCARE WORKERS MOST MISS THIS DEBT RELIEF STEP",
+            "INSIDER TO NURSES YOUR BALANCE MAY BE REDUCIBLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Nurse Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a nurse in scrubs after a shift, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired nurse in scrubs sitting in their car or a hospital break room after a long shift, holding the phone at arm's length and speaking candidly to the camera. Natural dim lighting, believable and weary. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the nurse sounds exhausted but genuine, sharing how they handled their debt like advice to a coworker—honest, warm, not salesy.",
+          "hooks": [
+            "I am a nurse, and checking my debt relief options finally gave me room to breathe.",
+            "I was buried in credit card debt after years of shifts until I found out I had other choices.",
+            "If you are a nurse making minimum payments, please check what I wish I had checked sooner.",
+            "I stopped dreading my bills once I looked into debt relief for healthcare workers."
+          ],
+          "bubbleHooks": [
+            "NURSE IN DEBT? HERE'S WHAT I WISH I KNEW SOONER",
+            "AFTER YEARS OF SHIFTS I CHECKED MY DEBT OPTIONS",
+            "I WAS DROWNING IN DEBT NURSING UNTIL I CHECKED THIS",
+            "FELLOW NURSES DON'T KEEP PAYING MINIMUMS CHECK THIS",
+            "NURSE TO NURSE YOUR DEBT MAY HAVE OTHER OPTIONS",
+            "I STOPPED DREADING MY BILLS AFTER CHECKING RELIEF"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-veterans",
+      "name": "Debt Veterans",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "U.S. military veterans carrying credit card debt, unsecured debt, or tax debt (general debt relief, not a VA benefit)",
+      "bodyVideo": "./assets/debt-body.mp4",
+      "outputName": "Debt Veterans",
+      "promptContext": "Speak to U.S. military veterans carrying credit card balances, unsecured debt, or IRS tax debt. Frame it as general debt relief, consolidation, or settlement options they may qualify to check—NOT a VA benefit or government payout. Do not promise guaranteed approval, exact amounts, or that the VA pays off debts. Each variation should feel like believable real footage of that setting—not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you are a veteran carrying credit card or tax debt, there is a new way to check the relief options you may qualify for.",
+        "Veterans are consolidating debt into one lower payment, and many had no idea they could.",
+        "A lot of veterans never find out their debt can be settled for less until they have overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip—not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert veterans need to hear today—clear, direct, professional. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "If you are a veteran carrying credit card or tax debt, there is a new way to check the relief options you may qualify for.",
+            "Veterans are consolidating debt into one lower payment, and many had no idea they could.",
+            "A consumer alert for those who served: you may not have to keep carrying that balance alone.",
+            "Thousands of veterans are reviewing debt relief options right now, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "VETERANS CHECK YOUR DEBT RELIEF OPTIONS TODAY",
+            "WHO SERVED? YOU MAY QUALIFY TO LOWER YOUR DEBT",
+            "CONSUMER ALERT VETERAN DEBT RELIEF OPTIONS OPENED",
+            "VETERAN IN DEBT? CHECK THIS BEFORE YOUR NEXT PAYMENT",
+            "VETERANS ONE LOWER PAYMENT MAY BE WITHIN REACH",
+            "VETERANS STOP CARRYING THAT BALANCE ALONE"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage—steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from veterans—raw, conversational, believable. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "Nobody tells veterans they may not have to keep drowning in credit card debt after service.",
+            "If you served and you are buried in debt, stop making minimum payments before you check this.",
+            "They do not want veterans knowing those balances can be settled for less.",
+            "I cannot believe how many veterans are missing the debt relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "VETERANS STOP PAYING MINIMUMS DEBT MAY BE REDUCIBLE",
+            "IF YOU SERVED AND YOU'RE IN DEBT WATCH THIS FIRST",
+            "THEY DON'T WANT VETERANS KNOWING ABOUT THIS OPTION",
+            "VETERANS YOUR CREDIT CARD BALANCE MIGHT BE NEGOTIABLE",
+            "PODCAST ALERT VETERAN DEBT RELIEF IS REAL CHECK IT",
+            "AFTER SERVICE AND IN DEBT? THE LOOPHOLE THEY KEEP QUIET"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable—not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for veterans in plain English—calm, credible, helpful. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "After years inside the debt industry, most veterans never hear about the relief they actually qualify for.",
+            "If you are a veteran with credit card or IRS debt, there is a simple way to check what you can reduce.",
+            "Most veterans never find out their debt can be consolidated until they have overpaid for years.",
+            "I helped run these programs, and veterans qualify far more often than they are ever told."
+          ],
+          "bubbleHooks": [
+            "INSIDER TIP VETERANS CHECK YOUR DEBT OPTIONS NOW",
+            "EX DEBT WORKER TO VETERANS YOU MAY QUALIFY FOR RELIEF",
+            "VETERANS THE DEBT SHORTCUT THE INDUSTRY WON'T EXPLAIN",
+            "IF YOU SERVED VERIFY YOUR DEBT OPTIONS BEFORE PAYING",
+            "VETERANS MOST MISS THIS DEBT RELIEF STEP",
+            "INSIDER TO VETERANS YOUR BALANCE MAY BE REDUCIBLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Veteran Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a military veteran at home, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a U.S. military veteran in a casual shirt or ball cap sitting at home, holding the phone at arm's length and speaking candidly to the camera. Natural home lighting, believable and grounded. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos, no insignia.",
+          "scenePrompt": "Personal story style: the veteran sounds straightforward and genuine, sharing how they handled their debt like advice to a fellow vet—honest, no-nonsense, not salesy. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "I am a veteran, and checking my debt relief options finally got me out from under it.",
+            "I was buried in credit card debt after I got out until I found I had other choices.",
+            "If you served and you are making minimum payments, check what I wish I had checked sooner.",
+            "I stopped dreading the mail once I looked into debt relief for veterans."
+          ],
+          "bubbleHooks": [
+            "VETERAN IN DEBT? HERE'S WHAT I WISH I KNEW SOONER",
+            "AFTER I GOT OUT I FINALLY CHECKED MY DEBT OPTIONS",
+            "I WAS DROWNING IN DEBT AFTER SERVICE UNTIL I CHECKED THIS",
+            "FELLOW VETERANS DON'T KEEP PAYING MINIMUMS CHECK THIS",
+            "VET TO VET YOUR DEBT MAY HAVE OTHER OPTIONS",
+            "I STOPPED DREADING THE MAIL AFTER CHECKING RELIEF"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    }
+  ],
+  "captions": {
+    "enabled": true,
+    "dialogue": "",
+    "wordsPerGroup": 4,
+    "upperCase": true,
+    "layout": "3:4",
+    "position": "bottom",
+    "style": "default",
+    "verticalPosition": 0,
+    "bubbleColor": "#FFFFFF",
+    "bubbleTextColor": "#111111",
+    "bubblePadding": 0,
+    "hookBubble": {
+      "enabled": true,
+      "bold": true,
+      "text": "",
+      "bubbleColor": "#FFFFFF",
+      "textColor": "#111111",
+      "bubblePadding": 0
+    },
+    "fontName": "Montserrat Black",
+    "fontSize": 0,
+    "primaryColor": "#FFFFFF",
+    "outlineColor": "#000000",
+    "outlineWidth": 4,
+    "highlightCurrentWord": true,
+    "highlightColor": "#22C7F5",
+    "timingEngine": "auto",
+    "timingOffsetSec": 0,
+    "fasterWhisperPython": ".venv-whisper/bin/python",
+    "fasterWhisperModel": "base.en",
+    "whisperBinary": "whisper-cli",
+    "whisperModel": ""
+  },
+  "browser": {
+    "headless": false,
+    "channel": "chrome",
+    "profileDir": "./.browser-profile",
+    "downloadDir": "./downloads",
+    "slowMoMs": 0
+  },
+  "run": {
+    "count": 1,
+    "delaySeconds": 0
+  },
+  "concurrency": {
+    "maxConcurrentJobs": 3,
+    "apiRequestsPerMinute": 10
+  },
+  "maintenance": {
+    "autoCleanIntermediates": true,
+    "keepIntermediateHours": 24
+  },
+  "spy": {
+    "enabled": true,
+    "country": "US",
+    "maxAdsPerPage": 40,
+    "scrollRounds": 8,
+    "minRunDays": 14,
+    "minCopies": 2,
+    "suggestionsPerVertical": 5,
+    "classifierModel": "gpt-4o-mini",
+    "transcribeModel": "whisper-1",
+    "regenerateCount": 3,
+    "autoCrawlMinutes": 60,
+    "fullRemakeMaxSegments": 6
+  }
+}

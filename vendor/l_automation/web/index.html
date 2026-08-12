@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UGC Studio — Control Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 4.5 19 12 5 19.5V4.5Z"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>UGC Studio</h1>
+          <span class="brand-sub">Campaign Control Panel</span>
+        </div>
+      </div>
+
+      <nav class="tabs" id="tabs">
+        <button class="tab active" data-tab="generate" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="M6 4.5 19 12 6 19.5V4.5Z" fill="currentColor" />
+          </svg>
+          Generate
+        </button>
+        <button class="tab" data-tab="newad" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" />
+          </svg>
+          New Ad
+        </button>
+        <button class="tab" data-tab="imageads" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7" />
+            <circle cx="9" cy="10" r="1.8" stroke="currentColor" stroke-width="1.5" />
+            <path d="m4 18 5-4 4 3 3-2 4 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          Image Ads
+        </button>
+        <button class="tab" data-tab="campaigns" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.7" />
+            <path d="M3 9h18" stroke="currentColor" stroke-width="1.7" />
+          </svg>
+          Campaigns
+        </button>
+        <button class="tab" data-tab="spy" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7" />
+            <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+          </svg>
+          Spy
+          <span class="tab-badge" id="spyBadge" hidden>0</span>
+        </button>
+      </nav>
+
+      <div class="topbar-right">
+        <span class="topbar-status" id="busyBadge"><i class="dot"></i>Idle</span>
+      </div>
+    </header>
+
+    <!-- ============ GENERATE VIEW ============ -->
+    <main class="view" id="view-generate">
+      <div class="generate-wrap">
+        <div class="run-hero">
+          <div class="hero-head">
+            <h2>Generate videos</h2>
+            <span class="capacity" id="capacity"></span>
+          </div>
+
+          <label class="block">
+            <span class="lbl">Campaign</span>
+            <select id="runCampaign"></select>
+          </label>
+
+          <div class="form-row two">
+            <label>
+              <span class="lbl">Count</span>
+              <input type="number" id="runCount" min="1" value="1" />
+            </label>
+            <label>
+              <span class="lbl">Persona</span>
+              <select id="runVariant">
+                <option value="">Random persona</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="lbl">Hook line <em>(spoken)</em></span>
+            <select id="runHook">
+              <option value="">Random (shuffle)</option>
+            </select>
+          </label>
+
+          <label class="block">
+            <span class="lbl">Hook bubble text <em>(this run only)</em></span>
+            <input
+              type="text"
+              id="runHookBubbleText"
+              placeholder="Override for this batch. Audience + benefit, keep it short."
+            />
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="runRandom" checked />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-text">Randomize persona + hooks</span>
+          </label>
+
+          <button class="btn primary full lg" id="runBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M6 4.5 19 12 6 19.5V4.5Z" fill="currentColor" />
+            </svg>
+            Start generation
+          </button>
+          <div class="job-meta" id="jobMeta"></div>
+        </div>
+
+        <div class="panel status-panel">
+          <div class="panel-head">
+            <h2>Veo capacity &amp; models</h2>
+            <span class="capacity" id="statusBackend"></span>
+          </div>
+          <div class="status-grid">
+            <div class="status-block">
+              <div class="status-block-head">
+                <span class="lbl">Daily Veo budget <em>(all models)</em></span>
+                <span class="rate-text" id="budgetText">—</span>
+              </div>
+              <div class="rate-bar"><div class="rate-fill" id="budgetFill"></div></div>
+              <div class="rate-sub" id="budgetSub"></div>
+            </div>
+            <div class="status-block">
+              <span class="lbl">Models <em>(fallback order · per-model limits)</em></span>
+              <ul class="model-list" id="modelList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="generate-grid">
+          <div class="panel progress-card">
+            <div class="panel-head">
+              <h2>Now generating</h2>
+              <span class="badge idle" id="progressBadge">Idle</span>
+            </div>
+            <div class="progress-stage" id="progressStage">
+              <div class="progress-thumb" id="progressThumb">
+                <div class="thumb-placeholder" id="thumbPlaceholder">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                    <circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5" />
+                    <path d="m4 18 5-4 4 3 3-2 4 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                  <span>No active generation</span>
+                </div>
+                <img id="progressImg" alt="Generated reference" hidden />
+              </div>
+              <div class="progress-side">
+                <ol class="steps" id="progressSteps">
+                  <li data-phase="image">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Reference image</span>
+                  </li>
+                  <li data-phase="video">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Hook video</span>
+                  </li>
+                  <li data-phase="captions">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Captions</span>
+                  </li>
+                  <li data-phase="splice">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Splice &amp; export</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="progress-info" id="progressInfo">
+              <p class="progress-empty">Start a generation above to watch it here.</p>
+            </div>
+          </div>
+
+          <div class="panel logs-panel">
+            <div class="panel-head">
+              <h2>Live logs</h2>
+              <span class="watching" id="watching"></span>
+            </div>
+            <pre class="logs" id="logs"></pre>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Jobs</h2>
+          </div>
+          <ul class="job-list" id="jobList"></ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Recent outputs</h2>
+            <button class="btn small ghost" id="refreshOutputs">Refresh</button>
+          </div>
+          <div class="outputs" id="outputs"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ NEW AD VIEW ============ -->
+    <main class="view hidden" id="view-newad">
+      <div class="generate-wrap">
+        <div class="run-hero">
+          <div class="hero-head">
+            <h2>Generate a full ad</h2>
+            <span class="capacity" id="newAdBackendNote">backend: browser (Flow)</span>
+          </div>
+          <p class="spy-help" style="margin: 0 0 4px">
+            Write the script, hit generate, and the whole ad is built from scratch:
+            one consistent persona image, one Veo clip per line (or per ~8s segment),
+            captions burned in, then stitched together. Pick a <b>body video</b> to
+            reuse an existing body and just generate a fresh hook in front of it
+            (e.g. reuse the nurse-debt body but target seniors). Uses the browser
+            (Flow) backend — make sure you're logged in via <code>npm run login</code>.
+          </p>
+
+          <div class="form-row two">
+            <label>
+              <span class="lbl">Topic / vertical <em>(names the file)</em></span>
+              <input type="text" id="naName" placeholder="VA Loans" />
+            </label>
+            <label>
+              <span class="lbl">Angle / audience</span>
+              <input type="text" id="naAngle" placeholder="veterans / no money down" />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="lbl">Body video <em>(optional — reuse a body, generate a new hook)</em></span>
+            <select id="naBody"></select>
+          </label>
+
+          <label class="block">
+            <span class="lbl">Persona <em>(who's on camera — blank = everyday person)</em></span>
+            <textarea
+              id="naPersona"
+              rows="2"
+              placeholder="e.g. A 60-year-old male veteran in a modest living room, baseball cap, casual."
+            ></textarea>
+          </label>
+
+          <label class="block">
+            <span class="lbl">Offer context <em>(optional)</em></span>
+            <textarea
+              id="naContext"
+              rows="2"
+              placeholder="Anything the model should know about the offer/product."
+            ></textarea>
+          </label>
+
+          <label class="block">
+            <span class="lbl">Script</span>
+            <textarea
+              id="naScript"
+              rows="8"
+              placeholder="One spoken line per clip (each line becomes ~8s clip).&#10;Or paste a full script and turn on auto-split below."
+            ></textarea>
+          </label>
+
+          <label class="block">
+            <span class="lbl">Hook bubble text <em>(first clip headline)</em></span>
+            <input type="text" id="naBubble" placeholder="Optional top-bar headline" />
+          </label>
+
+          <section class="fieldset" style="margin-top: 8px">
+            <div class="fieldset-head">
+              <h3>Output &amp; polish</h3>
+              <p>Pacing, captions, and auto-generated B-roll overlays.</p>
+            </div>
+
+            <div class="form-row two">
+              <label>
+                <span class="lbl">Speed <em>(1 = normal, 1.1 = 10% faster, pitch kept)</em></span>
+                <input type="number" id="naSpeed" min="0.5" max="2" step="0.05" value="1.1" />
+              </label>
+              <label>
+                <span class="lbl">Max clips <em>(auto-split only)</em></span>
+                <input type="number" id="naMaxSegments" min="1" value="6" />
+              </label>
+            </div>
+
+            <label class="toggle">
+              <input type="checkbox" id="naAutoSplit" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-text">Auto-split script into ~8s clips (AI)</span>
+            </label>
+
+            <label class="toggle">
+              <input type="checkbox" id="naCaptions" checked />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-text">Burn in captions</span>
+            </label>
+
+            <label class="toggle">
+              <input type="checkbox" id="naOverlays" />
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-text">Add B-roll overlays (auto, keyword-timed)</span>
+            </label>
+
+            <div
+              id="naOverlayOpts"
+              style="display: none; flex-direction: column; gap: 14px"
+            >
+              <div class="form-row two">
+                <label>
+                  <span class="lbl">Overlay style</span>
+                  <select id="naOverlayStyle">
+                    <option value="both" selected>Both (cutaways + cards)</option>
+                    <option value="fullframe">Full-frame cutaways</option>
+                    <option value="pip">Picture-in-picture cards</option>
+                  </select>
+                </label>
+                <label>
+                  <span class="lbl">B-roll type</span>
+                  <select id="naOverlaySource">
+                    <option value="image" selected>AI images (fast, Ken Burns)</option>
+                    <option value="video">AI video clips (slower, real motion)</option>
+                  </select>
+                </label>
+              </div>
+              <label class="block">
+                <span class="lbl">Max overlays <em>(blank = auto)</em></span>
+                <input type="number" id="naMaxOverlays" min="1" max="10" placeholder="auto" />
+              </label>
+              <p class="spy-help" style="margin: 0">
+                Visuals are generated from your script's keywords and placed on the
+                words they relate to. Video clips look best but are much slower
+                (each is a full generation).
+              </p>
+            </div>
+          </section>
+
+          <button class="btn primary full lg" id="naRunBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M6 4.5 19 12 6 19.5V4.5Z" fill="currentColor" />
+            </svg>
+            Generate full ad
+          </button>
+          <div class="job-meta" id="naJobMeta"></div>
+        </div>
+
+        <div class="generate-grid">
+          <div class="panel progress-card">
+            <div class="panel-head">
+              <h2>Now generating</h2>
+              <span class="badge idle" id="naProgressBadge">Idle</span>
+            </div>
+            <div class="progress-stage" id="naProgressStage">
+              <div class="progress-thumb" id="naProgressThumb">
+                <div class="thumb-placeholder" id="naThumbPlaceholder">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                    <circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5" />
+                    <path d="m4 18 5-4 4 3 3-2 4 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                  <span>No active generation</span>
+                </div>
+                <img id="naProgressImg" alt="Generated persona" hidden />
+              </div>
+              <div class="progress-side">
+                <ol class="steps" id="naProgressSteps">
+                  <li data-phase="image">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Persona image</span>
+                  </li>
+                  <li data-phase="video">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Clips</span>
+                  </li>
+                  <li data-phase="captions">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Captions</span>
+                  </li>
+                  <li data-phase="splice">
+                    <span class="step-dot"></span>
+                    <span class="step-label">Stitch &amp; export</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="progress-info" id="naProgressInfo">
+              <p class="progress-empty">Write a script above and generate to watch it here.</p>
+            </div>
+          </div>
+
+          <div class="panel logs-panel">
+            <div class="panel-head">
+              <h2>Live logs</h2>
+              <span class="watching" id="naWatching"></span>
+            </div>
+            <pre class="logs" id="naLogs"></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ IMAGE ADS VIEW ============ -->
+    <main class="view hidden" id="view-imageads">
+      <div class="generate-wrap">
+        <div class="run-hero">
+          <div class="hero-head">
+            <h2>Static image ads</h2>
+            <span class="capacity" id="iaBackendNote">model: gpt-image-2</span>
+          </div>
+          <p class="spy-help" style="margin: 0 0 4px">
+            Upload winning static ads. Each one is studied with vision (vertical,
+            angle, on-image copy, why it converts), then fresh variations are
+            generated — keeping what works but rewriting the headline/subhead for
+            your angle. Leave vertical/angle blank to use what the study infers.
+            Needs <code>OPENAI_API_KEY</code>.
+          </p>
+
+          <label class="block">
+            <span class="lbl">Winner images <em>(upload one or more)</em></span>
+            <input type="file" id="iaFiles" accept="image/*" multiple />
+          </label>
+          <div class="outputs" id="iaThumbs"></div>
+
+          <div class="form-row two">
+            <label>
+              <span class="lbl">Vertical <em>(blank = infer)</em></span>
+              <input type="text" id="iaVertical" placeholder="VA loans" />
+            </label>
+            <label>
+              <span class="lbl">Angle / audience <em>(blank = infer)</em></span>
+              <input type="text" id="iaAngle" placeholder="veterans / no money down" />
+            </label>
+          </div>
+
+          <div class="form-row two">
+            <label>
+              <span class="lbl">Variations per winner</span>
+              <input type="number" id="iaCount" min="1" value="4" />
+            </label>
+            <label>
+              <span class="lbl">Strategy</span>
+              <select id="iaMode">
+                <option value="both" selected>Both (remix + fresh)</option>
+                <option value="edit">Edit / remix the winner</option>
+                <option value="fresh">Fresh from study only</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="btn primary full lg" id="iaRunBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M6 4.5 19 12 6 19.5V4.5Z" fill="currentColor" />
+            </svg>
+            Generate image ads
+          </button>
+          <div class="job-meta" id="iaJobMeta"></div>
+        </div>
+
+        <div class="generate-grid">
+          <div class="panel progress-card">
+            <div class="panel-head">
+              <h2>Now generating</h2>
+              <span class="badge idle" id="iaProgressBadge">Idle</span>
+            </div>
+            <div class="progress-stage" id="iaProgressStage">
+              <div class="progress-thumb" id="iaProgressThumb">
+                <div class="thumb-placeholder" id="iaThumbPlaceholder">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                    <circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5" />
+                    <path d="m4 18 5-4 4 3 3-2 4 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" />
+                  </svg>
+                  <span>No active generation</span>
+                </div>
+                <img id="iaProgressImg" alt="Generated ad" hidden />
+              </div>
+              <div class="progress-side">
+                <div class="progress-info" id="iaProgressInfo">
+                  <p class="progress-empty">Upload winners and generate to watch it here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel logs-panel">
+            <div class="panel-head">
+              <h2>Live logs</h2>
+              <span class="watching" id="iaWatching"></span>
+            </div>
+            <pre class="logs" id="iaLogs"></pre>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Generated ads</h2>
+          </div>
+          <div class="outputs" id="iaResults">
+            <p class="progress-empty">Generated image ads will appear here.</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ CAMPAIGNS VIEW ============ -->
+    <main class="view hidden" id="view-campaigns">
+      <div class="camp-layout">
+        <aside class="sidebar">
+          <div class="sidebar-head">
+            <h2>Campaigns</h2>
+            <button class="btn small ghost" id="newCampaignBtn">
+              <span class="plus">+</span> New
+            </button>
+          </div>
+          <ul class="campaign-list" id="campaignList"></ul>
+        </aside>
+
+        <section class="editor" id="editor">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                <rect
+                  x="3"
+                  y="4"
+                  width="18"
+                  height="16"
+                  rx="2.5"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                />
+                <path d="M3 9h18M8 4v16" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+            </div>
+            <p class="empty-title">No campaign selected</p>
+            <p class="empty-sub">Pick a campaign on the left, or create a new one to get started.</p>
+          </div>
+
+          <form class="campaign-form hidden" id="campaignForm">
+            <div class="form-scroll">
+              <section class="fieldset">
+                <div class="fieldset-head">
+                  <h3>Campaign basics</h3>
+                  <p>Identity and where the finished videos land.</p>
+                </div>
+                <div class="form-row two">
+                  <label>
+                    <span class="lbl">Name</span>
+                    <input type="text" name="name" placeholder="Bathroom Remodel" />
+                  </label>
+                  <label>
+                    <span class="lbl">Campaign ID</span>
+                    <input type="text" name="id" placeholder="bathroom-remodel-seniors" />
+                  </label>
+                </div>
+                <div class="form-row two">
+                  <label>
+                    <span class="lbl">Vertical <em>(what's sold)</em></span>
+                    <input type="text" name="vertical" placeholder="bathroom remodel" />
+                  </label>
+                  <label>
+                    <span class="lbl">Angle <em>(who / why)</em></span>
+                    <input type="text" name="angle" placeholder="seniors / safer bathroom" />
+                  </label>
+                </div>
+                <div class="form-row two">
+                  <label>
+                    <span class="lbl">Body video</span>
+                    <select name="bodyVideo" id="bodyVideoSelect"></select>
+                  </label>
+                  <label>
+                    <span class="lbl">Output name</span>
+                    <input type="text" name="outputName" placeholder="Bathroom Remodel" />
+                  </label>
+                </div>
+              </section>
+
+              <section class="fieldset">
+                <div class="fieldset-head">
+                  <h3>Output &amp; captions</h3>
+                  <p>How the clip is trimmed and how on-screen text renders.</p>
+                </div>
+                <div class="form-row two">
+                  <label>
+                    <span class="lbl">Trim seconds</span>
+                    <input type="number" step="0.1" name="trimSeconds" placeholder="0.2" />
+                  </label>
+                  <label>
+                    <span class="lbl">Hook bubble</span>
+                    <select name="hookBubbleEnabled">
+                      <option value="">Use global default</option>
+                      <option value="true">On (bold, top bar)</option>
+                      <option value="false">Off</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="form-row two">
+                  <label>
+                    <span class="lbl">Caption style <em>(timed)</em></span>
+                    <select name="captionStyle">
+                      <option value="">Use global default</option>
+                      <option value="default">Default (outlined, smaller)</option>
+                      <option value="bubble">Bubble on captions (legacy)</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span class="lbl">Caption position <em>(timed)</em></span>
+                    <select name="captionPosition">
+                      <option value="">Use global default</option>
+                      <option value="bottom">Bottom bar (3:4 layout)</option>
+                      <option value="middle">Middle</option>
+                      <option value="top">Top</option>
+                    </select>
+                  </label>
+                </div>
+                <label class="block">
+                  <span class="lbl">Caption vertical position <em>(0–1)</em></span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    name="captionVerticalPosition"
+                    placeholder="0 = auto for 3:4 layout"
+                  />
+                </label>
+              </section>
+
+              <section class="fieldset">
+                <div class="fieldset-head">
+                  <h3>Hook bubble &amp; prompts</h3>
+                  <p>Top-bar headline and the prompts that shape each generation.</p>
+                </div>
+                <label class="block">
+                  <span class="lbl">Hook bubble text <em>(optional)</em></span>
+                  <textarea
+                    name="hookBubbleText"
+                    rows="2"
+                    placeholder="e.g. SENIORS 55+ COURT ORDERS YOUR BATHROOM REMODELED. Blank = random persona headlines."
+                  ></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Prompt context</span>
+                  <textarea name="promptContext" rows="3"></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Camera style <em>(fallback, blank = selfie)</em></span>
+                  <textarea
+                    name="cameraStyle"
+                    rows="2"
+                    placeholder="Applied to every run when camera prompts below are empty"
+                  ></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Prompt template <em>(optional)</em></span>
+                  <textarea
+                    name="promptTemplate"
+                    rows="3"
+                    placeholder="Use {{hook}}, {{vertical}}, {{angle}}, {{creatorPrompt}}, {{scenePrompt}}"
+                  ></textarea>
+                </label>
+              </section>
+
+              <section class="fieldset">
+                <div class="fieldset-head">
+                  <h3>Variations</h3>
+                  <p>One line each. Camera, creator, and scene prompts rotate together.</p>
+                </div>
+                <label class="block">
+                  <span class="lbl">Hooks <em>(one per line)</em></span>
+                  <textarea name="hooks" rows="6" placeholder="One spoken hook per line"></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Camera prompts <em>(rotates with creator prompts)</em></span>
+                  <textarea
+                    name="cameraPrompts"
+                    rows="5"
+                    placeholder="Line 1 = judge POV, line 2 = podcast framing, etc."
+                  ></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Creator prompts <em>(one per line)</em></span>
+                  <textarea
+                    name="creatorPrompts"
+                    rows="6"
+                    placeholder="Who gets generated visually. One per line."
+                  ></textarea>
+                </label>
+                <label class="block">
+                  <span class="lbl">Scene / persona prompts <em>(one per line)</em></span>
+                  <textarea
+                    name="scenePrompts"
+                    rows="6"
+                    placeholder="Delivery style / concept. One per line."
+                  ></textarea>
+                </label>
+              </section>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn danger ghost" id="deleteCampaignBtn">Delete</button>
+              <div class="spacer"></div>
+              <span class="save-hint" id="saveHint"></span>
+              <button type="submit" class="btn primary">Save campaigns</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <!-- ============ SPY VIEW ============ -->
+    <main class="view hidden" id="view-spy">
+      <div class="spy-wrap">
+        <div class="panel spy-intro">
+          <div class="panel-head">
+            <h2>Ad-library research</h2>
+            <span class="capacity" id="spyCounts"></span>
+          </div>
+          <p class="spy-help">
+            Whitelist the Meta Pages you want to watch. The crawler reads their
+            <b>active</b> ads from the Facebook Ad Library, infers each ad's vertical,
+            and ranks the ones that look like they're scaling (running a long time
+            with many active copies). Nothing is generated until you approve a
+            suggestion below. You must be logged into Facebook once via
+            <code>npm run login</code>.
+          </p>
+        </div>
+
+        <div class="spy-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Tracked pages</h2>
+            </div>
+            <form class="spy-add" id="spyAddForm">
+              <input
+                type="text"
+                id="spyPageInput"
+                placeholder="Page name, numeric page id, or Ad Library URL"
+              />
+              <input type="text" id="spyPageLabel" placeholder="Label (optional)" />
+              <button class="btn primary small" type="submit">Add</button>
+            </form>
+            <ul class="spy-page-list" id="spyPageList"></ul>
+            <div class="spy-crawl-bar">
+              <button class="btn primary" id="spyCrawlBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+                Crawl now
+              </button>
+              <span class="spy-crawl-status" id="spyCrawlStatus"></span>
+            </div>
+            <pre class="logs spy-logs" id="spyLogs"></pre>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Suggestions <em>(by vertical)</em></h2>
+              <button class="btn small ghost" id="spyRefreshBtn">Refresh</button>
+            </div>
+            <div class="spy-suggestions" id="spySuggestions">
+              <p class="progress-empty">No suggestions yet. Add a page and crawl.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div class="preview-modal hidden" id="previewModal">
+      <div class="preview-inner">
+        <button class="preview-close" id="previewClose" aria-label="Close">&times;</button>
+        <video id="previewVideo" controls playsinline></video>
+        <p class="preview-name" id="previewName"></p>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

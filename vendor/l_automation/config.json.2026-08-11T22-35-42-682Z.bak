@@ -1,0 +1,2111 @@
+{
+  "pinterest": {
+    "query": "girl UGC",
+    "imageUrl": "",
+    "resultIndex": 0
+  },
+  "imageSource": {
+    "mode": "chatgpt",
+    "nanoBanana": {
+      "model": "gemini-3-pro-image-preview",
+      "aspectRatio": "9:16",
+      "imageSize": "2K",
+      "promptOverride": ""
+    },
+    "openai": {
+      "model": "gpt-image-2",
+      "size": "1024x1536",
+      "quality": "high",
+      "promptOverride": ""
+    },
+    "chatgpt": {
+      "url": "https://chatgpt.com/",
+      "timeoutSec": 300,
+      "promptOverride": ""
+    }
+  },
+  "imageAds": {
+    "model": "gpt-image-2",
+    "size": "1024x1024",
+    "quality": "high",
+    "analysisModel": "gpt-4o-mini",
+    "variationsPerWinner": 4,
+    "mode": "both",
+    "concurrency": 4
+  },
+  "flow": {
+    "backend": "api",
+    "browserFallback": true,
+    "url": "https://labs.google/fx/tools/flow",
+    "prompt": "Create a vertical 9:16 hyper-realistic UGC selfie video. Use a natural front-facing iPhone camera look. The person is holding the phone at arm\u2019s length and speaking directly into the camera in a casual, believable way. The video should feel like real phone footage, not an ad, not a commercial, and not cinematic. Scene: A relatable person stands in a realistic everyday environment. The background should look natural, slightly imperfect, and lived-in. Keep the subject as the main focus, with the background visible but not distracting. Camera: Front-facing phone camera. Handheld selfie framing. The phone is held steady; her arm and hands stay still and do not move. Tiny realistic camera shake. Natural exposure shifts. Do not use perfect studio lighting. Do not make the shot too polished. Make it feel like a real person casually recording themselves. Performance: The person looks directly into the camera lens and maintains steady, constant eye contact the entire time. Her gaze stays locked on the camera and never drifts, looks away, or wanders off to the side. They speak naturally, with small pauses and real facial expressions. They should sound confident, conversational, and emotionally believable. Use subtle eyebrow movement and small head nods only. Keep her hands still \u2014 no hand gestures, no waving, no hand movements; her free hand stays out of frame and the hand holding the phone stays steady. Mouth movement must match the dialogue perfectly. Avoid overacting. Dialogue: 'The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.' Audio: Realistic phone-recorded voice. Natural room tone. Slight background ambience. No music. No robotic voice. No captions. No subtitles. No sound effects. Lighting: Natural available lighting. Realistic skin texture. Soft shadows. Slight imperfections. Do not make the skin too smooth. Do not make it look AI-generated. Style: Hyper-realistic. Casual UGC. Phone-shot. Authentic. Slightly imperfect. Believable social media video. Restrictions: No extra people. No text on screen. No logos. No cinematic camera moves. No dramatic lighting. No perfect influencer-style setup. No exaggerated emotions. No fake commercial energy. No hand gestures. No hand or arm movement. Hands stay still. No looking away from the camera. No darting or wandering eyes.",
+    "generationTimeoutMs": 600000,
+    "model": "Veo 3.1 - Lite",
+    "mode": "Ingredients",
+    "aspectRatio": "9:16",
+    "apiModel": "veo-3.1-generate-preview",
+    "apiModelFallbacks": [
+      "veo-3.1-fast-generate-preview",
+      "veo-3.1-lite-generate-preview"
+    ],
+    "resolution": "720p"
+  },
+  "video": {
+    "targetVideo": "./assets/body.mp4",
+    "outputDir": "./output",
+    "trimSeconds": 0.2,
+    "name": "VA Loans"
+  },
+  "campaigns": [
+    {
+      "id": "va-loans-veterans",
+      "name": "VA Loans",
+      "vertical": "VA loans / veteran grants",
+      "angle": "U.S. veterans with DD214 paperwork who may qualify for a short-term grant",
+      "bodyVideo": "./assets/body.mp4",
+      "outputName": "VA Loans",
+      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial.",
+      "promptTemplate": "",
+      "hooks": [
+        "VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85,
+      "hookBubbleText": "Veterans are getting DD-214 grants for the next two weeks",
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie Vet",
+          "creatorPrompt": "Candid selfie-style photo of a US military veteran man in his early 30s, short haircut, wearing a plain t-shirt or hoodie, sitting in the driver's seat of a parked car in daylight, holding the phone at arm's length, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A young veteran sitting in his parked car, just found out the news, excitedly sharing it selfie-style like a TikTok story time.",
+          "cameraPrompt": "",
+          "hooks": [
+            "VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
+            "I just checked my DD 214 and the VA approved me in like two minutes \u2014 they are giving veterans stimulus grants for the next two weeks."
+          ],
+          "bubbleHooks": []
+        },
+        {
+          "id": "older-vet",
+          "name": "Older Veteran",
+          "creatorPrompt": "Candid photo of a US military veteran man around 60 years old, gray hair, reading glasses pushed up, wearing a plaid shirt or veteran cap, sitting at a kitchen table with a coffee mug in the morning light, phone propped up in front of him, calm serious expression, shot on an older smartphone, slightly soft, natural window light.",
+          "scenePrompt": "An older veteran at his kitchen table with morning coffee, talking calmly but urgently to the camera like he is warning fellow vets not to miss out.",
+          "cameraPrompt": "",
+          "hooks": [
+            "If you served and you still have your DD 214, listen \u2014 the VA is giving out stimulus grants for the next two weeks and most veterans get around $70,000.",
+            "I served twenty years and nobody told me about this \u2014 veterans with a DD 214 are getting grant paychecks this month, and it takes a few minutes to check."
+          ],
+          "bubbleHooks": []
+        },
+        {
+          "id": "spouse",
+          "name": "Military Spouse",
+          "creatorPrompt": "Candid selfie-style photo of a woman in her late 30s, natural everyday makeup, hair in a loose ponytail, wearing a casual sweater, standing in a bright kitchen or living room, holding the phone at arm's length, surprised happy expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A military spouse in her kitchen excitedly sharing what just happened when her husband checked his VA grant eligibility, girl-talk energy, like telling her best friend.",
+          "cameraPrompt": "",
+          "hooks": [
+            "My husband is a veteran and I made him check this \u2014 the VA is giving DD 214 stimulus grants for two weeks and his came back at $70,000.",
+            "If your husband or dad served, send them this right now \u2014 veterans are getting DD 214 grant paychecks and it only takes a few minutes to check."
+          ],
+          "bubbleHooks": []
+        }
+      ]
+    },
+    {
+      "id": "nursing-loans",
+      "name": "Nursing Loans",
+      "vertical": "nurse student loan forgiveness / loan repayment programs",
+      "angle": "nurses and healthcare workers with student loans who may qualify for forgiveness or repayment assistance programs",
+      "bodyVideo": "./assets/DF_LNN_Body.mov",
+      "outputName": "Nursing Loans",
+      "promptContext": "Speak to nurses and healthcare workers still paying off student loans about checking whether they may qualify for loan forgiveness or repayment assistance programs built for healthcare workers. Use 'may qualify' and 'check your options' language; do not promise guaranteed forgiveness, exact amounts, or specific timelines. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a nurse with student loans, there's a new way to check what loan forgiveness you may qualify for.",
+        "Nurses are reviewing student loan forgiveness programs right now, and many find they qualify for help they never applied for.",
+        "Most nurses with student loans never find out about the repayment programs they may qualify for until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert nurses with student loans need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "If you're a nurse with student loans, there's a new way to check what loan forgiveness you may qualify for.",
+            "Nurses carrying student loan debt are reviewing forgiveness programs right now, and many qualify for help they never applied for.",
+            "Consumer alert for nurses: your student loans may be eligible for forgiveness or repayment help you've never been told about.",
+            "Thousands of nurses are checking their student loan forgiveness options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "NURSES \u2014 CHECK YOUR STUDENT LOAN FORGIVENESS OPTIONS",
+            "NURSES MAY QUALIFY FOR STUDENT LOAN FORGIVENESS",
+            "NURSE WITH STUDENT LOANS? CHECK THIS FIRST",
+            "STUDENT LOAN HELP FOR NURSES \u2014 CHECK IF YOU QUALIFY",
+            "NURSES STOP OVERPAYING ON STUDENT LOANS",
+            "NURSE STUDENT LOANS MAY BE FORGIVABLE"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the system for hiding student loan forgiveness options from nurses and healthcare workers\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells nurses with student loans that they may qualify for forgiveness programs built specifically for healthcare workers.",
+            "If you're a nurse still paying down student loans, stop before you make another payment and check what you may qualify for.",
+            "They don't want nurses knowing their student loans could be partly forgiven through programs almost nobody applies for.",
+            "I can't believe how many nurses with student loans are missing the forgiveness options sitting right in front of them."
+          ],
+          "bubbleHooks": [
+            "NURSES \u2014 CHECK YOUR STUDENT LOAN FORGIVENESS OPTIONS",
+            "NURSES MAY QUALIFY FOR STUDENT LOAN FORGIVENESS",
+            "NURSE WITH STUDENT LOANS? CHECK THIS FIRST",
+            "STUDENT LOAN HELP FOR NURSES \u2014 CHECK IF YOU QUALIFY",
+            "NURSES STOP OVERPAYING ON STUDENT LOANS",
+            "NURSE STUDENT LOANS MAY BE FORGIVABLE"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Loan Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former student-loan-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former student-loan-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how loan forgiveness and repayment programs work and is explaining the shortcut for nurses in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "After years inside these programs, most nurses with student loans never hear about the forgiveness they may actually qualify for.",
+            "If you're a nurse with student loans, there's a simple way to check which forgiveness and repayment programs you may qualify for.",
+            "Most nurses with student loans never find out they qualify for repayment help until they've paid for years.",
+            "I helped run these programs, and nurses qualify for student loan forgiveness far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "NURSES \u2014 CHECK YOUR STUDENT LOAN FORGIVENESS OPTIONS",
+            "NURSES MAY QUALIFY FOR STUDENT LOAN FORGIVENESS",
+            "NURSE WITH STUDENT LOANS? CHECK THIS FIRST",
+            "STUDENT LOAN HELP FOR NURSES \u2014 CHECK IF YOU QUALIFY",
+            "NURSES STOP OVERPAYING ON STUDENT LOANS",
+            "NURSE STUDENT LOANS MAY BE FORGIVABLE"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Nurse Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a nurse in scrubs after a shift, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired nurse in scrubs sitting in their car or a hospital break room after a long shift, holding the phone at arm's length and speaking candidly to the camera. Natural dim lighting, believable and weary. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the nurse sounds exhausted but genuine, sharing how they checked their student loan forgiveness options like advice to a coworker\u2014honest, warm, not salesy.",
+          "hooks": [
+            "I'm a nurse, and once I checked my student loan forgiveness options, I finally stopped drowning in payments.",
+            "I'm a nurse who thought I'd be paying student loans forever until I found out what I qualified for.",
+            "If you're a nurse with student loans and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading my student loan balance once I, a nurse, looked into the forgiveness programs."
+          ],
+          "bubbleHooks": [
+            "NURSES \u2014 CHECK YOUR STUDENT LOAN FORGIVENESS OPTIONS",
+            "NURSES MAY QUALIFY FOR STUDENT LOAN FORGIVENESS",
+            "NURSE WITH STUDENT LOANS? CHECK THIS FIRST",
+            "STUDENT LOAN HELP FOR NURSES \u2014 CHECK IF YOU QUALIFY",
+            "NURSES STOP OVERPAYING ON STUDENT LOANS",
+            "NURSE STUDENT LOANS MAY BE FORGIVABLE"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "Nurses are getting W-2 grants for the next two weeks",
+      "hookBubbleStyle": "shadow"
+    },
+    {
+      "id": "ebt-loans",
+      "name": "EBT Loans",
+      "vertical": "EBT / food stamp cardholder grants",
+      "angle": "people with an EBT card who may qualify for a short-term W-2 grant",
+      "bodyVideo": "./assets/DF_LNE_BODY.mov",
+      "outputName": "EBT Loans",
+      "promptContext": "Speak to everyday people who have an EBT card in a direct, urgent, conversational street style \u2014 like a real UGC selfie, not a polished commercial. Mention EBT card holders, a new grant made just for them, and a short two-week window. Keep the energy hyped and casual (y'all, yo, check it). There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "Y'all, did you know if you have an EBT card you can get money like this from this new grant made for EBT card holders?"
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "EBT card holders are getting W-2 grants for the next two weeks",
+      "hookBubbleStyle": "box",
+      "maxHookSeconds": 7.8,
+      "variants": [
+        {
+          "id": "cash-flex",
+          "name": "Cash Flex (winner style)",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a young man holding a thick stack of cash up to his ear like a phone, talking excitedly straight to camera. Natural indoor lighting, slightly shaky, high-energy authentic UGC.",
+          "creatorPrompt": "A vertical 9:16 photo of a young Black man with a beard in a black beanie and black hoodie, holding a thick stack of hundred-dollar bills up to his ear like a phone and reacting with an excited open-mouth expression. Indoor hallway with a white door behind him, older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Hyped peer flex style: the speaker sounds excited and surprised, like he just found out EBT card holders can get money from a new grant \u2014 casual street talk, y'all energy, not salesy.",
+          "hooks": [
+            "Y'all, did you know if you have an EBT card you can get money like this from this new grant made for EBT card holders?",
+            "Y'all, if you got an EBT card you need to hear this, they just dropped a new grant made just for EBT card holders.",
+            "Hold up, if you have an EBT card you can claim money from this new grant made for EBT card holders right now.",
+            "Y'all, EBT card holders are getting paid from this new grant and almost nobody is talking about it."
+          ],
+          "bubbleHooks": [
+            "EBT CARD HOLDERS ARE GETTING W-2 GRANTS FOR THE NEXT TWO WEEKS"
+          ]
+        },
+        {
+          "id": "watch-flex",
+          "name": "Watch Flex",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a young man in a car showing off a flashy watch on his wrist while talking straight to camera. Natural daylight through the windows, candid and slightly shaky.",
+          "creatorPrompt": "A vertical 9:16 photo of a young Black man with a beard in a black hoodie and durag sitting in a car, holding up a large diamond-style watch on his wrist toward the camera with a confident expression. Natural daylight, car interior background, older-phone softness. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Flex story style: the speaker brags casually that he just got a brand new watch using a grant for EBT card holders and didn't spend his own money \u2014 street talk, hyped, believable.",
+          "hooks": [
+            "Yo check it, I just got this brand new watch for 40 bands using this new grant for EBT card holders.",
+            "I ain't even have to spend my own money, this new grant for EBT card holders covered my whole watch.",
+            "Yo, if you got an EBT card you can get paid like this from the new grant made just for EBT card holders.",
+            "Check it, EBT card holders are pulling money from this new grant and buying whatever they want."
+          ],
+          "bubbleHooks": [
+            "EBT CARD HOLDERS ARE GETTING W-2 GRANTS FOR THE NEXT TWO WEEKS"
+          ]
+        },
+        {
+          "id": "house-flex",
+          "name": "House Flex",
+          "cameraPrompt": "Handheld talking-head selfie: a medium shot of a young woman standing in a bright empty house with hardwood floors and big windows, talking excitedly straight to camera. Natural daylight, candid UGC feel.",
+          "creatorPrompt": "A vertical 9:16 photo of a young Black woman with long braids in a bright red sweatshirt standing in an empty sunlit house with white walls and hardwood floors, chin resting on her hand, speaking excitedly to camera. Natural daylight, older-phone softness. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "House flex story style: the speaker sounds excited and proud that she got her house down payment through a new grant for EBT card holders \u2014 warm, conversational, not theatrical.",
+          "hooks": [
+            "Y'all, I just got this house and didn't even have to use my own money for the down payment.",
+            "I just used this new grant for EBT card holders and got my house without touching my own money.",
+            "If you have an EBT card you need to hear this, there's a new grant helping people get money fast.",
+            "Y'all, EBT card holders are using this new grant to get money they never knew they could claim."
+          ],
+          "bubbleHooks": [
+            "EBT CARD HOLDERS ARE GETTING W-2 GRANTS FOR THE NEXT TWO WEEKS"
+          ]
+        },
+        {
+          "id": "car-flex",
+          "name": "Car Flex",
+          "cameraPrompt": "Handheld talking-head selfie: a medium shot of a young man standing in front of a sporty car on a suburban street, talking hyped straight to camera. Bright outdoor daylight, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a young Black man in a black t-shirt with a bright orange V logo standing on a suburban street in front of a white muscle car with a black hood, holding the phone at arm's length and speaking excitedly to camera. Bright daylight, older-phone softness. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Car flex story style: the speaker brags that he just got a brand new Hellcat using a grant for EBT card holders and didn't use his own money \u2014 hyped street energy, casual.",
+          "hooks": [
+            "Oh yeah, I just got this brand new Hellcat using this new grant for EBT card holders.",
+            "I ain't even have to use my own money, this new grant for EBT card holders paid for my whole car.",
+            "If you got an EBT card you can get money like this from the new grant made just for EBT card holders.",
+            "Y'all, EBT card holders are getting paid from this grant and pulling up in brand new cars."
+          ],
+          "bubbleHooks": [
+            "EBT CARD HOLDERS ARE GETTING W-2 GRANTS FOR THE NEXT TWO WEEKS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bathroom-remodel-seniors",
+      "name": "Bathroom Remodel",
+      "vertical": "bathroom remodel / walk-in shower upgrades",
+      "angle": "seniors and older homeowners who want a safer bathroom and easier mobility",
+      "bodyVideo": "./assets/bath-body.mov",
+      "bodyVideos": [
+        "./assets/bath-body.mov",
+        "./assets/bathroom body rip.mov"
+      ],
+      "outputName": "Bathroom Remodel",
+      "promptContext": "Speak to seniors and older homeowners about safer bathrooms, replacing old tubs, walk-in showers, avoiding slips and falls, and aging in place. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "cameraPrompts": [
+        "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+        "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+        "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+        "Natural bathroom showroom: a medium shot of a licensed contractor in a work polo standing beside a walk-in shower display, talking directly and bluntly like he is explaining something important to a homeowner. Real showroom lighting, casual and believable.",
+        "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV."
+      ],
+      "creatorPrompts": [
+        "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+        "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+        "A vertical 9:16 photo of a mature female consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+        "A vertical 9:16 photo of a blunt licensed contractor in a work polo standing in a bathroom showroom beside a walk-in shower display, gesturing as he explains something to the camera. Real showroom lighting, tile displays in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+        "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos."
+      ],
+      "scenePrompts": [
+        "Courtroom order style: the judge sounds firm and official, as if ordering that seniors be given access to a bathroom remodel program.",
+        "Podcast expose style: the host sounds annoyed and skeptical, calling out agencies for not telling seniors about remodel assistance\u2014like a real podcast rant.",
+        "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert seniors need to see today\u2014delivered like a real news segment.",
+        "Contractor warning style: the contractor sounds blunt and experienced, like he has seen too many seniors fall because of old tubs.",
+        "Insider explanation style: the speaker sounds like someone who knows how assistance programs work and is explaining the shortcut in plain English."
+      ],
+      "promptTemplate": "",
+      "hooks": [
+        "Seniors over 55 are getting brand new walk-in showers completely free, and almost nobody knows.",
+        "If you're over 55, your entire bathroom remodel could be covered, you pay nothing.",
+        "There's a senior bathroom program paying for full walk-in showers, and it's ending soon."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "judge",
+          "name": "Judge / Courtroom",
+          "cameraPrompt": "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+          "creatorPrompt": "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+          "scenePrompt": "Courtroom order style: the judge sounds firm and official, delivering a short order about senior bathroom remodel access. Authoritative, believable, not theatrical.",
+          "hooks": [
+            "I am ordering every senior over 55 to get a brand new walk-in shower, and the program covers the entire cost.",
+            "This court rules that seniors over 55 can claim a free bathroom remodel, effective immediately.",
+            "Listen up, seniors over 55 now qualify for a fully covered walk-in shower, and I am making it official today.",
+            "By order of this court, no senior over 55 should pay a dime for a new bathroom ever again.",
+            "Seniors over 55, the court just unlocked a free bathroom remodel program, and you need to claim it now."
+          ],
+          "bubbleHooks": [
+            "JUDGE ORDERS FREE WALK-IN SHOWERS FOR SENIORS 55+",
+            "COURT RULES SENIORS 55+ GET A FREE BATHROOM REMODEL",
+            "SENIORS 55+ YOUR NEW BATHROOM IS NOW FULLY COVERED",
+            "JUDGE: SENIORS PAY $0 FOR A NEW WALK-IN SHOWER",
+            "COURT JUST UNLOCKED FREE BATHROOM UPGRADES FOR SENIORS",
+            "SENIORS 55+ CLAIM YOUR FREE BATHROOM BEFORE IT'S GONE",
+            "ORDERED: FREE WALK-IN SHOWERS FOR EVERY SENIOR 55+",
+            "IF YOU'RE 55+ THE JUDGE SAYS YOUR BATHROOM IS COVERED",
+            "SENIORS 55+ THE COURT IS PAYING FOR YOUR NEW BATHROOM",
+            "JUDGE MAKES WALK-IN SHOWERS FREE FOR SENIORS TODAY"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, like he is calling out agencies for hiding senior remodel assistance\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling seniors over 55 they can get a brand new walk-in shower for free, and it makes me sick.",
+            "Seniors over 55 are getting fully covered bathroom remodels and the big companies are hiding it from you.",
+            "If you're over 55, stop paying for a walk-in shower, the program covers all of it.",
+            "They do not want seniors over 55 knowing this free bathroom remodel program even exists.",
+            "I cannot believe how many seniors over 55 are missing out on a completely free new bathroom."
+          ],
+          "bubbleHooks": [
+            "SENIORS 55+ ARE GETTING FREE WALK-IN SHOWERS",
+            "THEY'RE HIDING THE FREE SENIOR BATHROOM PROGRAM FROM YOU",
+            "SENIORS 55+ STOP PAYING YOUR BATHROOM IS FREE",
+            "OVER 55? YOUR NEW BATHROOM IS FULLY COVERED",
+            "THE FREE BATHROOM REMODEL SENIORS AREN'T TOLD ABOUT",
+            "SENIORS 55+ CLAIM YOUR FREE WALK-IN SHOWER NOW",
+            "BIG COMPANIES HIDE THIS FREE SENIOR BATHROOM PROGRAM",
+            "IF YOU'RE 55+ YOU'RE OVERPAYING FOR YOUR BATHROOM",
+            "SENIORS 55+ A FREE NEW BATHROOM IS ONE CALL AWAY",
+            "OVER 55? DON'T PAY A DIME FOR A WALK-IN SHOWER"
+          ]
+        },
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature female consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer warning seniors need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "Breaking for seniors over 55, a new program is covering brand new walk-in showers at no cost.",
+            "Consumer alert: seniors over 55 can now claim a completely free bathroom remodel before funding runs out.",
+            "Seniors over 55 are getting free walk-in showers right now, and you may only have days to claim yours.",
+            "A new senior bathroom program is paying for full remodels, and thousands over 55 are cashing in today.",
+            "If you're a senior over 55, this free bathroom remodel program could close any day, so act now."
+          ],
+          "bubbleHooks": [
+            "BREAKING SENIORS 55+ GET FREE WALK-IN SHOWERS",
+            "NEW PROGRAM COVERS 100% OF SENIOR BATHROOM REMODELS",
+            "SENIORS 55+ CLAIM A FREE BATHROOM BEFORE FUNDS RUN OUT",
+            "CONSUMER ALERT FREE BATHROOMS FOR SENIORS 55+",
+            "SENIORS 55+ YOUR NEW WALK-IN SHOWER COSTS $0",
+            "THOUSANDS OF SENIORS ARE GETTING FREE BATHROOMS NOW",
+            "OVER 55? A FREE BATHROOM REMODEL ENDS SOON",
+            "NEW SENIOR PROGRAM PAYS FOR YOUR ENTIRE BATHROOM",
+            "SENIORS 55+ DON'T MISS THIS FREE BATHROOM DEADLINE",
+            "BREAKING FREE WALK-IN SHOWERS APPROVED FOR SENIORS"
+          ]
+        },
+        {
+          "id": "contractor",
+          "name": "Contractor",
+          "cameraPrompt": "Natural bathroom showroom: a medium shot of a licensed contractor in a work polo standing beside a walk-in shower display, talking directly and bluntly like he is explaining something important to a homeowner. Real showroom lighting, casual and believable.",
+          "creatorPrompt": "A vertical 9:16 photo of a blunt licensed contractor in a work polo standing in a bathroom showroom beside a walk-in shower display, gesturing as he explains something to the camera. Real showroom lighting, tile displays in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Contractor warning style: the contractor sounds blunt and experienced, like he has seen too many seniors fall because of old tubs\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I install walk-in showers every week, and most seniors over 55 are getting them completely free.",
+            "If you're over 55, I can tell you that program covers your whole bathroom, you pay nothing.",
+            "As a contractor, I watch seniors over 55 get free walk-in showers while everyone else overpays.",
+            "Stop paying me full price, seniors over 55 qualify to get this bathroom remodel for free.",
+            "I rip out old tubs all day, and seniors over 55 are getting the new shower at zero cost."
+          ],
+          "bubbleHooks": [
+            "I INSTALL FREE WALK-IN SHOWERS FOR SENIORS 55+ DAILY",
+            "SENIORS 55+ YOUR BATHROOM REMODEL IS FREE I'D KNOW",
+            "CONTRACTOR: SENIORS 55+ PAY $0 FOR NEW SHOWERS",
+            "OVER 55? STOP PAYING ME YOUR BATHROOM IS COVERED",
+            "I SEE SENIORS GET FREE BATHROOMS EVERY WEEK",
+            "SENIORS 55+ THIS REMODEL COSTS YOU NOTHING",
+            "INSTALLER: FREE WALK-IN SHOWERS FOR SENIORS ARE REAL",
+            "OVER 55? I'LL BUILD YOUR NEW BATHROOM FOR FREE",
+            "SENIORS 55+ DON'T PAY FULL PRICE LIKE EVERYONE ELSE",
+            "YOUR FREE SENIOR WALK-IN SHOWER IS ONE CALL AWAY"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Gov Insider",
+          "cameraPrompt": "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how assistance programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "I worked inside these programs, and seniors over 55 can get a free bathroom remodel almost every time.",
+            "Here's the shortcut: seniors over 55 qualify for a fully paid walk-in shower, and almost nobody applies.",
+            "After years on the inside, I'll tell you seniors over 55 are leaving free bathrooms on the table.",
+            "If you're over 55, there's a quiet program that pays for your entire bathroom, here's how to claim it.",
+            "Most seniors over 55 never find out the government will cover their whole walk-in shower."
+          ],
+          "bubbleHooks": [
+            "INSIDER: SENIORS 55+ QUALIFY FOR A FREE BATHROOM",
+            "THE FREE SENIOR BATHROOM PROGRAM THEY KEEP QUIET",
+            "OVER 55? THE GOVERNMENT COVERS YOUR WHOLE BATHROOM",
+            "SENIORS 55+ CLAIM THE FREE SHOWER ALMOST NOBODY USES",
+            "I WORKED INSIDE SENIORS GET FREE BATHROOMS",
+            "SENIORS 55+ YOU'RE LEAVING A FREE BATHROOM BEHIND",
+            "THE QUIET PROGRAM THAT PAYS FOR SENIOR BATHROOMS",
+            "OVER 55? HERE'S HOW TO GET YOUR BATHROOM FREE",
+            "SENIORS 55+ THE SHORTCUT TO A FREE WALK-IN SHOWER",
+            "INSIDER TIP SENIORS 55+ STOP PAYING FOR BATHROOMS"
+          ]
+        },
+        {
+          "id": "capitol",
+          "name": "Capitol Reporter",
+          "cameraPrompt": "Natural field-reporter setup: a medium shot of a TV journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and delivering a live report straight to camera. Feels like a believable on-location news clip\u2014handheld, slightly windy, candid, not a polished studio broadcast.",
+          "creatorPrompt": "A vertical 9:16 photo of a professional TV field journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and speaking directly to camera with a serious, urgent expression. Overcast natural daylight, the domed capitol building visible behind them, believable on-location news feel. Older-phone softness and mild compression. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Capitol field-report style: the journalist reports live from in front of the capitol on new legislation that forces bathroom remodel companies to offer fair prices amid the affordability crisis\u2014urgent, credible, breaking-news energy, not theatrical.",
+          "hooks": [
+            "Right behind me lawmakers just passed a law giving every senior over 55 a free bathroom remodel.",
+            "We're live at the capitol where a new bill just made walk-in showers free for seniors over 55.",
+            "Breaking from the capitol, the government will now pay for seniors' bathroom remodels in full.",
+            "Behind me they just signed a program covering brand new bathrooms for every senior over 55.",
+            "Reporting live, a new law means seniors over 55 can claim a free walk-in shower starting today."
+          ],
+          "bubbleHooks": [
+            "NEW LAW: FREE BATHROOM REMODELS FOR SENIORS 55+",
+            "CAPITOL JUST MADE WALK-IN SHOWERS FREE FOR SENIORS",
+            "GOVERNMENT WILL NOW PAY FOR SENIOR BATHROOMS",
+            "BREAKING SENIORS 55+ GET A FREE BATHROOM BY LAW",
+            "NEW BILL COVERS 100% OF SENIOR BATHROOM REMODELS",
+            "LAWMAKERS APPROVE FREE WALK-IN SHOWERS FOR 55+",
+            "SENIORS 55+ THE LAW JUST MADE YOUR BATHROOM FREE",
+            "CAPITOL ALERT FREE BATHROOMS FOR SENIORS PASSED",
+            "GOVERNMENT NOW PAYS FOR YOUR WALK-IN SHOWER 55+",
+            "NEW LAW SENIORS 55+ CLAIM YOUR FREE BATHROOM NOW"
+          ]
+        },
+        {
+          "id": "advocate",
+          "name": "Senior Advocate",
+          "cameraPrompt": "Natural PSA / town-hall setup: a medium shot of an angry elderly woman standing and confronting an official-looking man\u2014a judge or government official\u2014at a public event or in a courtroom, speaking heatedly and pointing as she demands answers. Candid, slightly shaky handheld, real event lighting, believable and not staged.",
+          "creatorPrompt": "A vertical 9:16 photo of a frustrated elderly woman in her seventies standing at a public PSA event or in a courtroom, gesturing angrily toward an official-looking man in a suit or a judge in a robe seated nearby, mid-confrontation with a stern expression. Natural indoor event lighting, plain institutional background, candid and believable. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Angry senior advocate style: an elderly woman heatedly confronts a judge or official at a PSA event or courtroom, demanding to know why seniors are not being told about the bathroom assistance program\u2014raw, indignant, righteous, believable, not theatrical.",
+          "hooks": [
+            "Why the hell are you not telling seniors they can get a brand new bathroom completely free through the senior bathroom program?",
+            "Explain to me why seniors aren't being told their walk-in shower is fully paid for!",
+            "How dare you hide a free bathroom remodel from every senior who qualifies for it!",
+            "Why is nobody telling our seniors they can get a new bathroom for free right now?",
+            "Seniors are paying thousands when the program covers it all, so why are you staying silent?"
+          ],
+          "bubbleHooks": [
+            "WHY AREN'T SENIORS TOLD THEIR BATHROOM IS FREE",
+            "SENIORS GET A FREE NEW BATHROOM AND NOBODY SAYS A WORD",
+            "THEY'RE HIDING THE FREE SENIOR BATHROOM PROGRAM",
+            "SENIORS QUALIFY FOR A FREE WALK-IN SHOWER RIGHT NOW",
+            "STOP HIDING FREE BATHROOMS FROM OUR SENIORS",
+            "ELDERLY WOMAN EXPOSES THE FREE SENIOR BATHROOM PROGRAM",
+            "WHY ARE SENIORS PAYING WHEN BATHROOMS ARE FREE",
+            "SENIORS ARE OWED A FREE BATHROOM AND NOBODY TELLS THEM",
+            "THE FREE SENIOR WALK-IN SHOWER THEY KEEP SECRET",
+            "SENIORS DESERVE THEIR FREE BATHROOM DEMAND IT NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "new-windows-homeowners",
+      "name": "New Windows",
+      "vertical": "new windows / energy-efficient window replacement",
+      "angle": "homeowners with old, drafty windows who want lower energy bills and may qualify for window replacement programs",
+      "bodyVideo": "./assets/DF_WindowBody.mov",
+      "outputName": "New Windows",
+      "promptContext": "Speak to homeowners with old, drafty, single-pane windows about high energy bills, drafts, and condensation, and checking whether they qualify for energy-efficient window replacement programs or rebates. Do not promise guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "Homeowners are getting brand new windows completely free, and almost nobody knows.",
+        "If you own a home, your entire window replacement could be covered, you pay nothing.",
+        "There's a program paying for full window replacements, and it's ending soon."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "",
+      "variants": [
+        {
+          "id": "judge",
+          "name": "Judge / Courtroom",
+          "cameraPrompt": "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+          "creatorPrompt": "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+          "scenePrompt": "Courtroom order style: the judge sounds firm and official, delivering a short order about homeowner access to a window replacement program. Authoritative, believable, not theatrical.",
+          "hooks": [
+            "I am ordering that homeowners get brand new energy-efficient windows, and this program covers the full cost.",
+            "This court rules that homeowners can claim free replacement windows, effective immediately.",
+            "Listen up, homeowners now qualify for fully covered new windows, and I am making it official today.",
+            "By order of this court, no homeowner should pay a dime for new windows ever again.",
+            "Homeowners, the court just unlocked a free window replacement program, and you need to claim it now."
+          ],
+          "bubbleHooks": [
+            "JUDGE ORDERS FREE NEW WINDOWS FOR HOMEOWNERS",
+            "COURT RULES HOMEOWNERS GET FREE REPLACEMENT WINDOWS",
+            "HOMEOWNERS YOUR NEW WINDOWS ARE NOW FULLY COVERED",
+            "JUDGE: HOMEOWNERS PAY $0 FOR NEW WINDOWS",
+            "COURT JUST UNLOCKED FREE WINDOWS FOR HOMEOWNERS",
+            "HOMEOWNERS CLAIM YOUR FREE WINDOWS BEFORE THEY'RE GONE",
+            "ORDERED: FREE ENERGY-EFFICIENT WINDOWS FOR HOMEOWNERS",
+            "IF YOU OWN A HOME THE JUDGE SAYS WINDOWS ARE FREE",
+            "HOMEOWNERS THE COURT IS PAYING FOR YOUR NEW WINDOWS",
+            "JUDGE MAKES NEW WINDOWS FREE FOR HOMEOWNERS TODAY"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, like he is calling out companies for hiding window replacement assistance from homeowners\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling homeowners they can get brand new windows for free, and it makes me sick.",
+            "Homeowners are getting fully covered new windows and the big companies are hiding it from you.",
+            "If you own a home, stop paying for windows, this program covers all of it.",
+            "They do not want homeowners knowing this free window replacement program even exists.",
+            "I cannot believe how many homeowners are missing out on completely free new windows."
+          ],
+          "bubbleHooks": [
+            "HOMEOWNERS ARE GETTING FREE NEW WINDOWS",
+            "THEY'RE HIDING THE FREE WINDOW PROGRAM FROM YOU",
+            "HOMEOWNERS STOP PAYING YOUR WINDOWS ARE FREE",
+            "OWN A HOME? YOUR NEW WINDOWS ARE FULLY COVERED",
+            "THE FREE WINDOW REPLACEMENT HOMEOWNERS AREN'T TOLD ABOUT",
+            "HOMEOWNERS CLAIM YOUR FREE WINDOWS NOW",
+            "BIG COMPANIES HIDE THIS FREE WINDOW PROGRAM",
+            "IF YOU OWN A HOME YOU'RE OVERPAYING FOR WINDOWS",
+            "HOMEOWNERS FREE NEW WINDOWS ARE ONE CALL AWAY",
+            "OWN A HOME? DON'T PAY A DIME FOR NEW WINDOWS"
+          ]
+        },
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert homeowners need to see today\u2014clear, direct, professional.",
+          "hooks": [
+            "Breaking for homeowners, a new program is covering brand new windows at no cost.",
+            "Consumer alert: homeowners can now claim completely free replacement windows before funding runs out.",
+            "Homeowners are getting free windows right now, and you may only have days to claim yours.",
+            "A new program is paying for full window replacements, and thousands of homeowners are cashing in today.",
+            "If you own a home, this free window program could close any day, so act now."
+          ],
+          "bubbleHooks": [
+            "BREAKING HOMEOWNERS GET FREE NEW WINDOWS",
+            "NEW PROGRAM COVERS 100% OF WINDOW REPLACEMENTS",
+            "HOMEOWNERS CLAIM FREE WINDOWS BEFORE FUNDS RUN OUT",
+            "CONSUMER ALERT FREE WINDOWS FOR HOMEOWNERS",
+            "HOMEOWNERS YOUR NEW WINDOWS COST $0",
+            "THOUSANDS OF HOMEOWNERS ARE GETTING FREE WINDOWS NOW",
+            "OWN A HOME? FREE WINDOW REPLACEMENT ENDS SOON",
+            "NEW PROGRAM PAYS FOR ALL YOUR NEW WINDOWS",
+            "HOMEOWNERS DON'T MISS THIS FREE WINDOW DEADLINE",
+            "BREAKING FREE NEW WINDOWS APPROVED FOR HOMEOWNERS"
+          ]
+        },
+        {
+          "id": "contractor",
+          "name": "Contractor",
+          "cameraPrompt": "Natural job site: a medium shot of a licensed window installer in a work polo standing beside a row of new energy-efficient windows, talking directly and bluntly like he is explaining something important to a homeowner. Real daylight, casual and believable.",
+          "creatorPrompt": "A vertical 9:16 photo of a blunt licensed window installer in a work polo standing beside new energy-efficient windows at a job site or showroom, gesturing as he explains something to the camera. Real daylight, window displays in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Contractor warning style: the installer sounds blunt and experienced, like he has seen too many homeowners overpay on energy bills because of old windows\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I install windows every week, and most homeowners are getting them completely free.",
+            "If you own a home, I can tell you this program covers your whole window job, you pay nothing.",
+            "As an installer, I watch homeowners get free windows while everyone else overpays.",
+            "Stop paying me full price, homeowners qualify to get these windows for free.",
+            "I replace old windows all day, and homeowners are getting the new ones at zero cost."
+          ],
+          "bubbleHooks": [
+            "I INSTALL FREE WINDOWS FOR HOMEOWNERS DAILY",
+            "HOMEOWNERS YOUR NEW WINDOWS ARE FREE I'D KNOW",
+            "CONTRACTOR: HOMEOWNERS PAY $0 FOR NEW WINDOWS",
+            "OWN A HOME? STOP PAYING ME YOUR WINDOWS ARE COVERED",
+            "I SEE HOMEOWNERS GET FREE WINDOWS EVERY WEEK",
+            "HOMEOWNERS THESE WINDOWS COST YOU NOTHING",
+            "INSTALLER: FREE WINDOWS FOR HOMEOWNERS ARE REAL",
+            "OWN A HOME? I'LL INSTALL YOUR NEW WINDOWS FOR FREE",
+            "HOMEOWNERS DON'T PAY FULL PRICE LIKE EVERYONE ELSE",
+            "YOUR FREE NEW WINDOWS ARE ONE CALL AWAY"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Gov Insider",
+          "cameraPrompt": "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how energy assistance programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "I worked inside these programs, and homeowners can get free windows almost every time.",
+            "Here's the shortcut: homeowners qualify for fully paid new windows, and almost nobody applies.",
+            "After years on the inside, I'll tell you homeowners are leaving free windows on the table.",
+            "If you own a home, there's a quiet program that pays for all your windows, here's how to claim it.",
+            "Most homeowners never find out the government will cover their entire window replacement."
+          ],
+          "bubbleHooks": [
+            "INSIDER: HOMEOWNERS QUALIFY FOR FREE WINDOWS",
+            "THE FREE WINDOW PROGRAM THEY KEEP QUIET",
+            "OWN A HOME? THE GOVERNMENT COVERS YOUR WINDOWS",
+            "HOMEOWNERS CLAIM THE FREE WINDOWS NOBODY USES",
+            "I WORKED INSIDE HOMEOWNERS GET FREE WINDOWS",
+            "HOMEOWNERS YOU'RE LEAVING FREE WINDOWS BEHIND",
+            "THE QUIET PROGRAM THAT PAYS FOR YOUR WINDOWS",
+            "OWN A HOME? HERE'S HOW TO GET WINDOWS FREE",
+            "HOMEOWNERS THE SHORTCUT TO FREE NEW WINDOWS",
+            "INSIDER TIP HOMEOWNERS STOP PAYING FOR WINDOWS"
+          ]
+        },
+        {
+          "id": "capitol",
+          "name": "Capitol Reporter",
+          "cameraPrompt": "Natural field-reporter setup: a medium shot of a TV journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and delivering a live report straight to camera. Feels like a believable on-location news clip\u2014handheld, slightly windy, candid, not a polished studio broadcast.",
+          "creatorPrompt": "A vertical 9:16 photo of a professional TV field journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and speaking directly to camera with a serious, urgent expression. Overcast natural daylight, the domed capitol building visible behind them, believable on-location news feel. Older-phone softness and mild compression. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Capitol field-report style: the journalist reports live from in front of the capitol on new legislation that forces window replacement companies to offer fair prices amid the affordability crisis\u2014urgent, credible, breaking-news energy, not theatrical.",
+          "hooks": [
+            "Right behind me lawmakers just passed a law giving homeowners brand new windows for free.",
+            "We're live at the capitol where a new bill just made replacement windows free for homeowners.",
+            "Breaking from the capitol, the government will now pay for homeowners' new windows in full.",
+            "Behind me they just signed a program covering brand new windows for every homeowner.",
+            "Reporting live, a new law means homeowners can claim free windows starting today."
+          ],
+          "bubbleHooks": [
+            "NEW LAW: FREE WINDOWS FOR HOMEOWNERS",
+            "CAPITOL JUST MADE NEW WINDOWS FREE FOR HOMEOWNERS",
+            "GOVERNMENT WILL NOW PAY FOR YOUR NEW WINDOWS",
+            "BREAKING HOMEOWNERS GET FREE WINDOWS BY LAW",
+            "NEW BILL COVERS 100% OF WINDOW REPLACEMENTS",
+            "LAWMAKERS APPROVE FREE WINDOWS FOR HOMEOWNERS",
+            "HOMEOWNERS THE LAW JUST MADE YOUR WINDOWS FREE",
+            "CAPITOL ALERT FREE WINDOWS FOR HOMEOWNERS PASSED",
+            "GOVERNMENT NOW PAYS FOR YOUR NEW WINDOWS",
+            "NEW LAW HOMEOWNERS CLAIM YOUR FREE WINDOWS NOW"
+          ]
+        },
+        {
+          "id": "advocate",
+          "name": "Senior Advocate",
+          "cameraPrompt": "Natural PSA / town-hall setup: a medium shot of an angry elderly woman standing and confronting an official-looking man\u2014a judge or government official\u2014at a public event or in a courtroom, speaking heatedly and pointing as she demands answers. Candid, slightly shaky handheld, real event lighting, believable and not staged.",
+          "creatorPrompt": "A vertical 9:16 photo of a frustrated elderly woman in her seventies standing at a public PSA event or in a courtroom, gesturing angrily toward an official-looking man in a suit or a judge in a robe seated nearby, mid-confrontation with a stern expression. Natural indoor event lighting, plain institutional background, candid and believable. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Angry senior advocate style: an elderly woman heatedly confronts a judge or official at a PSA event or courtroom, demanding to know why seniors are not being told about the window assistance program\u2014raw, indignant, righteous, believable, not theatrical.",
+          "hooks": [
+            "Why the hell are you not telling seniors they can get brand new windows completely free through the senior window program?",
+            "Explain to me why seniors aren't being told their new windows are fully paid for!",
+            "How dare you hide free windows from every senior who qualifies for them!",
+            "Why is nobody telling our seniors they can get new windows for free right now?",
+            "Seniors are paying thousands when the program covers it all, so why are you staying silent?"
+          ],
+          "bubbleHooks": [
+            "WHY AREN'T SENIORS TOLD THEIR WINDOWS ARE FREE",
+            "SENIORS GET FREE NEW WINDOWS AND NOBODY SAYS A WORD",
+            "THEY'RE HIDING THE FREE SENIOR WINDOW PROGRAM",
+            "SENIORS QUALIFY FOR FREE WINDOWS RIGHT NOW",
+            "STOP HIDING FREE WINDOWS FROM OUR SENIORS",
+            "ELDERLY WOMAN EXPOSES THE FREE SENIOR WINDOW PROGRAM",
+            "WHY ARE SENIORS PAYING WHEN WINDOWS ARE FREE",
+            "SENIORS ARE OWED FREE WINDOWS AND NOBODY TELLS THEM",
+            "THE FREE SENIOR WINDOWS THEY KEEP SECRET",
+            "SENIORS DESERVE FREE WINDOWS DEMAND THEM NOW"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "new-gutters-homeowners",
+      "name": "New Gutters",
+      "vertical": "new gutters / gutter replacement and gutter guard installation",
+      "angle": "homeowners with old, clogged, or failing gutters risking water and foundation damage who may qualify for replacement",
+      "bodyVideo": "./assets/gutters-body.mp4",
+      "outputName": "New Gutters",
+      "promptContext": "Speak to homeowners with old, sagging, overflowing, or constantly clogged gutters about water damage, foundation problems, and never cleaning gutters again, and checking whether they qualify for gutter replacement or gutter guard programs. Do not promise guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "Homeowners are getting brand new gutters completely free, and almost nobody knows.",
+        "If you own a home, your entire gutter replacement could be covered, you pay nothing.",
+        "There's a program paying for full gutter replacements, and it's ending soon."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "",
+      "variants": [
+        {
+          "id": "judge",
+          "name": "Judge / Courtroom",
+          "cameraPrompt": "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+          "creatorPrompt": "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+          "scenePrompt": "Courtroom order style: the judge sounds firm and official, delivering a short order about homeowner access to a gutter replacement program. Authoritative, believable, not theatrical.",
+          "hooks": [
+            "I am ordering that homeowners get brand new gutters and guards, and this program covers the full cost.",
+            "This court rules that homeowners can claim free gutter replacement, effective immediately.",
+            "Listen up, homeowners now qualify for fully covered new gutters, and I am making it official today.",
+            "By order of this court, no homeowner should pay a dime for new gutters ever again.",
+            "Homeowners, the court just unlocked a free gutter replacement program, and you need to claim it now."
+          ],
+          "bubbleHooks": [
+            "JUDGE ORDERS FREE NEW GUTTERS FOR HOMEOWNERS",
+            "COURT RULES HOMEOWNERS GET FREE GUTTER REPLACEMENT",
+            "HOMEOWNERS YOUR NEW GUTTERS ARE NOW FULLY COVERED",
+            "JUDGE: HOMEOWNERS PAY $0 FOR NEW GUTTERS",
+            "COURT JUST UNLOCKED FREE GUTTERS FOR HOMEOWNERS",
+            "HOMEOWNERS CLAIM YOUR FREE GUTTERS BEFORE THEY'RE GONE",
+            "ORDERED: FREE GUTTERS AND GUARDS FOR HOMEOWNERS",
+            "IF YOU OWN A HOME THE JUDGE SAYS GUTTERS ARE FREE",
+            "HOMEOWNERS THE COURT IS PAYING FOR YOUR NEW GUTTERS",
+            "JUDGE MAKES NEW GUTTERS FREE FOR HOMEOWNERS TODAY"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, like he is calling out companies for hiding gutter replacement assistance from homeowners\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling homeowners they can get brand new gutters for free, and it makes me sick.",
+            "Homeowners are getting fully covered gutters and guards and the big companies are hiding it from you.",
+            "If you own a home, stop paying for gutters, this program covers all of it.",
+            "They do not want homeowners knowing this free gutter program even exists.",
+            "I cannot believe how many homeowners are missing out on completely free new gutters."
+          ],
+          "bubbleHooks": [
+            "HOMEOWNERS ARE GETTING FREE NEW GUTTERS",
+            "THEY'RE HIDING THE FREE GUTTER PROGRAM FROM YOU",
+            "HOMEOWNERS STOP PAYING YOUR GUTTERS ARE FREE",
+            "OWN A HOME? YOUR NEW GUTTERS ARE FULLY COVERED",
+            "THE FREE GUTTER REPLACEMENT HOMEOWNERS AREN'T TOLD ABOUT",
+            "HOMEOWNERS CLAIM YOUR FREE GUTTERS NOW",
+            "BIG COMPANIES HIDE THIS FREE GUTTER PROGRAM",
+            "IF YOU OWN A HOME YOU'RE OVERPAYING FOR GUTTERS",
+            "HOMEOWNERS FREE NEW GUTTERS ARE ONE CALL AWAY",
+            "OWN A HOME? DON'T PAY A DIME FOR NEW GUTTERS"
+          ]
+        },
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert homeowners need to see today\u2014clear, direct, professional.",
+          "hooks": [
+            "Breaking for homeowners, a new program is covering brand new gutters at no cost.",
+            "Consumer alert: homeowners can now claim completely free gutters and guards before funding runs out.",
+            "Homeowners are getting free gutters right now, and you may only have days to claim yours.",
+            "A new program is paying for full gutter replacements, and thousands of homeowners are cashing in today.",
+            "If you own a home, this free gutter program could close any day, so act now."
+          ],
+          "bubbleHooks": [
+            "BREAKING HOMEOWNERS GET FREE NEW GUTTERS",
+            "NEW PROGRAM COVERS 100% OF GUTTER REPLACEMENTS",
+            "HOMEOWNERS CLAIM FREE GUTTERS BEFORE FUNDS RUN OUT",
+            "CONSUMER ALERT FREE GUTTERS FOR HOMEOWNERS",
+            "HOMEOWNERS YOUR NEW GUTTERS COST $0",
+            "THOUSANDS OF HOMEOWNERS ARE GETTING FREE GUTTERS NOW",
+            "OWN A HOME? FREE GUTTER REPLACEMENT ENDS SOON",
+            "NEW PROGRAM PAYS FOR ALL YOUR NEW GUTTERS",
+            "HOMEOWNERS DON'T MISS THIS FREE GUTTER DEADLINE",
+            "BREAKING FREE GUTTERS AND GUARDS APPROVED FOR HOMEOWNERS"
+          ]
+        },
+        {
+          "id": "contractor",
+          "name": "Contractor",
+          "cameraPrompt": "Natural job site: a medium shot of a licensed gutter installer in a work polo standing beside a ladder and new gutter sections on a house, talking directly and bluntly like he is explaining something important to a homeowner. Real daylight, casual and believable.",
+          "creatorPrompt": "A vertical 9:16 photo of a blunt licensed gutter installer in a work polo standing beside a ladder and new seamless gutters on a residential house, gesturing as he explains something to the camera. Real daylight, house exterior in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Contractor warning style: the installer sounds blunt and experienced, like he has seen too many homes wrecked by overflowing gutters\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I install gutters every week, and most homeowners are getting them completely free.",
+            "If you own a home, I can tell you this program covers your whole gutter job, you pay nothing.",
+            "As an installer, I watch homeowners get free gutters and guards while everyone else overpays.",
+            "Stop paying me full price, homeowners qualify to get these gutters for free.",
+            "I tear off old gutters all day, and homeowners are getting the new ones at zero cost."
+          ],
+          "bubbleHooks": [
+            "I INSTALL FREE GUTTERS FOR HOMEOWNERS DAILY",
+            "HOMEOWNERS YOUR NEW GUTTERS ARE FREE I'D KNOW",
+            "CONTRACTOR: HOMEOWNERS PAY $0 FOR NEW GUTTERS",
+            "OWN A HOME? STOP PAYING ME YOUR GUTTERS ARE COVERED",
+            "I SEE HOMEOWNERS GET FREE GUTTERS EVERY WEEK",
+            "HOMEOWNERS THESE GUTTERS COST YOU NOTHING",
+            "INSTALLER: FREE GUTTERS FOR HOMEOWNERS ARE REAL",
+            "OWN A HOME? I'LL INSTALL YOUR GUTTERS FOR FREE",
+            "HOMEOWNERS DON'T PAY FULL PRICE LIKE EVERYONE ELSE",
+            "YOUR FREE NEW GUTTERS ARE ONE CALL AWAY"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Gov Insider",
+          "cameraPrompt": "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how home improvement assistance programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "I worked inside these programs, and homeowners can get free gutters almost every time.",
+            "Here's the shortcut: homeowners qualify for fully paid gutters and guards, and almost nobody applies.",
+            "After years on the inside, I'll tell you homeowners are leaving free gutters on the table.",
+            "If you own a home, there's a quiet program that pays for all your gutters, here's how to claim it.",
+            "Most homeowners never find out the government will cover their entire gutter replacement."
+          ],
+          "bubbleHooks": [
+            "INSIDER: HOMEOWNERS QUALIFY FOR FREE GUTTERS",
+            "THE FREE GUTTER PROGRAM THEY KEEP QUIET",
+            "OWN A HOME? THE GOVERNMENT COVERS YOUR GUTTERS",
+            "HOMEOWNERS CLAIM THE FREE GUTTERS NOBODY USES",
+            "I WORKED INSIDE HOMEOWNERS GET FREE GUTTERS",
+            "HOMEOWNERS YOU'RE LEAVING FREE GUTTERS BEHIND",
+            "THE QUIET PROGRAM THAT PAYS FOR YOUR GUTTERS",
+            "OWN A HOME? HERE'S HOW TO GET GUTTERS FREE",
+            "HOMEOWNERS THE SHORTCUT TO FREE NEW GUTTERS",
+            "INSIDER TIP HOMEOWNERS STOP PAYING FOR GUTTERS"
+          ]
+        },
+        {
+          "id": "capitol",
+          "name": "Capitol Reporter",
+          "cameraPrompt": "Natural field-reporter setup: a medium shot of a TV journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and delivering a live report straight to camera. Feels like a believable on-location news clip\u2014handheld, slightly windy, candid, not a polished studio broadcast.",
+          "creatorPrompt": "A vertical 9:16 photo of a professional TV field journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and speaking directly to camera with a serious, urgent expression. Overcast natural daylight, the domed capitol building visible behind them, believable on-location news feel. Older-phone softness and mild compression. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Capitol field-report style: the journalist reports live from in front of the capitol on new legislation that forces gutter companies to offer fair prices amid the affordability crisis\u2014urgent, credible, breaking-news energy, not theatrical.",
+          "hooks": [
+            "Right behind me lawmakers just passed a law giving homeowners brand new gutters for free.",
+            "We're live at the capitol where a new bill just made gutter replacement free for homeowners.",
+            "Breaking from the capitol, the government will now pay for homeowners' new gutters in full.",
+            "Behind me they just signed a program covering brand new gutters for every homeowner.",
+            "Reporting live, a new law means homeowners can claim free gutters starting today."
+          ],
+          "bubbleHooks": [
+            "NEW LAW: FREE GUTTERS FOR HOMEOWNERS",
+            "CAPITOL JUST MADE NEW GUTTERS FREE FOR HOMEOWNERS",
+            "GOVERNMENT WILL NOW PAY FOR YOUR NEW GUTTERS",
+            "BREAKING HOMEOWNERS GET FREE GUTTERS BY LAW",
+            "NEW BILL COVERS 100% OF GUTTER REPLACEMENTS",
+            "LAWMAKERS APPROVE FREE GUTTERS FOR HOMEOWNERS",
+            "HOMEOWNERS THE LAW JUST MADE YOUR GUTTERS FREE",
+            "CAPITOL ALERT FREE GUTTERS FOR HOMEOWNERS PASSED",
+            "GOVERNMENT NOW PAYS FOR YOUR NEW GUTTERS",
+            "NEW LAW HOMEOWNERS CLAIM YOUR FREE GUTTERS NOW"
+          ]
+        },
+        {
+          "id": "advocate",
+          "name": "Senior Advocate",
+          "cameraPrompt": "Natural PSA / town-hall setup: a medium shot of an angry elderly woman standing and confronting an official-looking man\u2014a judge or government official\u2014at a public event or in a courtroom, speaking heatedly and pointing as she demands answers. Candid, slightly shaky handheld, real event lighting, believable and not staged.",
+          "creatorPrompt": "A vertical 9:16 photo of a frustrated elderly woman in her seventies standing at a public PSA event or in a courtroom, gesturing angrily toward an official-looking man in a suit or a judge in a robe seated nearby, mid-confrontation with a stern expression. Natural indoor event lighting, plain institutional background, candid and believable. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Angry senior advocate style: an elderly woman heatedly confronts a judge or official at a PSA event or courtroom, demanding to know why seniors are not being told about the gutter assistance program\u2014raw, indignant, righteous, believable, not theatrical.",
+          "hooks": [
+            "Why the hell are you not telling seniors they can get brand new gutters completely free through the senior gutter program?",
+            "Explain to me why seniors aren't being told their new gutters are fully paid for!",
+            "How dare you hide free gutters from every senior who qualifies for them!",
+            "Why is nobody telling our seniors they can get new gutters for free right now?",
+            "Seniors are paying thousands when the program covers it all, so why are you staying silent?"
+          ],
+          "bubbleHooks": [
+            "WHY AREN'T SENIORS TOLD THEIR GUTTERS ARE FREE",
+            "SENIORS GET FREE NEW GUTTERS AND NOBODY SAYS A WORD",
+            "THEY'RE HIDING THE FREE SENIOR GUTTER PROGRAM",
+            "SENIORS QUALIFY FOR FREE GUTTERS RIGHT NOW",
+            "STOP HIDING FREE GUTTERS FROM OUR SENIORS",
+            "ELDERLY WOMAN EXPOSES THE FREE SENIOR GUTTER PROGRAM",
+            "WHY ARE SENIORS PAYING WHEN GUTTERS ARE FREE",
+            "SENIORS ARE OWED FREE GUTTERS AND NOBODY TELLS THEM",
+            "THE FREE SENIOR GUTTERS THEY KEEP SECRET",
+            "SENIORS DESERVE FREE GUTTERS DEMAND THEM NOW"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "new-roofs-homeowners",
+      "name": "New Roofs",
+      "vertical": "new roof / roof replacement",
+      "angle": "homeowners with aging or storm-damaged roofs who may qualify for roof replacement or assistance",
+      "bodyVideo": "./assets/roofs-body.mp4",
+      "outputName": "New Roofs",
+      "promptContext": "Speak to homeowners with old, worn, or storm-damaged roofs about leaks, missing shingles, hail and storm damage, and checking whether they qualify for roof replacement programs or assistance. Do not promise guaranteed approval, exact amounts, or guaranteed insurance payouts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "Homeowners are getting a brand new roof completely free, and almost nobody knows.",
+        "If you own a home, your entire roof replacement could be covered, you pay nothing.",
+        "There's a program paying for full roof replacements, and it's ending soon."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "",
+      "variants": [
+        {
+          "id": "judge",
+          "name": "Judge / Courtroom",
+          "cameraPrompt": "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+          "creatorPrompt": "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+          "scenePrompt": "Courtroom order style: the judge sounds firm and official, delivering a short order about homeowner access to a roof replacement program. Authoritative, believable, not theatrical.",
+          "hooks": [
+            "I am ordering that homeowners get a brand new roof, and this program covers the full cost.",
+            "This court rules that homeowners can claim a free roof replacement, effective immediately.",
+            "Listen up, homeowners now qualify for a fully covered new roof, and I am making it official today.",
+            "By order of this court, no homeowner should pay a dime for a new roof ever again.",
+            "Homeowners, the court just unlocked a free roof replacement program, and you need to claim it now."
+          ],
+          "bubbleHooks": [
+            "JUDGE ORDERS FREE NEW ROOFS FOR HOMEOWNERS",
+            "COURT RULES HOMEOWNERS GET A FREE ROOF REPLACEMENT",
+            "HOMEOWNERS YOUR NEW ROOF IS NOW FULLY COVERED",
+            "JUDGE: HOMEOWNERS PAY $0 FOR A NEW ROOF",
+            "COURT JUST UNLOCKED FREE ROOFS FOR HOMEOWNERS",
+            "HOMEOWNERS CLAIM YOUR FREE ROOF BEFORE IT'S GONE",
+            "ORDERED: A FREE NEW ROOF FOR EVERY HOMEOWNER",
+            "IF YOU OWN A HOME THE JUDGE SAYS YOUR ROOF IS FREE",
+            "HOMEOWNERS THE COURT IS PAYING FOR YOUR NEW ROOF",
+            "JUDGE MAKES NEW ROOFS FREE FOR HOMEOWNERS TODAY"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, like he is calling out companies for hiding roof replacement assistance from homeowners\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling homeowners they can get a brand new roof for free, and it makes me sick.",
+            "Homeowners are getting fully covered new roofs and the big companies are hiding it from you.",
+            "If you own a home, stop paying for a roof, this program covers all of it.",
+            "They do not want homeowners knowing this free roof replacement program even exists.",
+            "I cannot believe how many homeowners are missing out on a completely free new roof."
+          ],
+          "bubbleHooks": [
+            "HOMEOWNERS ARE GETTING FREE NEW ROOFS",
+            "THEY'RE HIDING THE FREE ROOF PROGRAM FROM YOU",
+            "HOMEOWNERS STOP PAYING YOUR ROOF IS FREE",
+            "OWN A HOME? YOUR NEW ROOF IS FULLY COVERED",
+            "THE FREE ROOF REPLACEMENT HOMEOWNERS AREN'T TOLD ABOUT",
+            "HOMEOWNERS CLAIM YOUR FREE ROOF NOW",
+            "BIG COMPANIES HIDE THIS FREE ROOF PROGRAM",
+            "IF YOU OWN A HOME YOU'RE OVERPAYING FOR A ROOF",
+            "HOMEOWNERS A FREE NEW ROOF IS ONE CALL AWAY",
+            "OWN A HOME? DON'T PAY A DIME FOR A NEW ROOF"
+          ]
+        },
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert homeowners need to see today\u2014clear, direct, professional.",
+          "hooks": [
+            "Breaking for homeowners, a new program is covering brand new roofs at no cost.",
+            "Consumer alert: homeowners can now claim a completely free roof before funding runs out.",
+            "Homeowners are getting free roofs right now, and you may only have days to claim yours.",
+            "A new program is paying for full roof replacements, and thousands of homeowners are cashing in today.",
+            "If you own a home, this free roof program could close any day, so act now."
+          ],
+          "bubbleHooks": [
+            "BREAKING HOMEOWNERS GET A FREE NEW ROOF",
+            "NEW PROGRAM COVERS 100% OF ROOF REPLACEMENTS",
+            "HOMEOWNERS CLAIM A FREE ROOF BEFORE FUNDS RUN OUT",
+            "CONSUMER ALERT FREE ROOFS FOR HOMEOWNERS",
+            "HOMEOWNERS YOUR NEW ROOF COSTS $0",
+            "THOUSANDS OF HOMEOWNERS ARE GETTING FREE ROOFS NOW",
+            "OWN A HOME? FREE ROOF REPLACEMENT ENDS SOON",
+            "NEW PROGRAM PAYS FOR YOUR ENTIRE NEW ROOF",
+            "HOMEOWNERS DON'T MISS THIS FREE ROOF DEADLINE",
+            "BREAKING FREE NEW ROOFS APPROVED FOR HOMEOWNERS"
+          ]
+        },
+        {
+          "id": "contractor",
+          "name": "Contractor",
+          "cameraPrompt": "Natural job site: a medium shot of a licensed roofer in a work polo or hard hat standing in front of a house with a partially replaced roof, talking directly and bluntly like he is explaining something important to a homeowner. Real daylight, casual and believable.",
+          "creatorPrompt": "A vertical 9:16 photo of a blunt licensed roofer in a work polo or hard hat standing in front of a residential house with new shingles being installed, gesturing as he explains something to the camera. Real daylight, roof and ladder in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Contractor warning style: the roofer sounds blunt and experienced, like he has seen too many homeowners wait until their roof leaks\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I replace roofs every week, and most homeowners are getting them completely free.",
+            "If you own a home, I can tell you this program covers your whole roof, you pay nothing.",
+            "As a roofer, I watch homeowners get free roofs while everyone else overpays.",
+            "Stop paying me full price, homeowners qualify to get this roof for free.",
+            "I tear off old roofs all day, and homeowners are getting the new one at zero cost."
+          ],
+          "bubbleHooks": [
+            "I INSTALL FREE ROOFS FOR HOMEOWNERS DAILY",
+            "HOMEOWNERS YOUR NEW ROOF IS FREE I'D KNOW",
+            "CONTRACTOR: HOMEOWNERS PAY $0 FOR A NEW ROOF",
+            "OWN A HOME? STOP PAYING ME YOUR ROOF IS COVERED",
+            "I SEE HOMEOWNERS GET FREE ROOFS EVERY WEEK",
+            "HOMEOWNERS THIS ROOF COSTS YOU NOTHING",
+            "ROOFER: FREE ROOFS FOR HOMEOWNERS ARE REAL",
+            "OWN A HOME? I'LL BUILD YOUR NEW ROOF FOR FREE",
+            "HOMEOWNERS DON'T PAY FULL PRICE LIKE EVERYONE ELSE",
+            "YOUR FREE NEW ROOF IS ONE CALL AWAY"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Gov Insider",
+          "cameraPrompt": "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how roof replacement and assistance programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "I worked inside these programs, and homeowners can get a free roof almost every time.",
+            "Here's the shortcut: homeowners qualify for a fully paid roof, and almost nobody applies.",
+            "After years on the inside, I'll tell you homeowners are leaving a free roof on the table.",
+            "If you own a home, there's a quiet program that pays for your whole roof, here's how to claim it.",
+            "Most homeowners never find out the government will cover their entire roof replacement."
+          ],
+          "bubbleHooks": [
+            "INSIDER: HOMEOWNERS QUALIFY FOR A FREE ROOF",
+            "THE FREE ROOF PROGRAM THEY KEEP QUIET",
+            "OWN A HOME? THE GOVERNMENT COVERS YOUR ROOF",
+            "HOMEOWNERS CLAIM THE FREE ROOF NOBODY USES",
+            "I WORKED INSIDE HOMEOWNERS GET FREE ROOFS",
+            "HOMEOWNERS YOU'RE LEAVING A FREE ROOF BEHIND",
+            "THE QUIET PROGRAM THAT PAYS FOR YOUR ROOF",
+            "OWN A HOME? HERE'S HOW TO GET YOUR ROOF FREE",
+            "HOMEOWNERS THE SHORTCUT TO A FREE NEW ROOF",
+            "INSIDER TIP HOMEOWNERS STOP PAYING FOR A ROOF"
+          ]
+        },
+        {
+          "id": "capitol",
+          "name": "Capitol Reporter",
+          "cameraPrompt": "Natural field-reporter setup: a medium shot of a TV journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and delivering a live report straight to camera. Feels like a believable on-location news clip\u2014handheld, slightly windy, candid, not a polished studio broadcast.",
+          "creatorPrompt": "A vertical 9:16 photo of a professional TV field journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and speaking directly to camera with a serious, urgent expression. Overcast natural daylight, the domed capitol building visible behind them, believable on-location news feel. Older-phone softness and mild compression. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Capitol field-report style: the journalist reports live from in front of the capitol on new legislation that forces roofing companies to offer fair prices amid the affordability crisis\u2014urgent, credible, breaking-news energy, not theatrical.",
+          "hooks": [
+            "Right behind me lawmakers just passed a law giving homeowners a brand new roof for free.",
+            "We're live at the capitol where a new bill just made roof replacement free for homeowners.",
+            "Breaking from the capitol, the government will now pay for homeowners' new roofs in full.",
+            "Behind me they just signed a program covering a brand new roof for every homeowner.",
+            "Reporting live, a new law means homeowners can claim a free roof starting today."
+          ],
+          "bubbleHooks": [
+            "NEW LAW: FREE ROOFS FOR HOMEOWNERS",
+            "CAPITOL JUST MADE NEW ROOFS FREE FOR HOMEOWNERS",
+            "GOVERNMENT WILL NOW PAY FOR YOUR NEW ROOF",
+            "BREAKING HOMEOWNERS GET A FREE ROOF BY LAW",
+            "NEW BILL COVERS 100% OF ROOF REPLACEMENTS",
+            "LAWMAKERS APPROVE FREE ROOFS FOR HOMEOWNERS",
+            "HOMEOWNERS THE LAW JUST MADE YOUR ROOF FREE",
+            "CAPITOL ALERT FREE ROOFS FOR HOMEOWNERS PASSED",
+            "GOVERNMENT NOW PAYS FOR YOUR NEW ROOF",
+            "NEW LAW HOMEOWNERS CLAIM YOUR FREE ROOF NOW"
+          ]
+        },
+        {
+          "id": "advocate",
+          "name": "Senior Advocate",
+          "cameraPrompt": "Natural PSA / town-hall setup: a medium shot of an angry elderly woman standing and confronting an official-looking man\u2014a judge or government official\u2014at a public event or in a courtroom, speaking heatedly and pointing as she demands answers. Candid, slightly shaky handheld, real event lighting, believable and not staged.",
+          "creatorPrompt": "A vertical 9:16 photo of a frustrated elderly woman in her seventies standing at a public PSA event or in a courtroom, gesturing angrily toward an official-looking man in a suit or a judge in a robe seated nearby, mid-confrontation with a stern expression. Natural indoor event lighting, plain institutional background, candid and believable. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Angry senior advocate style: an elderly woman heatedly confronts a judge or official at a PSA event or courtroom, demanding to know why seniors are not being told about the roof assistance program\u2014raw, indignant, righteous, believable, not theatrical.",
+          "hooks": [
+            "Why the hell are you not telling seniors they can get a brand new roof completely free through the senior roof program?",
+            "Explain to me why seniors aren't being told their new roof is fully paid for!",
+            "How dare you hide a free roof from every senior who qualifies for it!",
+            "Why is nobody telling our seniors they can get a new roof for free right now?",
+            "Seniors are paying thousands when the program covers it all, so why are you staying silent?"
+          ],
+          "bubbleHooks": [
+            "WHY AREN'T SENIORS TOLD THEIR ROOF IS FREE",
+            "SENIORS GET A FREE NEW ROOF AND NOBODY SAYS A WORD",
+            "THEY'RE HIDING THE FREE SENIOR ROOF PROGRAM",
+            "SENIORS QUALIFY FOR A FREE ROOF RIGHT NOW",
+            "STOP HIDING FREE ROOFS FROM OUR SENIORS",
+            "ELDERLY WOMAN EXPOSES THE FREE SENIOR ROOF PROGRAM",
+            "WHY ARE SENIORS PAYING WHEN ROOFS ARE FREE",
+            "SENIORS ARE OWED A FREE ROOF AND NOBODY TELLS THEM",
+            "THE FREE SENIOR ROOF THEY KEEP SECRET",
+            "SENIORS DESERVE A FREE ROOF DEMAND IT NOW"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "new-roofs-seniors",
+      "name": "New Roofs Seniors",
+      "vertical": "new roof / roof replacement for seniors",
+      "angle": "seniors and older homeowners over 55 with aging or storm-damaged roofs who want to stop leaks and may qualify for a roof replacement program",
+      "bodyVideo": "./assets/roofs-body.mp4",
+      "outputName": "New Roofs Seniors",
+      "promptContext": "Speak to seniors and older homeowners over 55 with old, worn, or storm-damaged roofs about leaks, missing shingles, hail and storm damage, and protecting the home they plan to age in place in, and checking whether they qualify for roof replacement programs or assistance. Do not promise guaranteed approval, exact amounts, or guaranteed insurance payouts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "Seniors over 55 are getting a brand new roof completely free, and almost nobody knows.",
+        "If you're over 55, your entire roof replacement could be covered, you pay nothing.",
+        "There's a senior roof program paying for full roof replacements, and it's ending soon."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "",
+      "variants": [
+        {
+          "id": "judge",
+          "name": "Judge / Courtroom",
+          "cameraPrompt": "POV from the back of a courtroom, filmed over the shoulders and between the heads of people seated in front. Their blurry silhouettes fill the bottom foreground; the judge at the bench is the in-focus subject in the middle distance. Candid, slightly shaky, off-center. The phone body, its screen, and any app interface are never visible.",
+          "creatorPrompt": "A vertical 9:16 photo from the back rows of a courtroom, shot over the shoulders and between the heads of several people seated in front (their dark blurry silhouettes fill the bottom foreground), looking toward an older authoritative judge in a black robe at the bench in the middle distance. Slightly soft, mild phone compression and noise, natural indoor courtroom lighting, candid and a little shaky. Absolutely no text, no captions, no numbers, no timestamps, no overlays, no logos.",
+          "scenePrompt": "Courtroom order style: the judge sounds firm and official, delivering a short order about senior roof replacement access. Authoritative, believable, not theatrical.",
+          "hooks": [
+            "I am ordering every senior over 55 to get a brand new roof, and this program covers the entire cost.",
+            "This court rules that seniors over 55 can claim a free roof replacement, effective immediately.",
+            "Listen up, seniors over 55 now qualify for a fully covered new roof, and I am making it official today.",
+            "By order of this court, no senior over 55 should pay a dime for a new roof ever again.",
+            "Seniors over 55, the court just unlocked a free roof replacement program, and you need to claim it now."
+          ],
+          "bubbleHooks": [
+            "JUDGE ORDERS FREE NEW ROOFS FOR SENIORS 55+",
+            "COURT RULES SENIORS 55+ GET A FREE ROOF REPLACEMENT",
+            "SENIORS 55+ YOUR NEW ROOF IS NOW FULLY COVERED",
+            "JUDGE: SENIORS PAY $0 FOR A NEW ROOF",
+            "COURT JUST UNLOCKED FREE ROOFS FOR SENIORS",
+            "SENIORS 55+ CLAIM YOUR FREE ROOF BEFORE IT'S GONE",
+            "ORDERED: A FREE NEW ROOF FOR EVERY SENIOR 55+",
+            "IF YOU'RE 55+ THE JUDGE SAYS YOUR ROOF IS FREE",
+            "SENIORS 55+ THE COURT IS PAYING FOR YOUR NEW ROOF",
+            "JUDGE MAKES NEW ROOFS FREE FOR SENIORS TODAY"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged male podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, like he is calling out companies for hiding senior roof replacement assistance\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody is telling seniors over 55 they can get a brand new roof for free, and it makes me sick.",
+            "Seniors over 55 are getting fully covered new roofs and the big companies are hiding it from you.",
+            "If you're over 55, stop paying for a roof, this program covers all of it.",
+            "They do not want seniors over 55 knowing this free roof replacement program even exists.",
+            "I cannot believe how many seniors over 55 are missing out on a completely free new roof."
+          ],
+          "bubbleHooks": [
+            "SENIORS 55+ ARE GETTING FREE NEW ROOFS",
+            "THEY'RE HIDING THE FREE SENIOR ROOF PROGRAM FROM YOU",
+            "SENIORS 55+ STOP PAYING YOUR ROOF IS FREE",
+            "OVER 55? YOUR NEW ROOF IS FULLY COVERED",
+            "THE FREE ROOF REPLACEMENT SENIORS AREN'T TOLD ABOUT",
+            "SENIORS 55+ CLAIM YOUR FREE ROOF NOW",
+            "BIG COMPANIES HIDE THIS FREE SENIOR ROOF PROGRAM",
+            "IF YOU'RE 55+ YOU'RE OVERPAYING FOR A ROOF",
+            "SENIORS 55+ A FREE NEW ROOF IS ONE CALL AWAY",
+            "OVER 55? DON'T PAY A DIME FOR A NEW ROOF"
+          ]
+        },
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature female consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer alert seniors need to see today\u2014clear, direct, professional.",
+          "hooks": [
+            "Breaking for seniors over 55, a new program is covering brand new roofs at no cost.",
+            "Consumer alert: seniors over 55 can now claim a completely free roof before funding runs out.",
+            "Seniors over 55 are getting free roofs right now, and you may only have days to claim yours.",
+            "A new senior roof program is paying for full replacements, and thousands over 55 are cashing in today.",
+            "If you're a senior over 55, this free roof program could close any day, so act now."
+          ],
+          "bubbleHooks": [
+            "BREAKING SENIORS 55+ GET A FREE NEW ROOF",
+            "NEW PROGRAM COVERS 100% OF SENIOR ROOF REPLACEMENTS",
+            "SENIORS 55+ CLAIM A FREE ROOF BEFORE FUNDS RUN OUT",
+            "CONSUMER ALERT FREE ROOFS FOR SENIORS 55+",
+            "SENIORS 55+ YOUR NEW ROOF COSTS $0",
+            "THOUSANDS OF SENIORS ARE GETTING FREE ROOFS NOW",
+            "OVER 55? FREE ROOF REPLACEMENT ENDS SOON",
+            "NEW SENIOR PROGRAM PAYS FOR YOUR ENTIRE ROOF",
+            "SENIORS 55+ DON'T MISS THIS FREE ROOF DEADLINE",
+            "BREAKING FREE NEW ROOFS APPROVED FOR SENIORS"
+          ]
+        },
+        {
+          "id": "contractor",
+          "name": "Contractor",
+          "cameraPrompt": "Natural job site: a medium shot of a licensed roofer in a work polo or hard hat standing in front of a house with a partially replaced roof, talking directly and bluntly like he is explaining something important to a homeowner. Real daylight, casual and believable.",
+          "creatorPrompt": "A vertical 9:16 photo of a blunt licensed roofer in a work polo or hard hat standing in front of a residential house with new shingles being installed, gesturing as he explains something to the camera. Real daylight, roof and ladder in background, casual and authentic. Older-phone quality. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Contractor warning style: the roofer sounds blunt and experienced, like he has seen too many seniors wait until their roof is leaking over their head\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I replace roofs every week, and most seniors over 55 are getting them completely free.",
+            "If you're over 55, I can tell you this program covers your whole roof, you pay nothing.",
+            "As a roofer, I watch seniors over 55 get free roofs while everyone else overpays.",
+            "Stop paying me full price, seniors over 55 qualify to get this roof for free.",
+            "I tear off old roofs all day, and seniors over 55 are getting the new one at zero cost."
+          ],
+          "bubbleHooks": [
+            "I INSTALL FREE ROOFS FOR SENIORS 55+ DAILY",
+            "SENIORS 55+ YOUR NEW ROOF IS FREE I'D KNOW",
+            "ROOFER: SENIORS 55+ PAY $0 FOR A NEW ROOF",
+            "OVER 55? STOP PAYING ME YOUR ROOF IS COVERED",
+            "I SEE SENIORS GET FREE ROOFS EVERY WEEK",
+            "SENIORS 55+ THIS ROOF COSTS YOU NOTHING",
+            "ROOFER: FREE ROOFS FOR SENIORS ARE REAL",
+            "OVER 55? I'LL BUILD YOUR NEW ROOF FOR FREE",
+            "SENIORS 55+ DON'T PAY FULL PRICE LIKE EVERYONE ELSE",
+            "YOUR FREE SENIOR ROOF IS ONE CALL AWAY"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Gov Insider",
+          "cameraPrompt": "Natural government office: a medium shot across a plain desk of an older retired-government-worker type in a blazer, mid-explanation. Fluorescent office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retired-government-worker type in a blazer seated behind a plain desk in a government-style office, mid-explanation with hands visible. Fluorescent office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no seal, no overlays, no logos.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how roof replacement and assistance programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "I worked inside these programs, and seniors over 55 can get a free roof almost every time.",
+            "Here's the shortcut: seniors over 55 qualify for a fully paid roof, and almost nobody applies.",
+            "After years on the inside, I'll tell you seniors over 55 are leaving a free roof on the table.",
+            "If you're over 55, there's a quiet program that pays for your whole roof, here's how to claim it.",
+            "Most seniors over 55 never find out the government will cover their entire roof replacement."
+          ],
+          "bubbleHooks": [
+            "INSIDER: SENIORS 55+ QUALIFY FOR A FREE ROOF",
+            "THE FREE SENIOR ROOF PROGRAM THEY KEEP QUIET",
+            "OVER 55? THE GOVERNMENT COVERS YOUR ROOF",
+            "SENIORS 55+ CLAIM THE FREE ROOF NOBODY USES",
+            "I WORKED INSIDE SENIORS GET FREE ROOFS",
+            "SENIORS 55+ YOU'RE LEAVING A FREE ROOF BEHIND",
+            "THE QUIET PROGRAM THAT PAYS FOR SENIOR ROOFS",
+            "OVER 55? HERE'S HOW TO GET YOUR ROOF FREE",
+            "SENIORS 55+ THE SHORTCUT TO A FREE NEW ROOF",
+            "INSIDER TIP SENIORS 55+ STOP PAYING FOR A ROOF"
+          ]
+        },
+        {
+          "id": "capitol",
+          "name": "Capitol Reporter",
+          "cameraPrompt": "Natural field-reporter setup: a medium shot of a TV journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and delivering a live report straight to camera. Feels like a believable on-location news clip\u2014handheld, slightly windy, candid, not a polished studio broadcast.",
+          "creatorPrompt": "A vertical 9:16 photo of a professional TV field journalist standing outdoors in front of the U.S. Capitol building, holding a news microphone and speaking directly to camera with a serious, urgent expression. Overcast natural daylight, the domed capitol building visible behind them, believable on-location news feel. Older-phone softness and mild compression. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Capitol field-report style: the journalist reports live from in front of the capitol on new legislation that forces roofing companies to offer fair prices to seniors amid the affordability crisis\u2014urgent, credible, breaking-news energy, not theatrical.",
+          "hooks": [
+            "Right behind me lawmakers just passed a law giving every senior over 55 a brand new roof for free.",
+            "We're live at the capitol where a new bill just made roof replacement free for seniors over 55.",
+            "Breaking from the capitol, the government will now pay for seniors' new roofs in full.",
+            "Behind me they just signed a program covering a brand new roof for every senior over 55.",
+            "Reporting live, a new law means seniors over 55 can claim a free roof starting today."
+          ],
+          "bubbleHooks": [
+            "NEW LAW: FREE ROOFS FOR SENIORS 55+",
+            "CAPITOL JUST MADE NEW ROOFS FREE FOR SENIORS",
+            "GOVERNMENT WILL NOW PAY FOR SENIOR ROOFS",
+            "BREAKING SENIORS 55+ GET A FREE ROOF BY LAW",
+            "NEW BILL COVERS 100% OF SENIOR ROOF REPLACEMENTS",
+            "LAWMAKERS APPROVE FREE ROOFS FOR SENIORS 55+",
+            "SENIORS 55+ THE LAW JUST MADE YOUR ROOF FREE",
+            "CAPITOL ALERT FREE ROOFS FOR SENIORS PASSED",
+            "GOVERNMENT NOW PAYS FOR YOUR NEW ROOF 55+",
+            "NEW LAW SENIORS 55+ CLAIM YOUR FREE ROOF NOW"
+          ]
+        },
+        {
+          "id": "advocate",
+          "name": "Senior Advocate",
+          "cameraPrompt": "Natural PSA / town-hall setup: a medium shot of an angry elderly woman standing and confronting an official-looking man\u2014a judge or government official\u2014at a public event or in a courtroom, speaking heatedly and pointing as she demands answers. Candid, slightly shaky handheld, real event lighting, believable and not staged.",
+          "creatorPrompt": "A vertical 9:16 photo of a frustrated elderly woman in her seventies standing at a public PSA event or in a courtroom, gesturing angrily toward an official-looking man in a suit or a judge in a robe seated nearby, mid-confrontation with a stern expression. Natural indoor event lighting, plain institutional background, candid and believable. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Angry senior advocate style: an elderly woman heatedly confronts a judge or official at a PSA event or courtroom, demanding to know why seniors are not being told about the roof assistance program\u2014raw, indignant, righteous, believable, not theatrical.",
+          "hooks": [
+            "Why the hell are you not telling seniors they can get a brand new roof completely free through the senior roof program?",
+            "Explain to me why seniors aren't being told their new roof is fully paid for!",
+            "How dare you hide a free roof from every senior who qualifies for it!",
+            "Why is nobody telling our seniors they can get a new roof for free right now?",
+            "Seniors are paying thousands when the program covers it all, so why are you staying silent?"
+          ],
+          "bubbleHooks": [
+            "WHY AREN'T SENIORS TOLD THEIR ROOF IS FREE",
+            "SENIORS GET A FREE NEW ROOF AND NOBODY SAYS A WORD",
+            "THEY'RE HIDING THE FREE SENIOR ROOF PROGRAM",
+            "SENIORS QUALIFY FOR A FREE ROOF RIGHT NOW",
+            "STOP HIDING FREE ROOFS FROM OUR SENIORS",
+            "ELDERLY WOMAN EXPOSES THE FREE SENIOR ROOF PROGRAM",
+            "WHY ARE SENIORS PAYING WHEN ROOFS ARE FREE",
+            "SENIORS ARE OWED A FREE ROOF AND NOBODY TELLS THEM",
+            "THE FREE SENIOR ROOF THEY KEEP SECRET",
+            "SENIORS DESERVE A FREE ROOF DEMAND IT NOW"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "debt-seniors",
+      "name": "Debt Seniors",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "seniors and retirees on a fixed income carrying credit card balances, unsecured debt, or tax debt",
+      "bodyVideo": "./assets/senior-debt-body.mp4",
+      "outputName": "Debt Seniors",
+      "promptContext": "Speak to seniors and retirees on a fixed income who are stressed by credit card balances, unsecured debt, IRS or tax debt, and constant collection calls. Mention checking debt relief, consolidation, or settlement options that could lower monthly payments, without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a senior on a fixed income with more than 10 thousand dollars in debt, there's a new way to check what relief you may qualify for.",
+        "Seniors with over 10 thousand dollars in credit card debt are lowering what they owe without a single new loan.",
+        "Most seniors who owe 10 thousand dollars or more never find out their debt can be settled until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert seniors need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "If you're a senior on a fixed income with more than 10 thousand dollars in credit card or tax debt, there's a new way to check what relief you may qualify for.",
+            "Seniors carrying over 10 thousand dollars in debt are reviewing relief programs right now, and many qualify without a single new loan.",
+            "Consumer alert for seniors: if you owe 10 thousand dollars or more, those balances may not have to follow you around anymore.",
+            "Thousands of seniors with over 10 thousand dollars in credit card and tax debt are checking their options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "SENIORS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? SENIORS MAY QUALIFY FOR RELIEF",
+            "SENIORS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "SENIOR WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "SENIORS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? SENIORS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from seniors\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells seniors sitting on over 10 thousand dollars in debt that they may not have to keep drowning in minimum payments.",
+            "If you're a senior and you owe more than 10 thousand dollars, stop making minimum payments before you check this.",
+            "They don't want seniors knowing that 10 thousand dollars or more in debt can often be settled for less than what's owed.",
+            "I can't believe how many seniors carrying over 10 thousand dollars in debt are missing the relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "SENIORS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? SENIORS MAY QUALIFY FOR RELIEF",
+            "SENIORS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "SENIOR WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "SENIORS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? SENIORS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most seniors who owe over 10 thousand dollars never hear about the relief they actually qualify for.",
+            "If you're a senior with 10 thousand dollars or more in credit card or IRS debt, there's a simple way to check what you can reduce.",
+            "Most seniors carrying over 10 thousand dollars never find out their debt can be consolidated until they've overpaid for years.",
+            "I helped run these programs, and seniors who owe more than 10 thousand dollars qualify far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "SENIORS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? SENIORS MAY QUALIFY FOR RELIEF",
+            "SENIORS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "SENIOR WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "SENIORS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? SENIORS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Retiree Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of an older retiree sitting at a kitchen table at home, talking candidly to the camera like a real personal story. Natural home lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retiree sitting at a kitchen table in a modest, lived-in home, holding the phone at arm's length and speaking candidly to the camera. Natural window light, homey background, believable and warm. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the retiree sounds genuine and relieved, sharing what helped with their debt like advice to a friend\u2014honest, warm, not salesy.",
+          "hooks": [
+            "I'm a senior, and once my debt passed 10 thousand dollars, checking my relief options finally got me out from under it.",
+            "I'm a senior who was buried in over 10 thousand dollars of credit card debt until I found out I had other choices.",
+            "If you're a senior who owes 10 thousand dollars or more and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading the calls once I, a senior with more than 10 thousand dollars in debt, looked into relief."
+          ],
+          "bubbleHooks": [
+            "SENIORS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? SENIORS MAY QUALIFY FOR RELIEF",
+            "SENIORS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "SENIOR WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "SENIORS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? SENIORS CHECK RELIEF NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-teachers",
+      "name": "Debt Teachers",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "underpaid teachers and school staff carrying credit card debt, unsecured debt, or tax debt",
+      "bodyVideo": "./assets/tdebt body.mov",
+      "outputName": "Debt Teachers",
+      "promptContext": "Speak to teachers and school staff who are underpaid and stretched thin, often covering classroom costs out of pocket and carrying credit card balances, unsecured debt, or tax debt. Mention checking debt relief, consolidation, or lower-payment options without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a teacher or school staffer with more than 10 thousand dollars in debt, there's a new way to check what relief you may qualify for.",
+        "Teachers with over 10 thousand dollars in credit card debt are lowering what they owe without a single new loan.",
+        "Most teachers who owe 10 thousand dollars or more never find out their debt can be settled until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert teachers need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "If you're a teacher or school staffer with more than 10 thousand dollars in credit card or tax debt, there's a new way to check what relief you may qualify for.",
+            "Teachers carrying over 10 thousand dollars in debt are reviewing relief programs right now, and many qualify without a single new loan.",
+            "Consumer alert for teachers: if you owe 10 thousand dollars or more, those balances may not have to follow you around anymore.",
+            "Thousands of teachers with over 10 thousand dollars in credit card and tax debt are checking their options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "TEACHERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? TEACHERS MAY QUALIFY FOR RELIEF",
+            "TEACHERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "TEACHER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "TEACHERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? TEACHERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from teachers\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells teachers sitting on over 10 thousand dollars in debt that they may not have to keep drowning in minimum payments.",
+            "If you're a teacher and you owe more than 10 thousand dollars, stop making minimum payments before you check this.",
+            "They don't want teachers knowing that 10 thousand dollars or more in debt can often be settled for less than what's owed.",
+            "I can't believe how many teachers carrying over 10 thousand dollars in debt are missing the relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "TEACHERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? TEACHERS MAY QUALIFY FOR RELIEF",
+            "TEACHERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "TEACHER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "TEACHERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? TEACHERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for teachers in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most teachers who owe over 10 thousand dollars never hear about the relief they actually qualify for.",
+            "If you're a teacher with 10 thousand dollars or more in credit card or IRS debt, there's a simple way to check what you can reduce.",
+            "Most teachers carrying over 10 thousand dollars never find out their debt can be consolidated until they've overpaid for years.",
+            "I helped run these programs, and teachers who owe more than 10 thousand dollars qualify far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "TEACHERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? TEACHERS MAY QUALIFY FOR RELIEF",
+            "TEACHERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "TEACHER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "TEACHERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? TEACHERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Teacher Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a schoolteacher in an empty classroom after hours, talking candidly to the camera like a real personal story. Natural classroom lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired but warm schoolteacher standing in an empty classroom after hours with desks and a whiteboard behind them, holding the phone at arm's length and speaking candidly. Natural fluorescent classroom light, believable and relatable. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the teacher sounds genuine and a little frustrated, sharing how they handled their debt like advice to a fellow teacher\u2014honest, real, not salesy.",
+          "hooks": [
+            "I'm a teacher, and once my debt passed 10 thousand dollars, checking my relief options finally got me out from under it.",
+            "I'm a teacher who was buried in over 10 thousand dollars of credit card debt until I found out I had other choices.",
+            "If you're a teacher who owes 10 thousand dollars or more and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading the calls once I, a teacher with more than 10 thousand dollars in debt, looked into relief."
+          ],
+          "bubbleHooks": [
+            "TEACHERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? TEACHERS MAY QUALIFY FOR RELIEF",
+            "TEACHERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "TEACHER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "TEACHERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? TEACHERS CHECK RELIEF NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-union-workers",
+      "name": "Debt Union Workers",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "union and blue-collar workers with income swings carrying credit card debt, unsecured debt, or IRS tax debt",
+      "bodyVideo": "./assets/union-debt-body.mp4",
+      "outputName": "Debt Union Workers",
+      "promptContext": "Speak to union and blue-collar workers\u2014trades, labor, manufacturing\u2014whose income swings with overtime and layoffs, leaving them with credit card balances, unsecured debt, or IRS tax debt. Mention checking debt relief, consolidation, or settlement options that could lower monthly payments, without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a union or blue-collar worker with more than 10 thousand dollars in debt, there's a new way to check what relief you may qualify for.",
+        "Union workers with over 10 thousand dollars in credit card debt are lowering what they owe without a single new loan.",
+        "Most union workers who owe 10 thousand dollars or more never find out their debt can be settled until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert blue-collar workers need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "If you're a union or blue-collar worker with more than 10 thousand dollars in credit card or tax debt, there's a new way to check what relief you may qualify for.",
+            "Union workers carrying over 10 thousand dollars in debt are reviewing relief programs right now, and many qualify without a single new loan.",
+            "Consumer alert for union workers: if you owe 10 thousand dollars or more, those balances may not have to follow you around anymore.",
+            "Thousands of union workers with over 10 thousand dollars in credit card and tax debt are checking their options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? UNION WORKERS MAY QUALIFY FOR RELIEF",
+            "UNION WORKERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "UNION WORKER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "UNION WORKERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? UNION WORKERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from working families\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells union workers sitting on over 10 thousand dollars in debt that they may not have to keep drowning in minimum payments.",
+            "If you're a union worker and you owe more than 10 thousand dollars, stop making minimum payments before you check this.",
+            "They don't want union workers knowing that 10 thousand dollars or more in debt can often be settled for less than what's owed.",
+            "I can't believe how many union workers carrying over 10 thousand dollars in debt are missing the relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? UNION WORKERS MAY QUALIFY FOR RELIEF",
+            "UNION WORKERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "UNION WORKER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "UNION WORKERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? UNION WORKERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for working families in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most union workers who owe over 10 thousand dollars never hear about the relief they actually qualify for.",
+            "If you're a union worker with 10 thousand dollars or more in credit card or IRS debt, there's a simple way to check what you can reduce.",
+            "Most union workers carrying over 10 thousand dollars never find out their debt can be consolidated until they've overpaid for years.",
+            "I helped run these programs, and union workers who owe more than 10 thousand dollars qualify far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? UNION WORKERS MAY QUALIFY FOR RELIEF",
+            "UNION WORKERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "UNION WORKER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "UNION WORKERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? UNION WORKERS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Tradesworker Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium shot of a union tradesperson near a job site or in a garage, talking bluntly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a blue-collar union tradesperson in a work jacket or hi-vis standing near a job site or garage, holding the phone at arm's length and speaking candidly to the camera. Natural outdoor or shop lighting, believable and rugged. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the union worker sounds blunt and real, sharing how they dealt with their debt like advice to a buddy on the crew\u2014plain talk, no sales pitch.",
+          "hooks": [
+            "I'm a union worker, and once my debt passed 10 thousand dollars, checking my relief options finally got me out from under it.",
+            "I'm a union worker who was buried in over 10 thousand dollars of credit card debt until I found out I had other choices.",
+            "If you're a union worker who owes 10 thousand dollars or more and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading the calls once I, a union worker with more than 10 thousand dollars in debt, looked into relief."
+          ],
+          "bubbleHooks": [
+            "UNION WORKERS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? UNION WORKERS MAY QUALIFY FOR RELIEF",
+            "UNION WORKERS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "UNION WORKER WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "UNION WORKERS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? UNION WORKERS CHECK RELIEF NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-nurses",
+      "name": "Debt Nurses",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "nurses and healthcare workers carrying credit card debt, unsecured debt, or tax debt after long shifts",
+      "bodyVideo": "./assets/Ndebt body.mov",
+      "outputName": "Debt Nurses",
+      "promptContext": "Speak to nurses and healthcare workers worn down by long shifts and burnout who carry credit card balances, unsecured debt, or tax debt. Mention checking debt relief, consolidation, or lower-payment options without promising guaranteed approval or exact amounts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a nurse or healthcare worker with more than 10 thousand dollars in debt, there's a new way to check what relief you may qualify for.",
+        "Nurses with over 10 thousand dollars in credit card debt are lowering what they owe without a single new loan.",
+        "Most nurses who owe 10 thousand dollars or more never find out their debt can be settled until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert nurses need to hear today\u2014clear, direct, professional.",
+          "hooks": [
+            "If you're a nurse or healthcare worker with more than 10 thousand dollars in credit card or tax debt, there's a new way to check what relief you may qualify for.",
+            "Nurses carrying over 10 thousand dollars in debt are reviewing relief programs right now, and many qualify without a single new loan.",
+            "Consumer alert for nurses: if you owe 10 thousand dollars or more, those balances may not have to follow you around anymore.",
+            "Thousands of nurses with over 10 thousand dollars in credit card and tax debt are checking their options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "NURSES WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? NURSES MAY QUALIFY FOR RELIEF",
+            "NURSES: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "NURSE WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "NURSES STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? NURSES CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from healthcare workers\u2014raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells nurses sitting on over 10 thousand dollars in debt that they may not have to keep drowning in minimum payments.",
+            "If you're a nurse and you owe more than 10 thousand dollars, stop making minimum payments before you check this.",
+            "They don't want nurses knowing that 10 thousand dollars or more in debt can often be settled for less than what's owed.",
+            "I can't believe how many nurses carrying over 10 thousand dollars in debt are missing the relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "NURSES WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? NURSES MAY QUALIFY FOR RELIEF",
+            "NURSES: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "NURSE WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "NURSES STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? NURSES CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for nurses in plain English\u2014calm, credible, helpful.",
+          "hooks": [
+            "After years inside the debt industry, most nurses who owe over 10 thousand dollars never hear about the relief they actually qualify for.",
+            "If you're a nurse with 10 thousand dollars or more in credit card or IRS debt, there's a simple way to check what you can reduce.",
+            "Most nurses carrying over 10 thousand dollars never find out their debt can be consolidated until they've overpaid for years.",
+            "I helped run these programs, and nurses who owe more than 10 thousand dollars qualify far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "NURSES WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? NURSES MAY QUALIFY FOR RELIEF",
+            "NURSES: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "NURSE WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "NURSES STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? NURSES CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Nurse Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a nurse in scrubs after a shift, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired nurse in scrubs sitting in their car or a hospital break room after a long shift, holding the phone at arm's length and speaking candidly to the camera. Natural dim lighting, believable and weary. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the nurse sounds exhausted but genuine, sharing how they handled their debt like advice to a coworker\u2014honest, warm, not salesy.",
+          "hooks": [
+            "I'm a nurse, and once my debt passed 10 thousand dollars, checking my relief options finally got me out from under it.",
+            "I'm a nurse who was buried in over 10 thousand dollars of credit card debt until I found out I had other choices.",
+            "If you're a nurse who owes 10 thousand dollars or more and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading the calls once I, a nurse with more than 10 thousand dollars in debt, looked into relief."
+          ],
+          "bubbleHooks": [
+            "NURSES WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? NURSES MAY QUALIFY FOR RELIEF",
+            "NURSES: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "NURSE WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "NURSES STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? NURSES CHECK RELIEF NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "debt-veterans",
+      "name": "Debt Veterans",
+      "vertical": "debt relief / consolidation / credit card debt / tax debt help",
+      "angle": "U.S. military veterans carrying credit card debt, unsecured debt, or tax debt (general debt relief, not a VA benefit)",
+      "bodyVideo": "./assets/veteran body.mov",
+      "outputName": "Debt Veterans",
+      "promptContext": "Speak to U.S. military veterans carrying credit card balances, unsecured debt, or IRS tax debt. Frame it as general debt relief, consolidation, or settlement options they may qualify to check\u2014NOT a VA benefit or government payout. Do not promise guaranteed approval, exact amounts, or that the VA pays off debts. Each variation should feel like believable real footage of that setting\u2014not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you're a veteran with more than 10 thousand dollars in debt, there's a new way to check what relief you may qualify for.",
+        "Veterans with over 10 thousand dollars in credit card debt are lowering what they owe without a single new loan.",
+        "Most veterans who owe 10 thousand dollars or more never find out their debt can be settled until they've overpaid for years."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip\u2014not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer debt alert veterans need to hear today\u2014clear, direct, professional. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "If you're a veteran with more than 10 thousand dollars in credit card or tax debt, there's a new way to check what relief you may qualify for.",
+            "Veterans carrying over 10 thousand dollars in debt are reviewing relief programs right now, and many qualify without a single new loan.",
+            "Consumer alert for veterans: if you owe 10 thousand dollars or more, those balances may not have to follow you around anymore.",
+            "Thousands of veterans with over 10 thousand dollars in credit card and tax debt are checking their options today, and you may qualify too."
+          ],
+          "bubbleHooks": [
+            "VETERANS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? VETERANS MAY QUALIFY FOR RELIEF",
+            "VETERANS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "VETERAN WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "VETERANS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? VETERANS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage\u2014steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out the debt industry for hiding relief options from veterans\u2014raw, conversational, believable. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "Nobody tells veterans sitting on over 10 thousand dollars in debt that they may not have to keep drowning in minimum payments.",
+            "If you're a veteran and you owe more than 10 thousand dollars, stop making minimum payments before you check this.",
+            "They don't want veterans knowing that 10 thousand dollars or more in debt can often be settled for less than what's owed.",
+            "I can't believe how many veterans carrying over 10 thousand dollars in debt are missing the relief options right in front of them."
+          ],
+          "bubbleHooks": [
+            "VETERANS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? VETERANS MAY QUALIFY FOR RELIEF",
+            "VETERANS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "VETERAN WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "VETERANS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? VETERANS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Debt Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former debt-industry insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable\u2014not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former debt-industry insider in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how debt relief programs work and is explaining the shortcut for veterans in plain English\u2014calm, credible, helpful. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "After years inside the debt industry, most veterans who owe over 10 thousand dollars never hear about the relief they actually qualify for.",
+            "If you're a veteran with 10 thousand dollars or more in credit card or IRS debt, there's a simple way to check what you can reduce.",
+            "Most veterans carrying over 10 thousand dollars never find out their debt can be consolidated until they've overpaid for years.",
+            "I helped run these programs, and veterans who owe more than 10 thousand dollars qualify far more often than they're ever told."
+          ],
+          "bubbleHooks": [
+            "VETERANS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? VETERANS MAY QUALIFY FOR RELIEF",
+            "VETERANS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "VETERAN WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "VETERANS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? VETERANS CHECK RELIEF NOW"
+          ]
+        },
+        {
+          "id": "peer",
+          "name": "Veteran Story",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a military veteran at home, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a U.S. military veteran in a casual shirt or ball cap sitting at home, holding the phone at arm's length and speaking candidly to the camera. Natural home lighting, believable and grounded. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos, no insignia.",
+          "scenePrompt": "Personal story style: the veteran sounds straightforward and genuine, sharing how they handled their debt like advice to a fellow vet\u2014honest, no-nonsense, not salesy. Frame it as general debt relief, never a VA payout.",
+          "hooks": [
+            "I'm a veteran, and once my debt passed 10 thousand dollars, checking my relief options finally got me out from under it.",
+            "I'm a veteran who was buried in over 10 thousand dollars of credit card debt until I found out I had other choices.",
+            "If you're a veteran who owes 10 thousand dollars or more and you're only making minimums, check what I wish I'd checked sooner.",
+            "I stopped dreading the calls once I, a veteran with more than 10 thousand dollars in debt, looked into relief."
+          ],
+          "bubbleHooks": [
+            "VETERANS WITH $10K+ IN DEBT \u2014 CHECK YOUR RELIEF OPTIONS",
+            "OWE OVER $10,000? VETERANS MAY QUALIFY FOR RELIEF",
+            "VETERANS: $10K-PLUS IN DEBT MAY BE REDUCIBLE",
+            "VETERAN WITH $10,000+ IN DEBT? CHECK THIS FIRST",
+            "VETERANS STOP OVERPAYING ON $10K+ IN DEBT",
+            "$10,000 OR MORE IN DEBT? VETERANS CHECK RELIEF NOW"
+          ]
+        }
+      ],
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": ""
+    },
+    {
+      "id": "title-loans",
+      "name": "Title Loans",
+      "vertical": "car title loans / fast cash secured by your vehicle title",
+      "angle": "vehicle owners who need fast emergency cash and have bad or no credit, using their car title to borrow while still driving the car",
+      "bodyVideo": "./assets/title body.mp4",
+      "outputName": "Title Loans",
+      "promptContext": "Speak to everyday drivers and working people who own a car and need cash fast \u2014 a surprise bill, car repair, rent, or a slow week of work. Emphasize that they can use their car title to get same-day cash, that bad credit or no credit check is usually okay, and that they keep driving their car. Do not promise guaranteed approval or exact dollar amounts. Each variation should feel like believable real footage of that setting \u2014 not a polished ad. There must be absolutely no on-screen text, captions, numbers, or overlays of any kind.",
+      "cameraStyle": "",
+      "promptTemplate": "",
+      "hooks": [
+        "If you own your car, you may be able to get cash fast using just your title, even with bad credit.",
+        "Drivers are turning their car title into same-day cash and keeping their vehicle the whole time.",
+        "Need money fast with bad credit? Your car title may be the fastest option you have."
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0,
+      "captionStyle": "default",
+      "captionPosition": "bottom",
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8,
+      "hookBubbleText": "",
+      "variants": [
+        {
+          "id": "news",
+          "name": "News Reporter",
+          "cameraPrompt": "Natural local news desk: a medium shot of a real consumer reporter seated at a news desk, delivering a segment straight to camera. Feels like a believable local news clip \u2014 not a Hollywood broadcast. Clean framing, steady camera.",
+          "creatorPrompt": "A vertical 9:16 photo of a mature consumer reporter seated at a local news desk, speaking directly to camera with an urgent, investigative expression. Realistic studio lighting, plain neutral backdrop, believable local-station feel. Older-phone softness. Absolutely no text, no captions, no chyrons, no numbers, no overlays, no network logos.",
+          "scenePrompt": "Local news alert style: the reporter sounds urgent and investigative, like a consumer money alert drivers need to hear today \u2014 clear, direct, professional.",
+          "hooks": [
+            "Consumer alert for drivers: you may be able to get cash fast using just your car title, even with bad credit.",
+            "Drivers across the country are turning their car title into same-day cash, and most never knew they could.",
+            "If you own your vehicle, there may be a way to get emergency cash today without a hard credit check.",
+            "A lot of people sit on an emergency when the cash they needed was parked in the driveway the whole time."
+          ],
+          "bubbleHooks": [
+            "DRIVERS YOU CAN GET CASH USING YOUR CAR TITLE",
+            "CONSUMER ALERT GET FAST CASH FROM YOUR CAR TITLE",
+            "OWN YOUR CAR? YOU MAY QUALIFY FOR SAME DAY CASH",
+            "BAD CREDIT? YOUR CAR TITLE MAY STILL GET YOU CASH",
+            "NEED CASH FAST? SEE WHAT YOUR CAR TITLE CAN DO",
+            "KEEP DRIVING AND STILL GET CASH FROM YOUR TITLE"
+          ]
+        },
+        {
+          "id": "podcast",
+          "name": "Podcast Host",
+          "cameraPrompt": "Natural podcast setup: a medium shot of a real podcast host at a desk with a microphone and headphones in a small home studio. Feels like authentic podcast footage \u2014 steady, conversational, not staged. Speaker faces the mic and camera naturally.",
+          "creatorPrompt": "A vertical 9:16 photo of a middle-aged podcast host at a desk with a professional microphone and headphones in a small, realistic home podcast studio. Warm lamp light, acoustic panels or bookshelves in the background, natural conversational posture. Older-phone softness and mild compression. Absolutely no text, no captions, no numbers, no overlays, no logos.",
+          "scenePrompt": "Podcast expose style: the host sounds annoyed and skeptical, calling out banks for ignoring people with bad credit when their own car can get them cash \u2014 raw, conversational, believable.",
+          "hooks": [
+            "Nobody tells you that the car sitting in your driveway can get you cash faster than any bank will.",
+            "If you have bad credit, banks ignore you, but your car title can still get you money fast.",
+            "They do not advertise this, but you can borrow against your own car and keep driving it the whole time.",
+            "I cannot believe how many people miss out on fast cash that is sitting in their own car title."
+          ],
+          "bubbleHooks": [
+            "BANKS WON'T TELL YOU YOUR CAR TITLE GETS YOU CASH",
+            "BAD CREDIT? YOUR CAR CAN STILL GET YOU MONEY FAST",
+            "THE FASTEST CASH MIGHT BE PARKED IN YOUR DRIVEWAY",
+            "BORROW ON YOUR CAR AND KEEP DRIVING IT TOO",
+            "STOP IGNORING THE CASH IN YOUR OWN CAR TITLE",
+            "THEY DON'T WANT YOU KNOWING ABOUT TITLE CASH"
+          ]
+        },
+        {
+          "id": "insider",
+          "name": "Lending Insider",
+          "cameraPrompt": "Natural office: a medium shot across a plain desk of a former lending insider in business-casual attire, mid-explanation. Soft office lighting, straightforward and believable \u2014 not hidden-camera POV.",
+          "creatorPrompt": "A vertical 9:16 photo of a credible former loan officer in a blazer or button-down seated behind a plain desk in a modest office, mid-explanation with hands visible. Natural office lighting, neutral walls, believable and straightforward. Older-phone softness. Absolutely no text, no numbers, no logos, no overlays.",
+          "scenePrompt": "Insider explanation style: the speaker sounds like someone who knows how car title lending works and is explaining the shortcut to fast cash in plain English \u2014 calm, credible, helpful.",
+          "hooks": [
+            "After years inside lending, most people never realize their car title can get them cash the same day.",
+            "If you own your vehicle and need money fast, there is a simple way to use your title that I can explain.",
+            "I helped people get cash using their car title for years, and bad credit almost never stopped them.",
+            "Here is the shortcut to fast cash that most drivers with bad credit never hear about."
+          ],
+          "bubbleHooks": [
+            "EX LOAN OFFICER YOUR CAR TITLE CAN GET YOU CASH",
+            "OWN YOUR CAR? HERE'S HOW TO GET SAME DAY CASH",
+            "BAD CREDIT RARELY STOPS A CAR TITLE LOAN",
+            "INSIDER SHORTCUT TO FAST CASH FROM YOUR CAR",
+            "HOW DRIVERS GET CASH FAST USING THEIR TITLE",
+            "THE CAR TITLE TRICK BANKS WON'T EXPLAIN"
+          ]
+        },
+        {
+          "id": "driver",
+          "name": "Everyday Driver",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of an everyday working person sitting in the driver's seat of their car, talking candidly to the camera like a real personal story. Natural daylight through the windshield, slightly shaky, authentic.",
+          "creatorPrompt": "A vertical 9:16 photo of a regular working-class adult sitting in the front seat of their own car, holding the phone at arm's length and speaking candidly to the camera. Natural daylight, believable and a little worn out. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Personal story style: the driver sounds relieved and genuine, sharing how they handled a money emergency using their car title like advice to a friend \u2014 honest, warm, not salesy.",
+          "hooks": [
+            "When I got hit with a surprise bill, I used my car title to get cash the same day and kept driving.",
+            "I had bad credit and no options until I found out my own car could get me the cash I needed.",
+            "I almost panicked over money until I realized the answer was the car parked right outside.",
+            "If you are stuck and need cash fast, please look into using your car title like I did."
+          ],
+          "bubbleHooks": [
+            "I GOT CASH SAME DAY USING MY OWN CAR TITLE",
+            "BAD CREDIT AND BROKE? MY CAR TITLE SAVED ME",
+            "SURPRISE BILL? I USED MY CAR AND KEPT DRIVING",
+            "HOW I GOT FAST CASH WHEN BANKS SAID NO",
+            "THE CASH I NEEDED WAS PARKED IN MY DRIVEWAY",
+            "NEED MONEY FAST? HERE'S WHAT I DID WITH MY CAR"
+          ]
+        },
+        {
+          "id": "gig",
+          "name": "Rideshare Driver",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a rideshare or delivery driver in the driver's seat, phone mount and lanyard visible, talking candidly to the camera between shifts. Natural light, slightly shaky, authentic gig-driver feel.",
+          "creatorPrompt": "A vertical 9:16 photo of a rideshare or delivery driver sitting in their car with a phone mount on the dash and a lanyard or driver badge, holding the phone at arm's length and speaking candidly to the camera. Natural daylight, believable everyday gig-worker look. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "scenePrompt": "Gig-driver story style: the driver sounds practical and real, explaining how their car both earns income and got them fast cash when a slow week hit \u2014 down-to-earth, relatable.",
+          "hooks": [
+            "As a rideshare driver, slow weeks hit hard, so I used my car title to get cash and kept working.",
+            "Driving for apps, my car is my income, and it also got me fast cash when I needed it most.",
+            "When the gig money came up short, my own car title covered the gap the same day.",
+            "If your car is how you make money, it can also get you cash fast when things get tight."
+          ],
+          "bubbleHooks": [
+            "GIG DRIVERS YOUR CAR CAN GET YOU FAST CASH",
+            "SLOW WEEK? YOUR CAR TITLE CAN COVER THE GAP",
+            "RIDESHARE DRIVERS GET CASH AND KEEP DRIVING",
+            "YOUR CAR MAKES MONEY AND CAN GET YOU CASH",
+            "GIG INCOME SHORT? USE YOUR CAR TITLE TODAY",
+            "DRIVERS GET SAME DAY CASH FROM YOUR OWN TITLE"
+          ]
+        }
+      ]
+    }
+  ],
+  "captions": {
+    "enabled": true,
+    "dialogue": "",
+    "wordsPerGroup": 4,
+    "upperCase": true,
+    "layout": "3:4",
+    "position": "bottom",
+    "style": "default",
+    "verticalPosition": 0,
+    "bubbleColor": "#FFFFFF",
+    "bubbleTextColor": "#111111",
+    "bubblePadding": 0,
+    "hookBubble": {
+      "enabled": true,
+      "bold": true,
+      "text": "",
+      "bubbleColor": "#FFFFFF",
+      "textColor": "#111111",
+      "bubblePadding": 0,
+      "style": "card"
+    },
+    "fontName": "Montserrat Black",
+    "fontSize": 0,
+    "primaryColor": "#FFFFFF",
+    "outlineColor": "#000000",
+    "outlineWidth": 4,
+    "highlightCurrentWord": true,
+    "highlightColor": "#22C7F5",
+    "timingEngine": "auto",
+    "timingOffsetSec": 0,
+    "fasterWhisperPython": ".venv-whisper/bin/python",
+    "fasterWhisperModel": "base.en",
+    "whisperBinary": "whisper-cli",
+    "whisperModel": "./models/ggml-base.en.bin"
+  },
+  "browser": {
+    "headless": false,
+    "channel": "chrome",
+    "profileDir": "./.browser-profile",
+    "downloadDir": "./downloads",
+    "slowMoMs": 0
+  },
+  "run": {
+    "count": 1,
+    "delaySeconds": 0
+  },
+  "concurrency": {
+    "maxConcurrentJobs": 3,
+    "apiRequestsPerMinute": 10
+  },
+  "spy": {
+    "enabled": true,
+    "country": "US",
+    "maxAdsPerPage": 40,
+    "scrollRounds": 8,
+    "minRunDays": 14,
+    "minCopies": 2,
+    "suggestionsPerVertical": 5,
+    "classifierModel": "gpt-4o-mini",
+    "transcribeModel": "whisper-1",
+    "regenerateCount": 3,
+    "autoCrawlMinutes": 60,
+    "fullRemakeMaxSegments": 6
+  }
+}

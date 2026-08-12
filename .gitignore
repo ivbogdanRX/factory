@@ -1,0 +1,27 @@
+node_modules/
+.env
+*.log
+.DS_Store
+data/
+vendor/l_automation/node_modules/
+vendor/l_automation/.browser-profile/
+vendor/l_automation/.venv-whisper/
+vendor/l_automation/output/
+vendor/l_automation/downloads/
+vendor/l_automation/artifacts/
+vendor/l_automation/.state/
+vendor/l_automation/.env
+vendor/l_automation/config.json
+vendor/l_automation/.veo-usage.json
+vendor/ads-uploader/node_modules/
+vendor/ads-uploader/dist/
+vendor/ads-uploader/.env
+deploy/launchd/*.local.plist
+portal-vercel/node_modules/
+portal-vercel/.vercel/
+
+# Large media kept local (GitHub push size / 100MB limits)
+vendor/l_automation/assets/*
+!vendor/l_automation/assets/.gitkeep
+vendor/l_automation/examples/**/*.mov
+vendor/l_automation/examples/**/*.mp4

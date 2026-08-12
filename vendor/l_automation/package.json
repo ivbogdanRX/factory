@@ -1,0 +1,33 @@
+{
+  "name": "l-automation",
+  "version": "0.1.0",
+  "description": "Local automation: source a Pinterest image, generate a video with Google Flow, then trim and splice it onto another video.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "login": "tsx src/bootstrap-login.ts",
+    "inspect": "tsx src/inspect-flow.ts",
+    "run": "tsx src/index.ts",
+    "loop": "tsx src/index.ts --loop",
+    "batch": "tsx src/batch.ts",
+    "web": "tsx src/server.ts",
+    "spy": "tsx src/spy.ts",
+    "organize": "tsx src/organize.ts",
+    "clean": "node scripts/clean.mjs",
+    "test:fallback": "tsx scripts/test-fallback.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^2.8.0",
+    "openai": "^6.42.0",
+    "playwright": "^1.49.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

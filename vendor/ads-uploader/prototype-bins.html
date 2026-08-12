@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Set Bins — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111111;
+  --bg-surface: #1F1F1F;
+  --bg-elevated: #2A2A2A;
+  --border: rgba(255,255,255,0.04);
+  --text: #F5F5F5;
+  --text-muted: #8E8E93;
+  --accent: #0668E1;
+  --accent-glow: rgba(6, 104, 225, 0.4);
+  --emerald: #30D158;
+  --red: #FF453A;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-display: 'Silkscreen', monospace;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
+
+/* ── Card Shell ── */
+.card {
+  width: 900px;
+  max-height: 90vh;
+  background: linear-gradient(160deg, #242424, #1C1C1E);
+  border-radius: 36px;
+  border: 1px solid rgba(0,0,0,0.8);
+  box-shadow: -1px -1px 2px rgba(255,255,255,0.05), 20px 30px 60px rgba(0,0,0,0.9), inset 0 1px 2px rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.6);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.02);
+  flex-shrink: 0;
+}
+
+.card-header h1 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  color: #f0f0f5;
+  font-weight: 400;
+}
+
+.card-body {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 0;
+  mask-image: linear-gradient(to bottom, black calc(100% - 24px), transparent);
+}
+
+.section { padding: 16px 24px; }
+
+.cyber-label {
+  font-size: 10px; font-family: var(--font-display); font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted);
+}
+
+/* ── Skeuo Utilities ── */
+.skeuo-raised {
+  background: linear-gradient(145deg, #262626, #1C1C1C);
+  border: 1px solid rgba(0,0,0,0.8);
+  border-radius: 16px;
+  box-shadow: -1px -1px 2px rgba(255,255,255,0.05), 4px 4px 10px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.08);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.skeuo-inset {
+  background: #0D0D0D;
+  border: 1px solid rgba(255,255,255,0.02);
+  border-top-color: rgba(0,0,0,0.8);
+  border-radius: 14px;
+  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.8), inset -2px -2px 6px rgba(255,255,255,0.03), 0 1px 1px rgba(255,255,255,0.04);
+}
+
+/* ── File Grid ── */
+.file-pool {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.file-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: grab;
+  user-select: none;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+}
+.file-card:hover { border-color: rgba(255,255,255,0.12); }
+.file-card.selected { border-color: #0668E1; }
+.file-card.dragging { opacity: 0.4; transform: scale(0.95); }
+
+.file-card-img {
+  aspect-ratio: 1;
+  background: #1A1A1A;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.file-card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.file-card-footer {
+  padding: 4px 6px;
+  background: rgba(0,0,0,0.5);
+  font-size: 8px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-card .badge {
+  position: absolute; top: 4px; left: 4px;
+  font-size: 7px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 1px 5px; border-radius: 3px; backdrop-filter: blur(4px);
+}
+.badge-vid { background: rgba(6,104,225,0.75); color: #fff; }
+.badge-img { background: rgba(48,209,88,0.7); color: #fff; }
+
+.selection-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(6,104,225,0.85) 100%);
+  pointer-events: none;
+}
+
+/* ── Bin Shelf ── */
+.bin-shelf {
+  display: flex;
+  gap: 10px;
+  padding: 0 24px 20px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  min-height: 160px;
+}
+
+.bin {
+  min-width: 180px;
+  max-width: 220px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.bin.drop-hover {
+  border-color: rgba(6,104,225,0.5) !important;
+  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.8), inset -2px -2px 6px rgba(255,255,255,0.03), 0 0 0 2px var(--accent-glow), 0 0 20px rgba(6,104,225,0.15) !important;
+}
+
+.bin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  flex-shrink: 0;
+}
+.bin-header input {
+  background: transparent; border: none; outline: none;
+  color: #ddd; font-size: 11px; font-weight: 700;
+  font-family: var(--font-body); width: 100%;
+}
+.bin-header input::placeholder { color: #555; }
+
+.bin-count {
+  font-size: 9px; color: #555; font-weight: 600; flex-shrink: 0; margin-left: 8px;
+}
+
+.bin-body {
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;
+  min-height: 80px;
+  overflow-y: auto;
+}
+
+.bin-thumb {
+  width: 32px; height: 32px; border-radius: 5px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: grab;
+  transition: transform 0.1s;
+  position: relative;
+}
+.bin-thumb:hover { transform: scale(1.1); }
+.bin-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.bin-empty {
+  width: 100%; text-align: center; padding: 16px 8px;
+  font-size: 10px; color: #444; font-style: italic;
+}
+
+.bin-remove {
+  position: absolute; top: -2px; right: -2px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: rgba(255,69,58,0.9); border: none;
+  color: #fff; font-size: 7px; cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  line-height: 1;
+}
+.bin-thumb:hover .bin-remove { display: flex; }
+
+/* ── Add Bin Button ── */
+.add-bin {
+  min-width: 120px; flex-shrink: 0;
+  border: 2px dashed rgba(255,255,255,0.08);
+  border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.2s;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+}
+.add-bin:hover {
+  border-color: rgba(6,104,225,0.3);
+  color: #0668E1;
+  background: rgba(6,104,225,0.04);
+}
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: rgba(0,0,0,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* ── Drag ghost ── */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  gap: -8px;
+  align-items: center;
+  opacity: 0.9;
+}
+.drag-ghost-thumb {
+  width: 48px; height: 48px; border-radius: 8px;
+  border: 2px solid #0668E1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  overflow: hidden;
+  margin-left: -12px;
+}
+.drag-ghost-thumb:first-child { margin-left: 0; }
+.drag-ghost-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.drag-ghost-count {
+  background: #0668E1;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 4px;
+  box-shadow: 0 2px 8px rgba(6,104,225,0.5);
+}
+
+/* ── Animations ── */
+@keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slide-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse-border { 0%,100% { border-color: rgba(6,104,225,0.2); } 50% { border-color: rgba(6,104,225,0.5); } }
+
+.animate-in { animation: fade-in 0.2s ease both; }
+.shelf-label-area { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px 8px; flex-shrink: 0; }
+
+/* file count badge on pool header */
+.pool-badge {
+  font-size: 11px; color: #0668E1; font-weight: 700;
+  font-family: var(--font-display);
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="app">
+  <div class="card-header">
+    <h1>Organizer</h1>
+    <span class="cyber-label"><span class="pool-badge" id="unassigned-count">0</span> unassigned</span>
+  </div>
+
+  <div class="card-body">
+    <!-- File Pool -->
+    <div class="section" style="flex: 1; min-height: 200px;">
+      <div class="file-pool" id="file-pool"></div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Shelf Label -->
+  <div class="shelf-label-area">
+    <span class="cyber-label">Ad Sets</span>
+    <span class="cyber-label" style="color: #555;" id="bin-summary">0 bins · 0 ads</span>
+  </div>
+
+  <!-- Bin Shelf -->
+  <div class="bin-shelf" id="bin-shelf">
+    <button class="add-bin" id="add-bin-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      NEW AD SET
+    </button>
+  </div>
+</div>
+
+<!-- Custom drag ghost (hidden) -->
+<div class="drag-ghost" id="drag-ghost" style="display:none;"></div>
+
+<script>
+// ── Demo Data ──
+const DEMO_FILES = [
+  { id: 'f1', name: 'hook_nurse_pain.mp4', type: 'video', color: '#2a1f3d' },
+  { id: 'f2', name: 'ugc_testimonial_01.mp4', type: 'video', color: '#1f2d3d' },
+  { id: 'f3', name: 'lifestyle_outdoor.jpg', type: 'image', color: '#2d3d1f' },
+  { id: 'f4', name: 'before_after_v2.jpg', type: 'image', color: '#3d2d1f' },
+  { id: 'f5', name: 'doctor_explainer.mp4', type: 'video', color: '#1f3d2d' },
+  { id: 'f6', name: 'social_proof_01.jpg', type: 'image', color: '#3d1f2d' },
+  { id: 'f7', name: 'cta_urgency.mp4', type: 'video', color: '#2d1f3d' },
+  { id: 'f8', name: 'transformation.jpg', type: 'image', color: '#1f3d3d' },
+  { id: 'f9', name: 'hook_veteran_trust.mp4', type: 'video', color: '#3d3d1f' },
+  { id: 'f10', name: 'motion_graphic_01.mp4', type: 'video', color: '#2d2d1f' },
+  { id: 'f11', name: 'static_offer.jpg', type: 'image', color: '#1f2d2d' },
+  { id: 'f12', name: 'carousel_slide_01.jpg', type: 'image', color: '#2d1f2d' },
+];
+
+let selectedIds = new Set();
+let bins = []; // { id, name, fileIds: [] }
+let binIdCounter = 0;
+
+// ── Rendering ──
+function render() {
+  renderPool();
+  renderBins();
+  updateCounts();
+}
+
+function getAssignedFileIds() {
+  const assigned = new Set();
+  bins.forEach(b => b.fileIds.forEach(id => assigned.add(id)));
+  return assigned;
+}
+
+function renderPool() {
+  const pool = document.getElementById('file-pool');
+  const assigned = getAssignedFileIds();
+  const unassigned = DEMO_FILES.filter(f => !assigned.has(f.id));
+  
+  pool.innerHTML = '';
+  unassigned.forEach(f => {
+    const card = document.createElement('div');
+    card.className = `file-card ${selectedIds.has(f.id) ? 'selected' : ''}`;
+    card.dataset.fileId = f.id;
+    card.draggable = true;
+    card.innerHTML = `
+      <div class="file-card-img" style="background: ${f.color};">
+        <span class="badge ${f.type === 'video' ? 'badge-vid' : 'badge-img'}">${f.type === 'video' ? 'VID' : 'IMG'}</span>
+        ${selectedIds.has(f.id) ? '<div class="selection-overlay"></div>' : ''}
+      </div>
+      <div class="file-card-footer">${f.name}</div>
+    `;
+    
+    card.addEventListener('click', (e) => handleFileClick(f.id, e));
+    card.addEventListener('dragstart', (e) => handleDragStart(e, f.id));
+    card.addEventListener('dragend', handleDragEnd);
+    pool.appendChild(card);
+  });
+}
+
+function renderBins() {
+  const shelf = document.getElementById('bin-shelf');
+  const addBtn = document.getElementById('add-bin-btn');
+  
+  // Remove old bins
+  shelf.querySelectorAll('.bin').forEach(el => el.remove());
+  
+  bins.forEach(bin => {
+    const el = document.createElement('div');
+    el.className = 'bin skeuo-inset animate-in';
+    el.dataset.binId = bin.id;
+    
+    const files = bin.fileIds.map(id => DEMO_FILES.find(f => f.id === id)).filter(Boolean);
+    
+    el.innerHTML = `
+      <div class="bin-header">
+        <input type="text" value="${bin.name}" placeholder="Ad Set Name..." data-bin-id="${bin.id}" />
+        <span class="bin-count">${files.length}</span>
+      </div>
+      <div class="bin-body" data-bin-id="${bin.id}">
+        ${files.length === 0 ? '<div class="bin-empty">Drop files here</div>' : ''}
+        ${files.map(f => `
+          <div class="bin-thumb" draggable="true" data-file-id="${f.id}" data-from-bin="${bin.id}" title="${f.name}">
+            <div style="width:100%;height:100%;background:${f.color};display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:7px;color:rgba(255,255,255,0.5);font-weight:700;">${f.type === 'video' ? '▶' : '◻'}</span>
+            </div>
+            <button class="bin-remove" data-file-id="${f.id}" data-bin-id="${bin.id}">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    
+    // Insert before add button
+    shelf.insertBefore(el, addBtn);
+    
+    // Bin name editing
+    const input = el.querySelector('input');
+    input.addEventListener('change', (e) => {
+      const b = bins.find(b => b.id === e.target.dataset.binId);
+      if (b) b.name = e.target.value;
+    });
+    
+    // Drop target
+    const body = el.querySelector('.bin-body');
+    body.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('drop-hover'); });
+    body.addEventListener('dragleave', () => el.classList.remove('drop-hover'));
+    body.addEventListener('drop', (e) => {
+      e.preventDefault();
+      el.classList.remove('drop-hover');
+      handleDropOnBin(bin.id, e);
+    });
+    
+    // Remove file from bin
+    el.querySelectorAll('.bin-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const fileId = btn.dataset.fileId;
+        const binId = btn.dataset.binId;
+        const b = bins.find(b => b.id === binId);
+        if (b) {
+          b.fileIds = b.fileIds.filter(id => id !== fileId);
+          render();
+        }
+      });
+    });
+    
+    // Drag from bin (to move between bins or back to pool)
+    el.querySelectorAll('.bin-thumb[draggable]').forEach(thumb => {
+      thumb.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+          fileIds: [thumb.dataset.fileId],
+          fromBin: thumb.dataset.fromBin,
+        }));
+        const ghost = document.getElementById('drag-ghost');
+        ghost.innerHTML = '<div class="drag-ghost-thumb" style="margin-left:0;"><div style="width:100%;height:100%;background:#333;"></div></div><span class="drag-ghost-count">1</span>';
+        ghost.style.display = 'flex';
+        e.dataTransfer.setDragImage(ghost, 24, 24);
+      });
+      thumb.addEventListener('dragend', () => {
+        document.getElementById('drag-ghost').style.display = 'none';
+      });
+    });
+  });
+  
+  // Also make pool a drop target (to return files)
+  const pool = document.getElementById('file-pool');
+  pool.addEventListener('dragover', (e) => e.preventDefault());
+  pool.addEventListener('drop', (e) => {
+    e.preventDefault();
+    try {
+      const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      if (data.fromBin) {
+        const bin = bins.find(b => b.id === data.fromBin);
+        if (bin) {
+          data.fileIds.forEach(id => {
+            bin.fileIds = bin.fileIds.filter(fid => fid !== id);
+          });
+          render();
+        }
+      }
+    } catch {}
+  });
+}
+
+function updateCounts() {
+  const assigned = getAssignedFileIds();
+  document.getElementById('unassigned-count').textContent = DEMO_FILES.length - assigned.size;
+  
+  const totalAds = bins.reduce((sum, b) => sum + b.fileIds.length, 0);
+  document.getElementById('bin-summary').textContent = `${bins.length} bin${bins.length !== 1 ? 's' : ''} · ${totalAds} ad${totalAds !== 1 ? 's' : ''}`;
+}
+
+// ── Interactions ──
+function handleFileClick(fileId, e) {
+  if (e.shiftKey) {
+    // Range select (simplified)
+    if (selectedIds.has(fileId)) selectedIds.delete(fileId);
+    else selectedIds.add(fileId);
+  } else if (e.ctrlKey || e.metaKey) {
+    if (selectedIds.has(fileId)) selectedIds.delete(fileId);
+    else selectedIds.add(fileId);
+  } else {
+    if (selectedIds.has(fileId) && selectedIds.size === 1) {
+      selectedIds.clear();
+    } else {
+      selectedIds.clear();
+      selectedIds.add(fileId);
+    }
+  }
+  renderPool();
+}
+
+function handleDragStart(e, fileId) {
+  // If dragging a selected file, drag all selected. Otherwise just this one.
+  let dragIds;
+  if (selectedIds.has(fileId)) {
+    dragIds = [...selectedIds];
+  } else {
+    dragIds = [fileId];
+  }
+  
+  e.dataTransfer.setData('text/plain', JSON.stringify({ fileIds: dragIds, fromBin: null }));
+  
+  // Custom ghost
+  const ghost = document.getElementById('drag-ghost');
+  const files = dragIds.map(id => DEMO_FILES.find(f => f.id === id)).filter(Boolean);
+  ghost.innerHTML = files.slice(0, 3).map((f, i) => `
+    <div class="drag-ghost-thumb" style="margin-left:${i > 0 ? '-12px' : '0'};background:${f.color};z-index:${3 - i};">
+    </div>
+  `).join('') + (dragIds.length > 1 ? `<span class="drag-ghost-count">${dragIds.length}</span>` : '');
+  ghost.style.display = 'flex';
+  e.dataTransfer.setDragImage(ghost, 24, 24);
+  
+  // Mark as dragging
+  dragIds.forEach(id => {
+    const card = document.querySelector(`[data-file-id="${id}"]`);
+    if (card) card.classList.add('dragging');
+  });
+}
+
+function handleDragEnd() {
+  document.querySelectorAll('.file-card.dragging').forEach(el => el.classList.remove('dragging'));
+  document.querySelectorAll('.bin.drop-hover').forEach(el => el.classList.remove('drop-hover'));
+  document.getElementById('drag-ghost').style.display = 'none';
+}
+
+function handleDropOnBin(binId, e) {
+  try {
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const bin = bins.find(b => b.id === binId);
+    if (!bin) return;
+    
+    // Remove from source bin if moving between bins
+    if (data.fromBin) {
+      const srcBin = bins.find(b => b.id === data.fromBin);
+      if (srcBin) {
+        data.fileIds.forEach(id => {
+          srcBin.fileIds = srcBin.fileIds.filter(fid => fid !== id);
+        });
+      }
+    }
+    
+    // Add to target bin (avoid duplicates)
+    data.fileIds.forEach(id => {
+      // Remove from any other bin first
+      bins.forEach(b => {
+        b.fileIds = b.fileIds.filter(fid => fid !== id);
+      });
+      bin.fileIds.push(id);
+    });
+    
+    selectedIds.clear();
+    render();
+  } catch {}
+}
+
+// ── Add Bin ──
+document.getElementById('add-bin-btn').addEventListener('click', () => {
+  binIdCounter++;
+  bins.push({ id: `bin-${binIdCounter}`, name: '', fileIds: [] });
+  render();
+  // Focus the new bin's input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.bin-header input');
+    const last = inputs[inputs.length - 1];
+    if (last) last.focus();
+  }, 50);
+});
+
+// ── Double-click bin header to delete (if empty) ──
+document.getElementById('bin-shelf').addEventListener('dblclick', (e) => {
+  const binEl = e.target.closest('.bin');
+  if (!binEl) return;
+  const binId = binEl.dataset.binId;
+  const bin = bins.find(b => b.id === binId);
+  if (bin && bin.fileIds.length === 0) {
+    bins = bins.filter(b => b.id !== binId);
+    render();
+  }
+});
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>

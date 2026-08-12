@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c120e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Ad Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/glance.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="mark">AF</span> Ad Factory</div>
+    <div class="updated" id="updated">connecting…</div>
+  </header>
+
+  <main id="app">
+    <section class="hero card" id="hero">
+      <div class="hero-status" id="hero-status">
+        <span class="dot big" id="hero-dot"></span>
+        <span id="hero-text">Loading…</span>
+      </div>
+      <div class="hero-problems" id="hero-problems"></div>
+      <div class="hero-next" id="hero-next"></div>
+      <div class="hero-flags" id="hero-flags"></div>
+    </section>
+
+    <section class="stats" id="stats">
+      <div class="stat card"><div class="k" id="stat-spend">—</div><div class="l">spend today</div></div>
+      <div class="stat card"><div class="k" id="stat-purch">—</div><div class="l">purchases</div></div>
+      <div class="stat card"><div class="k" id="stat-cpa">—</div><div class="l">CPA</div></div>
+    </section>
+
+    <section>
+      <h2>Flights</h2>
+      <div id="flights"></div>
+    </section>
+
+    <section>
+      <h2>Angles</h2>
+      <div class="card" id="angles"></div>
+    </section>
+
+    <section>
+      <h2>Health</h2>
+      <div class="card" id="health"></div>
+    </section>
+
+    <footer id="foot"></footer>
+  </main>
+
+  <script src="/glance.js"></script>
+</body>
+</html>

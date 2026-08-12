@@ -1,0 +1,17 @@
+node_modules/
+dist/
+
+# Local runtime state and outputs
+.browser-profile/
+artifacts/
+downloads/
+output/
+.state/
+models/
+.venv-whisper/
+config.json
+.env
+*.log
+
+# OS noise
+.DS_Store
