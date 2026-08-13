@@ -570,7 +570,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
     campaigns: campaigns.map((campaign, idx) => {
       const c = campaign as Partial<CampaignConfig>;
       if (!c.id) fail(`campaigns[${idx}] is missing id`);
-      if (!c.bodyVideo) fail(`campaigns[${idx}] is missing bodyVideo`);
+      const bodyVideo = (c.bodyVideo ?? "").trim();
       if (!Array.isArray(c.hooks) || c.hooks.length === 0) {
         fail(`campaigns[${idx}] must include at least one hook`);
       }
@@ -579,7 +579,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
         name: c.name ?? c.id,
         vertical: c.vertical ?? "",
         angle: c.angle ?? "",
-        bodyVideo: resolvePath(c.bodyVideo),
+        bodyVideo: bodyVideo ? resolvePath(bodyVideo) : "",
         bodyVideos: Array.isArray(c.bodyVideos)
           ? c.bodyVideos
               .filter((v): v is string => typeof v === "string" && v.trim().length > 0)
