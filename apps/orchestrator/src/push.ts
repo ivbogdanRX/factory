@@ -94,15 +94,10 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     // studio config unreadable — glance just skips the angle card
   }
 
-  // Prefer account-wide numbers (include manual/cloned campaigns); fall back
-  // to the automated-campaign sums before the first daily refresh lands.
-  const daily = getDailyPerformance();
-  const ptToday = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit",
-  }).format(new Date());
-  const todayRow = daily.find((d) => d.date === ptToday);
-  const spendToday = todayRow ? todayRow.spend : perf.entries.reduce((sum, e) => sum + e.spend, 0);
-  const purchasesToday = todayRow ? todayRow.purchases : perf.entries.reduce((sum, e) => sum + e.purchases, 0);
+  // Factory-created campaigns only — the glance answers "how are MY automated
+  // ads doing", not what the manual clones on the spare accounts are up to.
+  const spendToday = perf.entries.reduce((sum, e) => sum + e.spend, 0);
+  const purchasesToday = perf.entries.reduce((sum, e) => sum + e.purchases, 0);
 
   const problems: string[] = [];
   if (health && !health.ok) problems.push("healthcheck failing");
@@ -151,7 +146,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
       cpaToday: purchasesToday > 0 ? spendToday / purchasesToday : null,
       campaigns: perf.entries,
     },
-    daily,
+    daily: getDailyPerformance(),
     runs,
     angles,
     redtrackAngles: guardrailAngleSnapshot(),

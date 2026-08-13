@@ -188,20 +188,26 @@ function render(snap) {
     <div><div class="n${cpa != null ? "" : " dim"}">${cpa != null ? money(cpa) : "—"}</div><div class="t">cpa</div></div>
   </div>`);
 
-  // 3. Per-day history — the "how's it actually going" table.
+  // 3. Per-day history of factory-launched campaigns, folded into a dropdown.
   const daily = snap.daily || [];
   if (daily.length) {
-    parts.push(`<div class="days">
-      <div class="dhead"><span>last 7 days</span><span>spend</span><span>buys</span><span>cpa</span></div>
-      ${daily.map((d) => `<div class="day${d.spend || d.purchases ? "" : " dim"}">
-        <span class="dt">${esc(dayLabel(d.date))}</span>
-        <span>${money(d.spend)}</span>
-        <span>${d.purchases}</span>
-        <span>${d.cpa != null ? money(d.cpa) : "—"}</span>
-      </div>`).join("")}
-    </div>`);
+    const totSpend = daily.reduce((s, d) => s + d.spend, 0);
+    const totBuys = daily.reduce((s, d) => s + d.purchases, 0);
+    parts.push(`<details id="d-days">
+      <summary><div class="row"><span class="l">Last 7 days</span>
+        <span class="v"><b>${money(totSpend)}</b> · ${totBuys} buys</span></div></summary>
+      <div class="days">
+        <div class="dhead"><span>day</span><span>spend</span><span>buys</span><span>cpa</span></div>
+        ${daily.map((d) => `<div class="day${d.spend || d.purchases ? "" : " dim"}">
+          <span class="dt">${esc(dayLabel(d.date))}</span>
+          <span>${money(d.spend)}</span>
+          <span>${d.purchases}</span>
+          <span>${d.cpa != null ? money(d.cpa) : "—"}</span>
+        </div>`).join("")}
+      </div>
+    </details>`);
   } else {
-    parts.push(`<div class="row"><span class="l">Last 7 days</span><span class="v muted">no flight history yet</span></div>`);
+    parts.push(`<div class="row"><span class="l">Last 7 days</span><span class="v muted">no factory flights yet</span></div>`);
   }
 
   // 4. Flights: live ones get a row each; otherwise just the next drop.
