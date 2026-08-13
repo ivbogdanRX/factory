@@ -109,6 +109,36 @@ h1 { font-size: 15px; font-weight: 600; flex: 1; letter-spacing: -0.01em; }
   letter-spacing: 0.07em;
 }
 
+/* ---- per-day performance table ---- */
+
+.days { border-bottom: 1px solid var(--line); padding: 10px 16px 12px; }
+
+.dhead,
+.day {
+  display: grid;
+  grid-template-columns: 1fr 76px 52px 64px;
+  gap: 8px;
+  align-items: baseline;
+}
+.dhead > span:not(:first-child),
+.day > span:not(:first-child) { text-align: right; }
+
+.dhead {
+  font-size: 11px;
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding-bottom: 6px;
+}
+
+.day {
+  padding: 4px 0;
+  font: 14px var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.day.dim > span:not(.dt) { color: var(--mut); }
+.day .dt { font-family: inherit; font-size: 13.5px; }
+
 /* ---- rows ---- */
 
 .row {
@@ -214,6 +244,89 @@ footer {
   color: var(--mut);
 }
 footer a { color: var(--mut); }
+
+/* ---- launch control: three deliberate steps, no accidents ---- */
+
+.launch { margin: 22px 16px 8px; }
+
+.launch-toggle {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--mut);
+  font-size: 13.5px;
+  padding: 11px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.launch-panel {
+  margin-top: 10px;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(248, 113, 113, 0.05);
+}
+
+.lp-warn { font-size: 13.5px; color: var(--txt); margin-bottom: 12px; }
+.lp-warn b { color: var(--bad); }
+
+.hold {
+  position: relative;
+  width: 100%;
+  height: 46px;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  border-radius: 10px;
+  background: none;
+  color: var(--bad);
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+  cursor: pointer;
+}
+.hold:disabled { color: var(--bg); }
+
+.hold-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: var(--bad);
+  transition: width 0.05s linear;
+}
+.hold-txt { position: relative; z-index: 1; }
+
+.lp-arm { display: flex; gap: 8px; margin-top: 10px; }
+.lp-arm input {
+  flex: 1;
+  min-width: 0;
+  background: #141519;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--txt);
+  font: 15px var(--mono);
+  letter-spacing: 0.08em;
+  padding: 10px;
+  text-transform: uppercase;
+}
+.lp-arm button {
+  background: var(--bad);
+  color: #17181c;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 16px;
+}
+.lp-arm button:disabled { opacity: 0.35; }
+
+.lp-msg { margin-top: 10px; font-size: 13.5px; }
+.lp-msg.ok { color: var(--ok); }
+.lp-msg.err { color: var(--bad); }
 
 /* ---- key form (remote access) ---- */
 

@@ -19,6 +19,27 @@
   <main id="app">
     <div class="row"><span class="l">Loading</span><span class="v muted">connecting to the Mac…</span></div>
   </main>
+
+  <!-- Launch control lives outside #app so the 20s re-render can't reset it mid-confirmation. -->
+  <div class="launch" id="launch">
+    <button class="launch-toggle" id="launch-toggle" type="button">Start a production run…</button>
+    <div class="launch-panel" id="launch-panel" hidden>
+      <div class="lp-warn">
+        This is <b>not a test</b>. It generates today's ads, uploads them to Meta,
+        and spends the real daily budget once live.
+      </div>
+      <button class="hold" id="hold-btn" type="button">
+        <span class="hold-fill" id="hold-fill"></span>
+        <span class="hold-txt" id="hold-txt">Hold for 3 seconds to arm</span>
+      </button>
+      <div class="lp-arm" id="lp-arm" hidden>
+        <input id="launch-word" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Type LAUNCH to confirm" />
+        <button id="launch-go" type="button" disabled>Launch</button>
+      </div>
+      <div class="lp-msg" id="lp-msg" hidden></div>
+    </div>
+  </div>
+
   <script src="/glance.js"></script>
 </body>
 </html>

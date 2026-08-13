@@ -149,8 +149,44 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     req.method !== "GET" && req.method !== "HEAD" && req.method !== "OPTIONS";
 
   try {
-    if (mutating && !isLoopback(req)) {
+    // The one deliberate exception to loopback-only writes: the phone's
+    // "launch production run" button. It has its own friction (exact confirm
+    // phrase + cooldown) so it can't fire by accident.
+    if (mutating && !isLoopback(req) && pathname !== "/api/launch") {
       sendJson(res, 403, { error: "Write APIs are localhost-only" });
+      return;
+    }
+
+    if (pathname === "/api/launch" && req.method === "POST") {
+      const body = await readBody(req);
+      if (String(body.confirm ?? "") !== "LAUNCH") {
+        sendJson(res, 400, { error: 'Confirmation phrase missing — type LAUNCH exactly.' });
+        return;
+      }
+      if (getSetting("globalPause") === "1") {
+        sendJson(res, 409, { error: "Factory is paused — resume it first (Slack /adops)." });
+        return;
+      }
+      const lastLaunch = Number(getSetting("lastManualLaunchAt") ?? 0);
+      const coolMs = 10 * 60 * 1000 - (Date.now() - lastLaunch);
+      if (coolMs > 0) {
+        sendJson(res, 429, { error: `A run was just launched. Try again in ${Math.ceil(coolMs / 60000)} min.` });
+        return;
+      }
+      const verticalId = body.verticalId ? String(body.verticalId) : undefined;
+      if (verticalId) {
+        const vertical = loadVerticals().find((v) => v.id === verticalId);
+        if (!vertical) {
+          sendJson(res, 404, { error: `Unknown vertical: ${verticalId}` });
+          return;
+        }
+        void runVertical(vertical);
+      } else {
+        void runDaily();
+      }
+      setSetting("lastManualLaunchAt", String(Date.now()));
+      console.log(`Manual production launch from ${req.socket.remoteAddress} (vertical: ${verticalId ?? "all"})`);
+      sendJson(res, 202, { ok: true, message: "Production run started — ads will generate now and go live after review." });
       return;
     }
     if (pathname === "/api/state" && req.method === "GET") {

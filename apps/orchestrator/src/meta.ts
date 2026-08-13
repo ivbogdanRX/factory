@@ -316,6 +316,36 @@ export async function getCampaignInsights(
   };
 }
 
+export interface DailyInsight {
+  /** YYYY-MM-DD in the ad account's timezone. */
+  date: string;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  purchases: number;
+}
+
+/** Per-day breakdown for the glance "last 7 days" table. */
+export async function getCampaignDailyInsights(campaignId: string): Promise<DailyInsight[]> {
+  const data = (await getJson(
+    `${campaignId}/insights?fields=spend,impressions,clicks,actions&date_preset=last_14d&time_increment=1`,
+    "campaignDailyInsights",
+  )) as { data?: Array<Record<string, unknown>> };
+  return (data.data ?? []).map((row) => {
+    const actions = (row.actions ?? []) as Array<{ action_type?: string; value?: string }>;
+    const purchases = actions
+      .filter((a) => a.action_type === "purchase" || a.action_type === "offsite_conversion.fb_pixel_purchase")
+      .reduce((max, a) => Math.max(max, Number(a.value ?? 0)), 0);
+    return {
+      date: String(row.date_start ?? ""),
+      spend: Number(row.spend ?? 0),
+      impressions: Number(row.impressions ?? 0),
+      clicks: Number(row.clicks ?? 0),
+      purchases,
+    };
+  }).filter((d) => d.date);
+}
+
 export interface AdInsights {
   spend: number;
   impressions: number;

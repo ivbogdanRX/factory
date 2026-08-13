@@ -9,7 +9,7 @@ import { env } from "./env.js";
 import { loadVerticals } from "./verticals.js";
 import { listRuns, listCreatives, getSetting } from "./db.js";
 import { nextRunAtIso } from "./schedule.js";
-import { getPerformanceReport, type PerformanceEntry } from "./perf.js";
+import { getDailyPerformance, getPerformanceReport, type PerformanceEntry } from "./perf.js";
 import { angleStats, type AngleStats } from "./angles.js";
 import { lastHealthReport } from "./healthcheck.js";
 import { studioHealthy } from "./creative.js";
@@ -129,6 +129,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
       cpaToday: purchasesToday > 0 ? spendToday / purchasesToday : null,
       campaigns: perf.entries,
     },
+    daily: getDailyPerformance(),
     runs,
     angles,
     redtrackAngles: guardrailAngleSnapshot(),

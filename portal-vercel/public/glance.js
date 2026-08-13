@@ -33,6 +33,14 @@ function until(iso) {
 
 const money = (n) => `$${Number(n).toFixed(Number(n) >= 100 ? 0 : 2)}`;
 
+/** "2026-08-14" → "Thu 8/14" without UTC-midnight date shifting. */
+function dayLabel(ymd) {
+  const [y, m, d] = String(ymd).split("-").map(Number);
+  if (!y || !m || !d) return ymd;
+  const wd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(y, m - 1, d).getDay()];
+  return `${wd} ${m}/${d}`;
+}
+
 /* ---- access key (only needed off-LAN) ---- */
 
 (() => {
@@ -180,7 +188,23 @@ function render(snap) {
     <div><div class="n${cpa != null ? "" : " dim"}">${cpa != null ? money(cpa) : "—"}</div><div class="t">cpa</div></div>
   </div>`);
 
-  // 3. Flights: live ones get a row each; otherwise just the next drop.
+  // 3. Per-day history — the "how's it actually going" table.
+  const daily = snap.daily || [];
+  if (daily.length) {
+    parts.push(`<div class="days">
+      <div class="dhead"><span>last 7 days</span><span>spend</span><span>buys</span><span>cpa</span></div>
+      ${daily.map((d) => `<div class="day${d.spend || d.purchases ? "" : " dim"}">
+        <span class="dt">${esc(dayLabel(d.date))}</span>
+        <span>${money(d.spend)}</span>
+        <span>${d.purchases}</span>
+        <span>${d.cpa != null ? money(d.cpa) : "—"}</span>
+      </div>`).join("")}
+    </div>`);
+  } else {
+    parts.push(`<div class="row"><span class="l">Last 7 days</span><span class="v muted">no flight history yet</span></div>`);
+  }
+
+  // 4. Flights: live ones get a row each; otherwise just the next drop.
   const live = (snap.runs || []).filter((r) => ["live", "scheduled", "generating", "uploading"].includes(r.status));
   for (const r of live) {
     let v = "";
@@ -249,6 +273,113 @@ function render(snap) {
     if (d) d.open = true;
   }
 }
+
+/* ---- launch control: expand → hold 3s to arm → type LAUNCH → go ---- */
+
+(() => {
+  const panel = $("#launch-panel");
+  const holdBtn = $("#hold-btn");
+  const holdFill = $("#hold-fill");
+  const holdTxt = $("#hold-txt");
+  const armRow = $("#lp-arm");
+  const word = $("#launch-word");
+  const go = $("#launch-go");
+  const msg = $("#lp-msg");
+
+  const HOLD_MS = 3000;
+  let holdStart = 0;
+  let holdTimer = null;
+  let disarmTimer = null;
+
+  function reset() {
+    clearInterval(holdTimer);
+    clearTimeout(disarmTimer);
+    holdTimer = null;
+    holdFill.style.width = "0%";
+    holdTxt.textContent = "Hold for 3 seconds to arm";
+    holdBtn.disabled = false;
+    armRow.hidden = true;
+    word.value = "";
+    go.disabled = true;
+  }
+
+  $("#launch-toggle").addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+    msg.hidden = true;
+    if (!panel.hidden) reset();
+  });
+
+  function arm() {
+    clearInterval(holdTimer);
+    holdTimer = null;
+    holdFill.style.width = "100%";
+    holdTxt.textContent = "Armed";
+    holdBtn.disabled = true;
+    armRow.hidden = false;
+    word.focus();
+    // Auto-disarm if nothing happens — no live grenades left lying around.
+    disarmTimer = setTimeout(reset, 60_000);
+  }
+
+  function startHold(e) {
+    e.preventDefault();
+    if (holdBtn.disabled || holdTimer) return;
+    holdStart = Date.now();
+    holdTimer = setInterval(() => {
+      const pct = Math.min(100, ((Date.now() - holdStart) / HOLD_MS) * 100);
+      holdFill.style.width = `${pct}%`;
+      if (pct >= 100) arm();
+    }, 50);
+  }
+
+  function cancelHold() {
+    if (holdBtn.disabled) return;
+    clearInterval(holdTimer);
+    holdTimer = null;
+    holdFill.style.width = "0%";
+  }
+
+  holdBtn.addEventListener("touchstart", startHold, { passive: false });
+  holdBtn.addEventListener("mousedown", startHold);
+  for (const ev of ["touchend", "touchcancel", "mouseup", "mouseleave"]) {
+    holdBtn.addEventListener(ev, cancelHold);
+  }
+  holdBtn.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  word.addEventListener("input", () => {
+    go.disabled = word.value.trim().toUpperCase() !== "LAUNCH";
+  });
+
+  go.addEventListener("click", async () => {
+    if (go.disabled) return;
+    go.disabled = true;
+    go.textContent = "Launching…";
+    try {
+      const res = await fetch("/api/launch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: word.value.trim().toUpperCase() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      msg.hidden = false;
+      if (res.ok) {
+        msg.className = "lp-msg ok";
+        msg.textContent = data.message || "Production run started.";
+        panel.hidden = true;
+        setTimeout(refresh, 2000);
+      } else {
+        msg.className = "lp-msg err";
+        msg.textContent = data.error || `Failed (HTTP ${res.status})`;
+      }
+    } catch (err) {
+      msg.hidden = false;
+      msg.className = "lp-msg err";
+      msg.textContent = `Couldn't reach the Mac: ${err.message || err}`;
+    }
+    go.textContent = "Launch";
+    reset();
+  });
+})();
 
 refresh();
 setInterval(refresh, 20_000);
