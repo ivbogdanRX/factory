@@ -60,7 +60,7 @@ async function uploadToSlack(videoPath: string): Promise<boolean> {
   try {
     // Use the existing Slack upload functionality
     const { uploadVideoPreviewToSlack } = await import("../apps/orchestrator/src/slack.js");
-    const success = await uploadVideoPreviewToSlack(videoPath, "Generated Video");
+    const success = await uploadVideoPreviewToSlack(videoPath, "VA Loans — hook test (no Meta)");
     
     if (success) {
       console.log("✅ Video uploaded to Slack successfully!");
@@ -75,14 +75,21 @@ async function uploadToSlack(videoPath: string): Promise<boolean> {
   }
 }
 
+function campaignArgs(): string[] {
+  const extra = process.argv.slice(2);
+  if (extra.includes("--campaign")) return extra;
+  return ["--campaign", "va-loans-veterans", ...extra];
+}
+
 async function generateVideo(): Promise<string | null> {
+  const args = campaignArgs();
   console.log("🎬 Generating video using l_automation...\n");
+  console.log(`   args: ${args.join(" ")}\n`);
 
   return new Promise((resolve, reject) => {
-    const proc = spawn("npm", ["run", "run"], {
+    const proc = spawn("npm", ["run", "run", "--", ...args], {
       cwd: VENDOR_DIR,
       stdio: "inherit",
-      shell: true
     });
 
     proc.on("close", async (code) => {

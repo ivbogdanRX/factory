@@ -142,7 +142,7 @@ export function applyCampaign(
     ? `${choices.creatorPrompt} ${NO_SCREEN_UI}`
     : "";
 
-  const bodyVideo = choices.bodyVideo?.trim() || campaign.bodyVideo;
+  const bodyVideo = (choices.bodyVideo?.trim() || campaign.bodyVideo || "").trim();
 
   return {
     ...cfg,

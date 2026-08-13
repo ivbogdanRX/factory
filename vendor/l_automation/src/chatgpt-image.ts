@@ -28,12 +28,15 @@ export async function generateModelImageChatGPT(
   const fullPrompt =
     "Generate an image. Photorealistic, vertical 9:16 portrait. " +
     "Absolutely no text, captions, watermarks, or logos in the image. " +
-    "Style constraint: this must look like a casual amateur selfie from a phone front camera, " +
-    "with ordinary imperfect lighting, slight grain and soft focus — " +
-    "NOT a professional photoshoot, NOT studio lighting, NOT retouched glossy skin. " +
+    "Style constraint: this must look like a casual amateur selfie from an older iPhone " +
+    "(iPhone 11 / 12) front camera, with ordinary imperfect lighting, slight grain, " +
+    "mild compression, and slightly soft focus — " +
+    "NOT a professional photoshoot, NOT studio lighting, NOT a ring light, NOT retouched glossy skin. " +
+    "Follow the ethnicity in the prompt exactly. Do not default to mixed-race or racially ambiguous features. " +
     prompt;
 
   log.step("ChatGPT web: generating UGC model image via browser.");
+  log.info(`Look: ${prompt.slice(0, 180)}...`);
 
   // A fresh conversation per run keeps prior images out of the way.
   await page.goto(cc.url, { waitUntil: "domcontentloaded" });

@@ -28,7 +28,7 @@
     "backend": "api",
     "browserFallback": true,
     "url": "https://labs.google/fx/tools/flow",
-    "prompt": "Slow cinematic camera push-in, gentle parallax, soft natural light",
+    "prompt": "Handheld iPhone talking-head selfie of a pretty young woman speaking directly to camera about a VA loan / DD214 grant. Casual at-home selfie, slightly shaky, older-iPhone look. Not a news reporter, not a studio, not a commercial.",
     "generationTimeoutMs": 600000,
     "model": "Veo 3.1 - Lite",
     "mode": "Ingredients",
@@ -52,17 +52,38 @@
       "name": "VA Loans",
       "vertical": "VA loans / veteran grants",
       "angle": "U.S. veterans with DD214 paperwork who may qualify for a short-term grant",
-      "bodyVideo": "./assets/body.mp4",
+      "bodyVideo": "",
       "outputName": "VA Loans",
-      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial.",
+      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial. This is a casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter at a desk.",
       "promptTemplate": "",
       "hooks": [
         "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
         "If you have a DD 214, you need to check this before the VA grant window closes.",
         "Most veterans have no idea this DD 214 grant is still open, and it only takes a few minutes to check."
       ],
+      "variants": [
+        {
+          "id": "ugc-peer",
+          "name": "UGC Selfie",
+          "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a pretty young woman holding the phone at arm's length, talking candidly to the camera like a real Instagram story. Natural home lighting, slightly shaky, authentic older-iPhone front-camera look. Not a news desk. Not a studio.",
+          "creatorPrompt": "",
+          "scenePrompt": "Personal UGC story: a pretty young woman filming herself on her iPhone at home, talking directly to veterans about a DD214 / VA grant. Casual, urgent, conversational. Not a news reporter, not a commercial, not a courtroom, not a podcast studio.",
+          "hooks": [
+            "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
+            "If you have a DD 214, you need to check this before the VA grant window closes.",
+            "Most veterans have no idea this DD 214 grant is still open, and it only takes a few minutes to check."
+          ],
+          "bubbleHooks": [
+            "VETERANS WITH A DD214 CHECK THIS VA GRANT TODAY",
+            "IF YOU HAVE A DD214 THE VA GRANT WINDOW IS OPEN",
+            "MOST VETERANS DONT KNOW THIS DD214 GRANT IS STILL OPEN"
+          ]
+        }
+      ],
       "trimSeconds": 0.2,
-      "captionVerticalPosition": 0.85
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "maxHookSeconds": 7.8
     },
     {
       "id": "bathroom-remodel-seniors",
