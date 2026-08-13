@@ -49,7 +49,7 @@ export function lastAccountsReport(): { at: string; accounts: GlanceAccount[] } 
 /** Every ad account to monitor: vertical-configured ones plus any extras from
  * EXTRA_META_HEALTH_ACCOUNTS (comma-separated act_… ids) — used for the spare
  * accounts running cloned campaigns that no vertical points at. */
-function monitoredAccountIds(): string[] {
+export function monitoredAccountIds(): string[] {
   const extras = (process.env.EXTRA_META_HEALTH_ACCOUNTS ?? "")
     .split(",")
     .map((s) => s.trim())

@@ -230,7 +230,7 @@ function render(snap) {
       <summary><div class="row"><span class="l">Ad accounts</span>
         <span class="v"><b class="${badN ? "warned" : "good"}">${okN} of ${accts.length} usable</b></span></div></summary>
       <div class="dlist">${accts.map((a) =>
-        `<div class="drow"><span class="dot ${a.ok ? "" : "bad"}"></span><span class="nm">${esc(a.label)}</span><span class="st ${a.ok ? "" : "bad"}">${esc(a.status)}</span></div>`).join("")}</div>
+        `<div class="drow"><span class="dot ${a.ok ? (a.cooldownUntil ? "warn" : "") : "bad"}"></span><span class="nm">${esc(a.label)}</span><span class="st ${a.ok ? "" : "bad"}">${esc(a.ok && a.cooldownUntil ? `cooldown ${until(a.cooldownUntil)}` : a.status)}</span></div>`).join("")}</div>
     </details>`);
   }
 
@@ -286,10 +286,41 @@ function render(snap) {
   const go = $("#launch-go");
   const msg = $("#lp-msg");
 
+  const acctsBox = $("#lp-accts");
+
   const HOLD_MS = 3000;
   let holdStart = 0;
   let holdTimer = null;
   let disarmTimer = null;
+  let selectedAccount = null;
+
+  function renderAccounts() {
+    const accounts = (lastSnap && lastSnap.accounts && lastSnap.accounts.accounts) || [];
+    if (!accounts.length) {
+      selectedAccount = null;
+      acctsBox.innerHTML = `<div class="lpa-note">No account health data yet — the run will use the config default.</div>`;
+      return;
+    }
+    const usable = (a) => a.ok && !a.cooldownUntil;
+    if (!selectedAccount || !accounts.some((a) => a.id === selectedAccount && usable(a))) {
+      selectedAccount = (accounts.find(usable) || {}).id || null;
+    }
+    acctsBox.innerHTML = accounts.map((a) => {
+      const cooling = a.cooldownUntil ? `cooldown ${until(a.cooldownUntil)}` : null;
+      const disabled = !usable(a);
+      return `<button type="button" class="lpa${a.id === selectedAccount ? " sel" : ""}" data-id="${esc(a.id)}" ${disabled ? "disabled" : ""}>
+        <span class="dot ${a.ok ? (a.cooldownUntil ? "warn" : "") : "bad"}"></span>
+        <span class="lpa-nm">${esc(a.label)}</span>
+        <span class="lpa-st">${esc(cooling || a.status)}</span>
+      </button>`;
+    }).join("");
+    for (const btn of acctsBox.querySelectorAll(".lpa:not([disabled])")) {
+      btn.addEventListener("click", () => {
+        selectedAccount = btn.dataset.id;
+        renderAccounts();
+      });
+    }
+  }
 
   function reset() {
     clearInterval(holdTimer);
@@ -306,7 +337,10 @@ function render(snap) {
   $("#launch-toggle").addEventListener("click", () => {
     panel.hidden = !panel.hidden;
     msg.hidden = true;
-    if (!panel.hidden) reset();
+    if (!panel.hidden) {
+      reset();
+      renderAccounts();
+    }
   });
 
   function arm() {
@@ -355,10 +389,12 @@ function render(snap) {
     go.disabled = true;
     go.textContent = "Launching…";
     try {
+      const payload = { confirm: word.value.trim().toUpperCase() };
+      if (selectedAccount) payload.accountId = selectedAccount;
       const res = await fetch("/api/launch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirm: word.value.trim().toUpperCase() }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
       msg.hidden = false;

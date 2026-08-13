@@ -272,6 +272,40 @@ footer a { color: var(--mut); }
 .lp-warn { font-size: 13.5px; color: var(--txt); margin-bottom: 12px; }
 .lp-warn b { color: var(--bad); }
 
+.lp-accts-label {
+  font-size: 11px;
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+.lp-accts { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+
+.lpa {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  background: #141519;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--txt);
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.lpa.sel { border-color: var(--ok); background: rgba(52, 211, 153, 0.08); }
+.lpa:disabled { opacity: 0.45; cursor: default; }
+.lpa .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); flex: none; }
+.lpa .dot.bad { background: var(--bad); }
+.lpa .dot.warn { background: var(--warn); }
+.lpa .lpa-nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lpa .lpa-st { color: var(--mut); font: 11.5px var(--mono); flex: none; }
+
+.lpa-note { color: var(--mut); font-size: 13px; }
+
 .hold {
   position: relative;
   width: 100%;

@@ -14,7 +14,8 @@ import { angleStats, type AngleStats } from "./angles.js";
 import { lastHealthReport } from "./healthcheck.js";
 import { studioHealthy } from "./creative.js";
 import { guardrailAngleSnapshot } from "./guardrails.js";
-import { lastAccountsReport } from "./account-health.js";
+import { lastAccountsReport, type GlanceAccount } from "./account-health.js";
+import { accountCooldownMsLeft } from "./launch-guard.js";
 import { listLatestCreatives, loadOffer, prettyMacName } from "./glance-creatives.js";
 
 const PERF_TTL_MS = 10 * 60 * 1000;
@@ -41,6 +42,20 @@ async function cachedPerf(): Promise<{ asOf: string; entries: PerformanceEntry[]
   return {
     asOf: new Date(perfCache?.at ?? Date.now()).toISOString(),
     entries: perfCache?.entries ?? [],
+  };
+}
+
+/** Accounts as the health poller saw them, plus manual-launch cooldown info
+ * so the launch picker can grey out accounts that were used recently. */
+function accountsWithCooldowns(): { at: string; accounts: (GlanceAccount & { cooldownUntil: string | null })[] } | null {
+  const report = lastAccountsReport();
+  if (!report) return null;
+  return {
+    at: report.at,
+    accounts: report.accounts.map((a) => {
+      const msLeft = accountCooldownMsLeft(a.id);
+      return { ...a, cooldownUntil: msLeft > 0 ? new Date(Date.now() + msLeft).toISOString() : null };
+    }),
   };
 }
 
@@ -79,8 +94,15 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     // studio config unreadable — glance just skips the angle card
   }
 
-  const spendToday = perf.entries.reduce((sum, e) => sum + e.spend, 0);
-  const purchasesToday = perf.entries.reduce((sum, e) => sum + e.purchases, 0);
+  // Prefer account-wide numbers (include manual/cloned campaigns); fall back
+  // to the automated-campaign sums before the first daily refresh lands.
+  const daily = getDailyPerformance();
+  const ptToday = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+  const todayRow = daily.find((d) => d.date === ptToday);
+  const spendToday = todayRow ? todayRow.spend : perf.entries.reduce((sum, e) => sum + e.spend, 0);
+  const purchasesToday = todayRow ? todayRow.purchases : perf.entries.reduce((sum, e) => sum + e.purchases, 0);
 
   const problems: string[] = [];
   if (health && !health.ok) problems.push("healthcheck failing");
@@ -121,7 +143,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     nextRunAt: nextRunAtIso(Number(getSetting("runHourPt") ?? env.runHourPt)),
     offer,
     latestCreatives: listLatestCreatives(4),
-    accounts: lastAccountsReport(),
+    accounts: accountsWithCooldowns(),
     perf: {
       asOf: perf.asOf,
       spendToday,
@@ -129,7 +151,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
       cpaToday: purchasesToday > 0 ? spendToday / purchasesToday : null,
       campaigns: perf.entries,
     },
-    daily: getDailyPerformance(),
+    daily,
     runs,
     angles,
     redtrackAngles: guardrailAngleSnapshot(),

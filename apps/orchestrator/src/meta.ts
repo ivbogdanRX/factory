@@ -325,11 +325,15 @@ export interface DailyInsight {
   purchases: number;
 }
 
-/** Per-day breakdown for the glance "last 7 days" table. */
-export async function getCampaignDailyInsights(campaignId: string): Promise<DailyInsight[]> {
+/**
+ * Per-day breakdown for the glance "last 7 days" table. Works for any insights
+ * object id — an ad account (act_…) captures every campaign on it, manual
+ * clones included, which is what the history table wants.
+ */
+export async function getDailyInsights(objectId: string): Promise<DailyInsight[]> {
   const data = (await getJson(
-    `${campaignId}/insights?fields=spend,impressions,clicks,actions&date_preset=last_14d&time_increment=1`,
-    "campaignDailyInsights",
+    `${objectId}/insights?fields=spend,impressions,clicks,actions&date_preset=last_14d&time_increment=1`,
+    "dailyInsights",
   )) as { data?: Array<Record<string, unknown>> };
   return (data.data ?? []).map((row) => {
     const actions = (row.actions ?? []) as Array<{ action_type?: string; value?: string }>;

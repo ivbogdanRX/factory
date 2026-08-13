@@ -27,6 +27,9 @@ import { startHookTest, approveHookTest, rejectHookTest } from "./hook-tests.js"
 import { startAdDrafts, publishAdDraft, rejectAdDraft, startManualLaunchBatch, launchRun } from "./ad-drafts.js";
 import { listHookTests, listAdDrafts } from "./db.js";
 import { runHealthcheck, lastHealthReport } from "./healthcheck.js";
+import { monitoredAccountIds } from "./account-health.js";
+import { getAdAccountHealth } from "./meta.js";
+import { globalCooldownMsLeft, accountCooldownMsLeft, recordLaunch } from "./launch-guard.js";
 import { sendDigest } from "./digest.js";
 import { studioHealthy } from "./creative.js";
 import { angleStats } from "./angles.js";
@@ -167,26 +170,52 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
         sendJson(res, 409, { error: "Factory is paused — resume it first (Slack /adops)." });
         return;
       }
-      const lastLaunch = Number(getSetting("lastManualLaunchAt") ?? 0);
-      const coolMs = 10 * 60 * 1000 - (Date.now() - lastLaunch);
-      if (coolMs > 0) {
-        sendJson(res, 429, { error: `A run was just launched. Try again in ${Math.ceil(coolMs / 60000)} min.` });
+      const globalMs = globalCooldownMsLeft();
+      if (globalMs > 0) {
+        sendJson(res, 429, { error: `A run was just launched. Try again in ${Math.ceil(globalMs / 60000)} min.` });
         return;
       }
+
       const verticalId = body.verticalId ? String(body.verticalId) : undefined;
-      if (verticalId) {
-        const vertical = loadVerticals().find((v) => v.id === verticalId);
-        if (!vertical) {
-          sendJson(res, 404, { error: `Unknown vertical: ${verticalId}` });
+      const vertical = verticalId
+        ? loadVerticals().find((v) => v.id === verticalId)
+        : loadVerticals().find((v) => v.enabled);
+      if (!vertical) {
+        sendJson(res, 404, { error: verticalId ? `Unknown vertical: ${verticalId}` : "No enabled vertical to launch." });
+        return;
+      }
+
+      const accountId = body.accountId ? String(body.accountId) : vertical.meta.adAccountId;
+      if (!monitoredAccountIds().includes(accountId)) {
+        sendJson(res, 400, { error: `Unknown ad account: ${accountId}` });
+        return;
+      }
+      const acctMs = accountCooldownMsLeft(accountId);
+      if (acctMs > 0) {
+        const h = Math.floor(acctMs / 3600000);
+        const m = Math.ceil((acctMs % 3600000) / 60000);
+        sendJson(res, 429, { error: `That account was launched on recently — usable again in ${h ? `${h}h ` : ""}${m}m. Pick another account.` });
+        return;
+      }
+      // Live health check right before spending — the 10-minute poll can be stale.
+      try {
+        const health = await getAdAccountHealth(accountId);
+        if (health.accountStatus !== 1) {
+          sendJson(res, 409, { error: `Account ${accountId.slice(-4)} is not ACTIVE right now (status ${health.accountStatus}) — pick a healthy one.` });
           return;
         }
-        void runVertical(vertical);
-      } else {
-        void runDaily();
+      } catch {
+        sendJson(res, 502, { error: "Couldn't verify the account with Meta — not launching blind. Try again in a minute." });
+        return;
       }
-      setSetting("lastManualLaunchAt", String(Date.now()));
-      console.log(`Manual production launch from ${req.socket.remoteAddress} (vertical: ${verticalId ?? "all"})`);
-      sendJson(res, 202, { ok: true, message: "Production run started — ads will generate now and go live after review." });
+
+      void runVertical({ ...vertical, meta: { ...vertical.meta, adAccountId: accountId } });
+      recordLaunch(accountId);
+      console.log(`Manual production launch from ${req.socket.remoteAddress} (vertical: ${vertical.id}, account: ${accountId})`);
+      sendJson(res, 202, {
+        ok: true,
+        message: `Production run started on ·${accountId.slice(-4)} — ads will generate now and go live after review.`,
+      });
       return;
     }
     if (pathname === "/api/state" && req.method === "GET") {

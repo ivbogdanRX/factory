@@ -5,7 +5,8 @@
  */
 import { env } from "./env.js";
 import { listRuns } from "./db.js";
-import { getCampaignInsights, getCampaignDailyInsights } from "./meta.js";
+import { getCampaignInsights, getDailyInsights } from "./meta.js";
+import { monitoredAccountIds } from "./account-health.js";
 
 export interface PerformanceEntry {
   runId: string;
@@ -65,9 +66,11 @@ let dailyCache: { at: number; rows: DailyPerf[] } | null = null;
 let dailyRefreshing = false;
 
 /**
- * Last 7 days of spend/purchases across every automated campaign, summed per
- * day. Serves stale data instantly and refreshes in the background so the
- * glance snapshot never blocks on N Meta insight calls.
+ * Last 7 days of spend/purchases summed per day across every monitored ad
+ * account — account-level insights, so manually cloned campaigns on the spare
+ * accounts count too, not just orchestrator-created ones. Serves stale data
+ * instantly and refreshes in the background so the glance snapshot never
+ * blocks on N Meta insight calls (~10 calls per 10-minute refresh).
  */
 export function getDailyPerformance(): DailyPerf[] {
   const stale = !dailyCache || Date.now() - dailyCache.at > DAILY_TTL_MS;
@@ -79,15 +82,10 @@ export function getDailyPerformance(): DailyPerf[] {
 }
 
 async function refreshDaily(): Promise<void> {
-  const cutoff = Date.now() - 15 * 24 * 60 * 60 * 1000;
-  const runs = listRuns(200).filter(
-    (r) => r.meta_campaign_id && r.created_at >= cutoff && r.status !== "error" && r.status !== "cancelled",
-  );
-  const campaignIds = [...new Set(runs.map((r) => r.meta_campaign_id!))];
   const byDate = new Map<string, DailyPerf>();
-  for (const campaignId of campaignIds) {
+  for (const accountId of monitoredAccountIds()) {
     try {
-      for (const d of await getCampaignDailyInsights(campaignId)) {
+      for (const d of await getDailyInsights(accountId)) {
         const cur = byDate.get(d.date) ?? { date: d.date, spend: 0, purchases: 0, clicks: 0, impressions: 0, cpa: null };
         cur.spend += d.spend;
         cur.purchases += d.purchases;
@@ -96,7 +94,7 @@ async function refreshDaily(): Promise<void> {
         byDate.set(d.date, cur);
       }
     } catch (error) {
-      console.warn(`Daily insights failed for campaign ${campaignId}`, error);
+      console.warn(`Daily insights failed for account ${accountId}`, error);
     }
   }
   const rows = [...byDate.values()].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 7);
