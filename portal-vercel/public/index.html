@@ -3,81 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="theme-color" content="#0b0c0e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="VA Loans" />
+  <meta name="apple-mobile-web-app-title" content="Factory" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>VA Loans · Factory</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500;1,9..144,600&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <title>Factory</title>
   <link rel="stylesheet" href="/glance.css" />
 </head>
 <body>
-  <header class="top">
-    <div class="brand">
-      <span class="mark">VA</span>
-      <div>
-        <div class="brand-name">VA Loans</div>
-        <div class="brand-sub">ad factory</div>
-      </div>
-    </div>
-    <div class="live" id="updated">connecting</div>
+  <header>
+    <span class="sdot" id="sdot"></span>
+    <h1>VA Loans factory</h1>
+    <span class="upd" id="updated">…</span>
   </header>
-
   <main id="app">
-    <section class="hero" id="hero">
-      <div class="hero-kicker" id="hero-kicker">Factory</div>
-      <h1 id="hero-text">Loading…</h1>
-      <p class="hero-next" id="hero-next"></p>
-      <div class="hero-problems" id="hero-problems"></div>
-      <div class="hero-flags" id="hero-flags"></div>
-    </section>
-
-    <section class="stats" id="stats">
-      <div class="stat">
-        <div class="k" id="stat-spend">—</div>
-        <div class="l">spend today</div>
-      </div>
-      <div class="stat">
-        <div class="k" id="stat-purch">—</div>
-        <div class="l">purchases</div>
-      </div>
-      <div class="stat">
-        <div class="k" id="stat-cpa">—</div>
-        <div class="l">CPA</div>
-      </div>
-    </section>
-    <p class="stats-note" id="stats-note"></p>
-
-    <section>
-      <h2>The hook</h2>
-      <div class="card hook" id="hook"></div>
-    </section>
-
-    <section>
-      <h2>Today’s ads</h2>
-      <div class="creatives" id="creatives"></div>
-    </section>
-
-    <section>
-      <h2>Flights</h2>
-      <div id="flights"></div>
-    </section>
-
-    <section>
-      <h2>Meta accounts</h2>
-      <div class="card" id="accounts"></div>
-    </section>
-
-    <section>
-      <h2>Machine</h2>
-      <div class="card" id="health"></div>
-    </section>
-
-    <footer id="foot"></footer>
+    <div class="row"><span class="l">Loading</span><span class="v muted">connecting to the Mac…</span></div>
   </main>
-
   <script src="/glance.js"></script>
 </body>
 </html>
