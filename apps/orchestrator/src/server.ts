@@ -46,6 +46,10 @@ const VIDEO_TYPES: Record<string, string> = {
   ".m4v": "video/mp4",
   ".mov": "video/quicktime",
   ".webm": "video/webm",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
 };
 
 function sendJson(res: ServerResponse, status: number, body: unknown): void {

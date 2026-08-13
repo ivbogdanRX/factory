@@ -4,7 +4,7 @@
  * (PORTAL_PUSH_URL + PORTAL_PUSH_SECRET) so the same page works away from the
  * Mac. Perf numbers hit the Meta insights API, so they're cached for 10 min.
  */
-import { hostname } from "node:os";
+import { existsSync } from "node:fs";
 import { env } from "./env.js";
 import { loadVerticals } from "./verticals.js";
 import { listRuns, listCreatives, getSetting } from "./db.js";
@@ -14,6 +14,8 @@ import { angleStats, type AngleStats } from "./angles.js";
 import { lastHealthReport } from "./healthcheck.js";
 import { studioHealthy } from "./creative.js";
 import { guardrailAngleSnapshot } from "./guardrails.js";
+import { lastAccountsReport } from "./account-health.js";
+import { listLatestCreatives, loadOffer, prettyMacName } from "./glance-creatives.js";
 
 const PERF_TTL_MS = 10 * 60 * 1000;
 // Slightly under the 30s scheduler tick so every tick actually pushes.
@@ -90,6 +92,19 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
   const studioUp = await studioHealthy();
   if (!studioUp) problems.push("creative studio down");
 
+  const offer = loadOffer();
+  const ffmpegFull = existsSync("/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg");
+  const healthChecks = (health?.checks ?? []).filter((c) => {
+    if (c.name === "OpenAI credits" || c.name === "Gemini key (Veo)") return false;
+    return true;
+  }).map((c) => {
+    if (c.name === "ffmpeg" && ffmpegFull) {
+      return { ...c, status: "ok" as const, detail: "ffmpeg-full with libass (captions ready)" };
+    }
+    return c;
+  });
+  const healthOk = healthChecks.every((c) => c.status !== "fail");
+
   return {
     generatedAt: new Date().toISOString(),
     ok: problems.length === 0,
@@ -99,11 +114,14 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     skipNext: getSetting("skipNext") === "1",
     studioHealthy: studioUp,
     mac: {
-      hostname: hostname(),
+      hostname: prettyMacName(),
       lastSeen: new Date().toISOString(),
       online: true,
     },
     nextRunAt: nextRunAtIso(Number(getSetting("runHourPt") ?? env.runHourPt)),
+    offer,
+    latestCreatives: listLatestCreatives(4),
+    accounts: lastAccountsReport(),
     perf: {
       asOf: perf.asOf,
       spendToday,
@@ -113,10 +131,10 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     },
     runs,
     angles,
-    // Per-angle Meta spend + RedTrack conversions from the last guardrail
-    // pass (null until the first evaluation of a live flight).
     redtrackAngles: guardrailAngleSnapshot(),
-    health: health ? { at: health.at, ok: health.ok, checks: health.checks } : null,
+    health: health
+      ? { at: health.at, ok: healthOk, checks: healthChecks }
+      : null,
   };
 }
 

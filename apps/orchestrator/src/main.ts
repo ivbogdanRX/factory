@@ -25,6 +25,7 @@ startServer(() => {
   // Hook tests / ad drafts can outlive a restart: re-attach to their studio jobs.
   resumeHookTestWatches();
   resumeAdDraftWatches();
+  setTimeout(() => maybePollAccountHealth(), 2_000);
 });
 console.log(
   `Ad Factory orchestrator up. Daily run at ${env.runHourPt}:00 PT (override in portal). ` +

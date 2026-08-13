@@ -141,8 +141,11 @@ async function checkChatGPTSession(): Promise<HealthCheckItem> {
 }
 
 async function checkFfmpeg(): Promise<HealthCheckItem> {
+  const bin = existsSync("/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg")
+    ? "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg"
+    : "ffmpeg";
   try {
-    const { stdout } = await execFileAsync("ffmpeg", ["-hide_banner", "-filters"], { timeout: 10_000 });
+    const { stdout } = await execFileAsync(bin, ["-hide_banner", "-filters"], { timeout: 10_000 });
     const hasAss = /(^|\s)ass(\s|$)/m.test(stdout) || stdout.includes(" ass ");
     if (!hasAss) {
       return {

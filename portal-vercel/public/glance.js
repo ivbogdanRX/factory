@@ -1,5 +1,4 @@
-/* Ad Factory glance — read-only mobile hub. Fetches /api/snapshot (served
-   live by the local orchestrator, or from the pushed blob on Vercel). */
+/* VA Loans glance — live snapshot from the always-on Mac. */
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -13,9 +12,21 @@ const PT_FMT = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
   minute: "2-digit",
 });
+const PT_DAY = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Los_Angeles",
+  weekday: "long",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
 
 function fmtPt(iso) {
   return iso ? `${PT_FMT.format(new Date(iso))} PT` : "—";
+}
+
+function fmtDay(iso) {
+  return iso ? `${PT_DAY.format(new Date(iso))} PT` : "—";
 }
 
 function ago(iso) {
@@ -36,9 +47,6 @@ function until(iso) {
 
 const money = (n) => `$${Number(n).toFixed(n >= 100 ? 0 : 2)}`;
 
-/* Access key: accepted from ?key= in the URL (so a bookmarked / home-screen
-   link self-configures), remembered in localStorage, asked for via an inline
-   form only as a last resort (prompt() is broken in iOS standalone mode). */
 (() => {
   const urlKey = new URLSearchParams(location.search).get("key");
   if (urlKey) {
@@ -47,7 +55,7 @@ const money = (n) => `$${Number(n).toFixed(n >= 100 ? 0 : 2)}`;
   }
 })();
 
-let memKey = null; // fallback when localStorage is unavailable
+let memKey = null;
 
 function getKey() {
   try { return localStorage.getItem("adf-key") || memKey; } catch { return memKey; }
@@ -108,8 +116,7 @@ async function doRefresh() {
     const res = await fetch(snapshotUrl(), { cache: "no-store" });
     if (res.status === 401) {
       $("#updated").textContent = "locked";
-      $("#updated").className = "updated";
-      $("#hero-dot").className = "dot big warn";
+      $("#updated").className = "live stale";
       $("#hero-text").textContent = "Enter access key";
       showKeyForm();
       return;
@@ -119,12 +126,12 @@ async function doRefresh() {
     const form = $("#keyform");
     if (form) form.remove();
   } catch (err) {
-    $("#updated").textContent = "unreachable";
-    $("#updated").className = "updated stale";
-    $("#hero-dot").className = "dot big bad";
-    $("#hero-text").textContent = "Always-on Mac is offline";
-    $("#hero-problems").innerHTML = `<div>• ${esc(err.message || err)}</div><div>• last heartbeat missing — is the Mac asleep or off?</div>`;
-    $("#health").innerHTML = `<div class="hrow"><span class="dot bad"></span><b>Always-on Mac</b><span class="hd">offline · no snapshot</span></div>`;
+    $("#updated").textContent = "offline";
+    $("#updated").className = "live stale";
+    $("#hero-kicker").textContent = "Can't reach the Mac";
+    $("#hero-text").textContent = "Factory is offline";
+    $("#hero-problems").innerHTML = `<div>${esc(err.message || err)}</div>`;
+    $("#hero-next").textContent = "Open this page on the same Wi-Fi as the Mac mini, or via Tailscale.";
     return;
   }
   render(snap);
@@ -133,104 +140,101 @@ async function doRefresh() {
 function macCheckFromSnap(snap) {
   const last = (snap.mac && snap.mac.lastSeen) || snap.generatedAt;
   const ageMs = Math.max(0, Date.now() - new Date(last).getTime());
-  if (ageMs < 90_000) {
-    return { name: "Always-on Mac", status: "ok", detail: `on · heartbeat ${ago(last)}` };
-  }
-  if (ageMs < 180_000) {
-    return { name: "Always-on Mac", status: "warn", detail: `heartbeat ${ago(last)} — may be stalling` };
-  }
-  return { name: "Always-on Mac", status: "fail", detail: `offline · last seen ${ago(last)}` };
+  const host = (snap.mac && snap.mac.hostname) || "Mac mini";
+  if (ageMs < 90_000) return { name: host, status: "ok", detail: `on · ${ago(last)}` };
+  if (ageMs < 180_000) return { name: host, status: "warn", detail: `heartbeat ${ago(last)}` };
+  return { name: host, status: "fail", detail: `offline · ${ago(last)}` };
 }
 
 function render(snap) {
   lastSnap = snap;
-  // freshness
   const ageMs = Date.now() - new Date(snap.generatedAt).getTime();
   const stale = ageMs > 90 * 1000;
   const macOffline = ageMs > 180 * 1000;
   const upd = $("#updated");
-  upd.textContent = `updated ${ago(snap.generatedAt)}`;
-  upd.className = stale ? "updated stale" : "updated";
+  upd.textContent = stale ? `stale · ${ago(snap.generatedAt)}` : "live";
+  upd.className = stale ? "live stale" : "live";
 
-  // hero
+  const offer = snap.offer || {};
   const problems = [...(snap.problems || [])];
-  if (macOffline) problems.unshift("always-on Mac is offline");
-  else if (stale && !problems.includes("snapshot is stale — is the Mac online?")) {
-    problems.unshift("snapshot is stale — is the Mac online?");
-  }
-  const ok = problems.length === 0;
-  $("#hero-dot").className = `dot big ${ok ? "ok" : macOffline ? "bad" : "bad"}`;
-  $("#hero-text").textContent = macOffline ? "Always-on Mac is offline" : ok ? "All systems go" : "Needs attention";
+  if (macOffline) problems.unshift("Mac mini is offline");
+  const ok = problems.length === 0 && !macOffline;
+
+  $("#hero-kicker").textContent = ok ? "Running" : macOffline ? "Offline" : "Needs attention";
+  $("#hero-text").textContent = offer.name || "VA Loans";
+  $("#hero-next").innerHTML = snap.nextRunAt
+    ? `Next drop <b>${fmtDay(snap.nextRunAt)}</b> · ${until(snap.nextRunAt)}`
+    : "";
   $("#hero-problems").innerHTML = problems.map((p) => `<div>• ${esc(p)}</div>`).join("");
-  $("#hero-next").innerHTML = `Next batch <b>${fmtPt(snap.nextRunAt)}</b> · ${until(snap.nextRunAt)}`;
   const flags = [];
   if (snap.dryRun) flags.push("dry run");
-  if (snap.globalPause) flags.push("global pause");
-  if (snap.skipNext) flags.push("skipping next run");
+  if (snap.globalPause) flags.push("paused");
+  if (snap.skipNext) flags.push("skipping next");
+  if (offer.dailyCount) flags.push(`${offer.dailyCount} ads / day`);
+  if (offer.budgetUsd) flags.push(`${money(offer.budgetUsd)} budget`);
   $("#hero-flags").innerHTML = flags.map((f) => `<span class="flag">${esc(f)}</span>`).join("");
 
-  // money
-  $("#stat-spend").textContent = money(snap.perf.spendToday);
-  $("#stat-purch").textContent = String(snap.perf.purchasesToday);
-  $("#stat-cpa").textContent = snap.perf.cpaToday !== null ? money(snap.perf.cpaToday) : "—";
+  const spend = snap.perf?.spendToday ?? 0;
+  const purch = snap.perf?.purchasesToday ?? 0;
+  $("#stat-spend").textContent = money(spend);
+  $("#stat-purch").textContent = String(purch);
+  $("#stat-cpa").textContent = snap.perf?.cpaToday != null ? money(snap.perf.cpaToday) : "—";
+  const liveFlights = (snap.runs || []).filter((r) => r.status === "live" || r.status === "scheduled");
+  $("#stats-note").textContent = liveFlights.length
+    ? `${liveFlights.length} flight${liveFlights.length > 1 ? "s" : ""} live or queued.`
+    : "No Meta flights live yet. Numbers fill in after tomorrow’s 10am PT drop.";
 
-  // flights — active runs plus a few recent finished/failed; cancelled runs
-  // are old news and stay out of the glance entirely.
+  const hook = offer.hook || "";
+  const headline = offer.headline || "";
+  $("#hook").innerHTML = hook
+    ? `<p class="quote">“${esc(hook)}”</p>
+       ${headline ? `<div class="headline">${esc(headline)}</div>` : ""}
+       <div class="meta">locked script · pretty-woman UGC</div>`
+    : `<div class="empty">No locked hook in the VA campaign config.</div>`;
+
+  const creatives = snap.latestCreatives || [];
+  $("#creatives").innerHTML = creatives.length
+    ? creatives.map((c) => {
+        const poster = c.posterUrl
+          ? `<img src="${esc(c.posterUrl)}" alt="" />`
+          : `<div class="ph">ad</div>`;
+        return `<a class="creative" href="${esc(c.videoUrl)}">
+          ${poster}
+          <div>
+            <div class="nm">${esc(c.name)}</div>
+            <div class="when">${esc(ago(c.createdAt))} · tap to play</div>
+          </div>
+        </a>`;
+      }).join("")
+    : `<div class="card empty">No VA ads rendered today.</div>`;
+
   const activeStatuses = ["generating", "uploading", "scheduled", "live", "paused"];
   const runs = (snap.runs || []).filter((r) => activeStatuses.includes(r.status)).concat(
     (snap.runs || []).filter((r) => r.status === "completed" || r.status === "error").slice(0, 3),
   );
   $("#flights").innerHTML = runs.length
     ? runs.map(flightCard).join("")
-    : `<div class="card empty">No runs yet today.</div>`;
+    : `<div class="card empty">Nothing scheduled. First automated flight is ${snap.nextRunAt ? until(snap.nextRunAt) : "queued"}.</div>`;
 
-  // angles
-  const angles = [...(snap.angles || [])].sort((a, b) => b.weight - a.weight);
-  const maxW = Math.max(...angles.map((a) => a.weight), 0.0001);
-  $("#angles").innerHTML = angles.length
-    ? angles
-        .map((a) => {
-          const cpa = a.costPerPurchase !== null ? money(a.costPerPurchase) : "—";
-          return `<div class="arow">
-            <span class="an">${esc(a.name)}<small>${a.creatives} ad(s) · ${money(a.spend)} · ${a.purchases} purch</small></span>
-            <span class="abar"><span style="width:${Math.round((a.weight / maxW) * 100)}%"></span></span>
-            <span class="am">CPA<br>${cpa}</span>
-          </div>`;
-        })
-        .join("")
-    : `<div class="empty">No angles configured.</div>`;
+  const accounts = snap.accounts?.accounts || [];
+  const acctOk = accounts.filter((a) => a.ok).length;
+  $("#accounts").innerHTML = accounts.length
+    ? `<div class="hrow"><b>${acctOk}/${accounts.length} active</b><span class="hd">${snap.accounts.at ? ago(snap.accounts.at) : ""}</span></div>` +
+      accounts.map((a) => `<div class="acct"><span class="dot ${a.ok ? "ok" : "bad"}"></span>${esc(a.label)}<span class="st ${a.ok ? "ok" : "bad"}">${esc(a.status)}</span></div>`).join("")
+    : `<div class="empty">Account check runs every 10 minutes. Pull to refresh in a bit.</div>`;
 
-  // health — Always-on Mac heartbeat first, then the rest. Glance only needs
-  // pass/fail; hard failures get one short line, warnings are a count.
   const mac = macCheckFromSnap(snap);
   const health = snap.health;
   const checks = [mac, ...((health && health.checks) || []).filter((c) => c.name !== "Always-on Mac")];
-  const fails = checks.filter((c) => c.status === "fail");
-  const warns = checks.filter((c) => c.status === "warn").length;
-  const passing = checks.filter((c) => c.status === "ok").length;
-  const healthOk = fails.length === 0;
-  const summary = [
-    `${passing}/${checks.length} passing`,
-    warns ? `${warns} warning${warns > 1 ? "s" : ""}` : "",
-  ].filter(Boolean).join(" · ");
-  const head = `<div class="hrow"><span class="dot ${healthOk ? "ok" : "bad"}"></span>
-    <b>${healthOk ? "Healthy" : "Problems found"}</b>
-    <span class="hd">${esc(ago((health && health.at) || snap.generatedAt))} · ${summary}</span></div>`;
-  const rows = checks
-    .filter((c) => c.name !== "Always-on Mac" && c.status !== "ok")
-    .map((c) => {
-      const short = c.detail.length > 70 ? `${c.detail.slice(0, 70)}…` : c.detail;
-      return `<div class="hrow"><span class="dot ${esc(c.status === "warn" ? "warn" : "bad")}"></span>${esc(c.name)}<span class="hd">${esc(short)}</span></div>`;
-    })
-    .join("");
-  const macRow = `<div class="hrow"><span class="dot ${esc(mac.status === "ok" ? "ok" : mac.status === "warn" ? "warn" : "bad")}"></span>${esc(mac.name)}<span class="hd">${esc(mac.detail)}</span></div>`;
-  $("#health").innerHTML = head + macRow + rows;
+  $("#health").innerHTML = checks.map((c) => {
+    const short = c.detail.length > 64 ? `${c.detail.slice(0, 64)}…` : c.detail;
+    return `<div class="hrow"><span class="dot ${esc(c.status === "ok" ? "ok" : c.status === "warn" ? "warn" : "bad")}"></span>${esc(c.name)}<span class="hd">${esc(short)}</span></div>`;
+  }).join("");
 
-  // footer: manage link only when served by the local orchestrator
   const local = ["localhost", "127.0.0.1"].includes(location.hostname);
   $("#foot").innerHTML = local
-    ? `<a href="/manage">open management console</a> · controls also in Slack /adops`
-    : `read-only glance · controls in Slack /adops`;
+    ? `<a href="/manage">management console</a> · Slack /adops`
+    : `controls in Slack /adops`;
 }
 
 function flightCard(r) {
@@ -238,14 +242,14 @@ function flightCard(r) {
   let bar = "";
   const now = Date.now();
   if (r.status === "scheduled" && r.goLiveAt) {
-    sub = `Goes live <b>${fmtPt(r.goLiveAt)}</b> · ${until(r.goLiveAt)} · ${r.adCount} ad(s) ready`;
+    sub = `Goes live <b>${fmtPt(r.goLiveAt)}</b> · ${until(r.goLiveAt)} · ${r.adCount} ad(s)`;
   } else if (r.status === "live" && r.goLiveAt && r.flightEndsAt) {
     const total = new Date(r.flightEndsAt).getTime() - new Date(r.goLiveAt).getTime();
     const pct = Math.min(100, Math.max(0, Math.round(((now - new Date(r.goLiveAt).getTime()) / total) * 100)));
     sub = `Live · auto-off ${until(r.flightEndsAt)} · ${r.adCount} ad(s)`;
     bar = `<div class="bar"><span class="fill" style="width:${pct}%"></span></div>`;
   } else if (r.status === "generating" || r.status === "uploading") {
-    sub = `${r.status === "generating" ? "Generating creatives" : "Uploading to Meta"}… ${r.creativeCount ? `${r.creativeCount} so far` : ""}`;
+    sub = `${r.status === "generating" ? "Generating" : "Uploading"}… ${r.creativeCount ? `${r.creativeCount} so far` : ""}`;
   } else if (r.status === "completed") {
     sub = r.note ? esc(r.note) : "Flight completed";
   } else if (r.note) {
@@ -255,16 +259,11 @@ function flightCard(r) {
     <div class="flight-head"><span class="v">${esc(r.vertical)}</span><span class="chip ${esc(r.status)}">${esc(r.status)}</span></div>
     ${sub ? `<div class="flight-sub">${sub}</div>` : ""}
     ${r.error ? `<div class="flight-error">${esc(r.error.length > 90 ? `${r.error.slice(0, 90)}…` : r.error)}</div>` : ""}
-    ${r.angles && r.angles.length ? `<div class="angle-chips">${r.angles.map((a) => `<span class="angle-chip">${esc(a)}</span>`).join("")}</div>` : ""}
     ${bar}
   </div>`;
 }
 
 refresh();
-
-// Live without reloads: poll continuously, re-poll the instant the app comes
-// back to the foreground (home-screen apps freeze timers in the background),
-// and keep the countdown / "updated Xs ago" labels ticking between polls.
 setInterval(refresh, 20_000);
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refresh();
