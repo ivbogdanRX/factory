@@ -15,6 +15,7 @@
     "run-now": "tsx apps/orchestrator/src/cli.ts run",
     "dry-run": "DRY_RUN=1 tsx apps/orchestrator/src/cli.ts run",
     "generate-slack": "tsx scripts/generate-one-slack.ts",
+    "check-video-env": "tsx scripts/check-video-env.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
