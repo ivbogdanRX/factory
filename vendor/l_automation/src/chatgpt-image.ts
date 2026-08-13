@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { BrowserContext, Page } from "playwright";
 import type { AppConfig } from "./config.js";
 import { buildUgcPrompt, type GeneratedModelImage } from "./nanobanana.js";
+import { IMAGE_GUARDS } from "./prompt-guards.js";
 import { snapshot } from "./browser.js";
 import { ensureDir, timestamp } from "./utils.js";
 import { log } from "./logger.js";
@@ -24,10 +25,11 @@ export async function generateModelImageChatGPT(
   cfg: AppConfig,
 ): Promise<GeneratedModelImage> {
   const cc = cfg.imageSource.chatgpt;
-  const prompt = cc.promptOverride.trim() || buildUgcPrompt();
+  const prompt = (cc.promptOverride.trim() || buildUgcPrompt()) + " " + IMAGE_GUARDS;
   const fullPrompt =
     "Generate an image. Photorealistic, vertical 9:16 portrait. " +
     "Absolutely no text, captions, watermarks, or logos in the image. " +
+    "Head-and-shoulders only. Do not show hands, arms, fingers, or a phone in the photo. " +
     "Style constraint: this must look like a casual amateur selfie from an older iPhone " +
     "(iPhone 11 / 12) front camera, with ordinary imperfect lighting, slight grain, " +
     "mild compression, and slightly soft focus — " +

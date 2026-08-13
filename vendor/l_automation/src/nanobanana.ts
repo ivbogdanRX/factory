@@ -6,6 +6,7 @@ import { getApiKey } from "./veo-api.js";
 import { ensureDir, slugify, timestamp } from "./utils.js";
 import { acquireApiSlot } from "./ratelimit.js";
 import { log } from "./logger.js";
+import { IMAGE_GUARDS } from "./prompt-guards.js";
 
 const IMAGE_DIR = "downloads/images";
 
@@ -183,8 +184,9 @@ export function buildUgcPrompt(): string {
     `the kind of pretty girl you'd actually see on a friend's Instagram Story —`,
     `NOT a beauty-pageant glam look, NOT plastic-surgery features, NOT a fashion-campaign model.`,
     `Light natural makeup or clean skin, slightly imperfect hair, real skin with visible texture and pores.`,
-    `She is holding her phone at arm's length taking a front-facing selfie`,
-    `in ${setting} during ${timeOfDay}, with ${lighting}. She is wearing ${clothing}.`,
+    `Chest-up / head-and-shoulders talking-head, looking straight through the front camera lens.`,
+    `She is NOT holding a phone. No hands, fingers, wrists, or arms in frame — the camera is invisible.`,
+    `Setting: ${setting} during ${timeOfDay}, with ${lighting}. She is wearing ${clothing}.`,
     // Amateur capture quality — this must NOT look like a photoshoot.
     `Amateur older-iPhone front-camera quality (around iPhone 11 / 12): candid uneven framing,`,
     `ordinary imperfect lighting (no studio light, no ring light, no beauty dish),`,
@@ -211,7 +213,7 @@ export async function generateModelImage(
 ): Promise<GeneratedModelImage> {
   const ai = new GoogleGenAI({ apiKey: getApiKey() });
   const nb = cfg.imageSource.nanoBanana;
-  const prompt = nb.promptOverride.trim() || buildUgcPrompt();
+  const prompt = (nb.promptOverride.trim() || buildUgcPrompt()) + " " + IMAGE_GUARDS;
 
   log.step(`Nano Banana Pro: generating UGC model image (${nb.aspectRatio}, ${nb.imageSize}).`);
 
