@@ -14,6 +14,7 @@
     "uploader": "npm --prefix vendor/ads-uploader run dev",
     "run-now": "tsx apps/orchestrator/src/cli.ts run",
     "dry-run": "DRY_RUN=1 tsx apps/orchestrator/src/cli.ts run",
+    "generate-slack": "tsx scripts/generate-one-slack.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

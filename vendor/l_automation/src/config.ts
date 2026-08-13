@@ -470,7 +470,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
   if (!flow.prompt) fail("missing flow.prompt");
 
   const video = cfg.video as Partial<VideoConfig> & { outputVideo?: string };
-  if (!video.targetVideo) fail("missing video.targetVideo");
+  // targetVideo is optional for standalone video generation
   // Back-compat: if an old config still sets video.outputVideo (a file path),
   // use its directory as the base output dir.
   const outputDir =
@@ -562,7 +562,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
       resolution: flow.resolution ?? "720p",
     },
     video: {
-      targetVideo: resolvePath(video.targetVideo),
+      targetVideo: video.targetVideo ? resolvePath(video.targetVideo) : "",
       outputDir: resolvePath(outputDir),
       trimSeconds: video.trimSeconds ?? 0.5,
       name: video.name ?? "",
