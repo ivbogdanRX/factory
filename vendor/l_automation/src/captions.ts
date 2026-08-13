@@ -1037,11 +1037,13 @@ export async function addCaptions(
   );
 
   log.step("Burning captions onto the generated clip...");
-  const assArg = assPath.replace(/\\/g, "/").replace(/:/g, "\\:");
+  // ffmpeg 8 requires named filter options (filename= / fontsdir=). Quote
+  // paths so colons in timestamps don't split the option list.
+  const assArg = assPath.replace(/\\/g, "/").replace(/'/g, "\\'");
   const fontsDir = "fonts";
   const assFilter = existsSync(fontsDir)
-    ? `ass=${assArg}:fontsdir=${fontsDir.replace(/:/g, "\\:")}`
-    : `ass=${assArg}`;
+    ? `ass=filename='${assArg}':fontsdir='${fontsDir}'`
+    : `ass=filename='${assArg}'`;
   if (cfg.captions.layout === "3:4") {
     log.info(
       "Text placement: 3:4 safe zone on full 9:16 frame (hook top / captions bottom inside zone).",
