@@ -5,6 +5,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
+import { hostname } from "node:os";
 import { env, PORTAL_WEB_DIR, PORTAL_GLANCE_DIR, VENDOR_STUDIO_DIR } from "./env.js";
 import { loadVerticals, patchVertical } from "./verticals.js";
 import { listRuns, listCreatives, getSetting, setSetting } from "./db.js";
@@ -125,6 +126,7 @@ async function buildState(): Promise<Record<string, unknown>> {
     studioUrl: env.studioUrl,
     studioHealthy: await studioHealthy(),
     lastHealthcheck: lastHealthReport(),
+    mac: { hostname: hostname(), online: true, lastSeen: new Date().toISOString() },
     verticals: loadVerticals(),
     runs,
   };

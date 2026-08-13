@@ -107,9 +107,15 @@ function badge(status) {
 
 function renderHealth() {
   const report = state.lastHealthcheck;
-  if (!report) return;
+  const mac = state.mac || { online: true, lastSeen: state.now, hostname: "" };
+  const macItem = `<div class="health-item"><span class="dot ${mac.online ? "ok" : "fail"}"></span><span class="hname">Always-on Mac</span><span class="hdetail">${mac.online ? `on${mac.hostname ? ` · ${escapeHtml(mac.hostname)}` : ""}` : "offline"}</span></div>`;
+  if (!report) {
+    $("#health-when").textContent = "No healthcheck run yet.";
+    $("#health-checks").innerHTML = macItem;
+    return;
+  }
   $("#health-when").textContent = `Last run ${new Date(report.at).toLocaleString()} — ${report.ok ? "all clear" : "problems found"}`;
-  $("#health-checks").innerHTML = report.checks
+  $("#health-checks").innerHTML = macItem + report.checks
     .map(
       (c) =>
         `<div class="health-item"><span class="dot ${c.status}"></span><span class="hname">${escapeHtml(c.name)}</span><span class="hdetail">${escapeHtml(c.detail)}</span></div>`,

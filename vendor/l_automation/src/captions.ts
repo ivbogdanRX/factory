@@ -41,6 +41,26 @@ function run(
   });
 }
 
+async function ffmpegBinary(): Promise<string> {
+  const candidates = [
+    process.env.FFMPEG_PATH,
+    "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg",
+    "/usr/local/opt/ffmpeg-full/bin/ffmpeg",
+    "ffmpeg",
+    "/opt/homebrew/bin/ffmpeg",
+  ].filter((v): v is string => Boolean(v));
+
+  for (const bin of candidates) {
+    try {
+      const { code, stdout } = await run(bin, ["-hide_banner", "-filters"]);
+      if (code === 0 && /\bass\b/.test(stdout)) return bin;
+    } catch {
+      // try next
+    }
+  }
+  return "ffmpeg";
+}
+
 async function commandExists(cmd: string): Promise<boolean> {
   try {
     const { code } = await run("which", [cmd]);
@@ -1049,7 +1069,8 @@ export async function addCaptions(
       "Text placement: 3:4 safe zone on full 9:16 frame (hook top / captions bottom inside zone).",
     );
   }
-  const { code, stderr } = await run("ffmpeg", [
+  const ffmpeg = await ffmpegBinary();
+  const { code, stderr } = await run(ffmpeg, [
     "-y",
     "-i",
     clipPath,

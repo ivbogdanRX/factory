@@ -122,28 +122,45 @@ async function doRefresh() {
     $("#updated").textContent = "unreachable";
     $("#updated").className = "updated stale";
     $("#hero-dot").className = "dot big bad";
-    $("#hero-text").textContent = "Can't reach the factory";
-    $("#hero-problems").innerHTML = `<div>${esc(err.message || err)}</div>`;
+    $("#hero-text").textContent = "Always-on Mac is offline";
+    $("#hero-problems").innerHTML = `<div>• ${esc(err.message || err)}</div><div>• last heartbeat missing — is the Mac asleep or off?</div>`;
+    $("#health").innerHTML = `<div class="hrow"><span class="dot bad"></span><b>Always-on Mac</b><span class="hd">offline · no snapshot</span></div>`;
     return;
   }
   render(snap);
+}
+
+function macCheckFromSnap(snap) {
+  const last = (snap.mac && snap.mac.lastSeen) || snap.generatedAt;
+  const ageMs = Math.max(0, Date.now() - new Date(last).getTime());
+  if (ageMs < 90_000) {
+    return { name: "Always-on Mac", status: "ok", detail: `on · heartbeat ${ago(last)}` };
+  }
+  if (ageMs < 180_000) {
+    return { name: "Always-on Mac", status: "warn", detail: `heartbeat ${ago(last)} — may be stalling` };
+  }
+  return { name: "Always-on Mac", status: "fail", detail: `offline · last seen ${ago(last)}` };
 }
 
 function render(snap) {
   lastSnap = snap;
   // freshness
   const ageMs = Date.now() - new Date(snap.generatedAt).getTime();
-  const stale = ageMs > 5 * 60 * 1000;
+  const stale = ageMs > 90 * 1000;
+  const macOffline = ageMs > 180 * 1000;
   const upd = $("#updated");
   upd.textContent = `updated ${ago(snap.generatedAt)}`;
   upd.className = stale ? "updated stale" : "updated";
 
   // hero
   const problems = [...(snap.problems || [])];
-  if (stale) problems.unshift("snapshot is stale — is the Mac online?");
+  if (macOffline) problems.unshift("always-on Mac is offline");
+  else if (stale && !problems.includes("snapshot is stale — is the Mac online?")) {
+    problems.unshift("snapshot is stale — is the Mac online?");
+  }
   const ok = problems.length === 0;
-  $("#hero-dot").className = `dot big ${ok ? "ok" : "bad"}`;
-  $("#hero-text").textContent = ok ? "All systems go" : "Needs attention";
+  $("#hero-dot").className = `dot big ${ok ? "ok" : macOffline ? "bad" : "bad"}`;
+  $("#hero-text").textContent = macOffline ? "Always-on Mac is offline" : ok ? "All systems go" : "Needs attention";
   $("#hero-problems").innerHTML = problems.map((p) => `<div>• ${esc(p)}</div>`).join("");
   $("#hero-next").innerHTML = `Next batch <b>${fmtPt(snap.nextRunAt)}</b> · ${until(snap.nextRunAt)}`;
   const flags = [];
@@ -183,29 +200,31 @@ function render(snap) {
         .join("")
     : `<div class="empty">No angles configured.</div>`;
 
-  // health — a glance only needs pass/fail; hard failures get one short line,
-  // warnings are just a count (full detail lives in /manage and Slack).
+  // health — Always-on Mac heartbeat first, then the rest. Glance only needs
+  // pass/fail; hard failures get one short line, warnings are a count.
+  const mac = macCheckFromSnap(snap);
   const health = snap.health;
-  if (!health) {
-    $("#health").innerHTML = `<div class="empty">No healthcheck yet.</div>`;
-  } else {
-    const fails = health.checks.filter((c) => c.status === "fail");
-    const warns = health.checks.filter((c) => c.status === "warn").length;
-    const summary = [
-      `${health.checks.length - fails.length - warns}/${health.checks.length} passing`,
-      warns ? `${warns} warning${warns > 1 ? "s" : ""}` : "",
-    ].filter(Boolean).join(" · ");
-    const head = `<div class="hrow"><span class="dot ${health.ok ? "ok" : "bad"}"></span>
-      <b>${health.ok ? "Healthy" : "Problems found"}</b>
-      <span class="hd">${esc(ago(health.at))} · ${summary}</span></div>`;
-    const rows = fails
-      .map((c) => {
-        const short = c.detail.length > 70 ? `${c.detail.slice(0, 70)}…` : c.detail;
-        return `<div class="hrow"><span class="dot bad"></span>${esc(c.name)}<span class="hd">${esc(short)}</span></div>`;
-      })
-      .join("");
-    $("#health").innerHTML = head + rows;
-  }
+  const checks = [mac, ...((health && health.checks) || []).filter((c) => c.name !== "Always-on Mac")];
+  const fails = checks.filter((c) => c.status === "fail");
+  const warns = checks.filter((c) => c.status === "warn").length;
+  const passing = checks.filter((c) => c.status === "ok").length;
+  const healthOk = fails.length === 0;
+  const summary = [
+    `${passing}/${checks.length} passing`,
+    warns ? `${warns} warning${warns > 1 ? "s" : ""}` : "",
+  ].filter(Boolean).join(" · ");
+  const head = `<div class="hrow"><span class="dot ${healthOk ? "ok" : "bad"}"></span>
+    <b>${healthOk ? "Healthy" : "Problems found"}</b>
+    <span class="hd">${esc(ago((health && health.at) || snap.generatedAt))} · ${summary}</span></div>`;
+  const rows = checks
+    .filter((c) => c.name !== "Always-on Mac" && c.status !== "ok")
+    .map((c) => {
+      const short = c.detail.length > 70 ? `${c.detail.slice(0, 70)}…` : c.detail;
+      return `<div class="hrow"><span class="dot ${esc(c.status === "warn" ? "warn" : "bad")}"></span>${esc(c.name)}<span class="hd">${esc(short)}</span></div>`;
+    })
+    .join("");
+  const macRow = `<div class="hrow"><span class="dot ${esc(mac.status === "ok" ? "ok" : mac.status === "warn" ? "warn" : "bad")}"></span>${esc(mac.name)}<span class="hd">${esc(mac.detail)}</span></div>`;
+  $("#health").innerHTML = head + macRow + rows;
 
   // footer: manage link only when served by the local orchestrator
   const local = ["localhost", "127.0.0.1"].includes(location.hostname);

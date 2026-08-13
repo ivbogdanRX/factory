@@ -60,7 +60,7 @@ async function uploadToSlack(videoPath: string): Promise<boolean> {
   try {
     // Use the existing Slack upload functionality
     const { uploadVideoPreviewToSlack } = await import("../apps/orchestrator/src/slack.js");
-    const success = await uploadVideoPreviewToSlack(videoPath, "VA Loans — hook test (no Meta)");
+    const success = await uploadVideoPreviewToSlack(videoPath, "VA Loans — full ad (no Meta)");
     
     if (success) {
       console.log("✅ Video uploaded to Slack successfully!");

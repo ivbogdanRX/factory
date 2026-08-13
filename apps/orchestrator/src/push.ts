@@ -4,6 +4,7 @@
  * (PORTAL_PUSH_URL + PORTAL_PUSH_SECRET) so the same page works away from the
  * Mac. Perf numbers hit the Meta insights API, so they're cached for 10 min.
  */
+import { hostname } from "node:os";
 import { env } from "./env.js";
 import { loadVerticals } from "./verticals.js";
 import { listRuns, listCreatives, getSetting } from "./db.js";
@@ -97,6 +98,11 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     globalPause: getSetting("globalPause") === "1",
     skipNext: getSetting("skipNext") === "1",
     studioHealthy: studioUp,
+    mac: {
+      hostname: hostname(),
+      lastSeen: new Date().toISOString(),
+      online: true,
+    },
     nextRunAt: nextRunAtIso(Number(getSetting("runHourPt") ?? env.runHourPt)),
     perf: {
       asOf: perf.asOf,
