@@ -1,6 +1,7 @@
 /**
- * Orchestrator HTTP API + portal static hosting. Localhost only — Slack is the
- * remote control surface; the portal is for when you're at the machine.
+ * Orchestrator HTTP API + portal static hosting.
+ * Glance is reachable on the LAN / Tailscale; write APIs stay loopback-only
+ * (Slack bot talks to 127.0.0.1).
  */
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
@@ -51,6 +52,11 @@ function sendJson(res: ServerResponse, status: number, body: unknown): void {
   const data = JSON.stringify(body);
   res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
   res.end(data);
+}
+
+function isLoopback(req: IncomingMessage): boolean {
+  const ip = req.socket.remoteAddress ?? "";
+  return ip === "127.0.0.1" || ip === "::1" || ip === "::ffff:127.0.0.1";
 }
 
 async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> {
@@ -135,8 +141,14 @@ async function buildState(): Promise<Record<string, unknown>> {
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? "/", `http://127.0.0.1:${env.port}`);
   const { pathname } = url;
+  const mutating =
+    req.method !== "GET" && req.method !== "HEAD" && req.method !== "OPTIONS";
 
   try {
+    if (mutating && !isLoopback(req)) {
+      sendJson(res, 403, { error: "Write APIs are localhost-only" });
+      return;
+    }
     if (pathname === "/api/state" && req.method === "GET") {
       sendJson(res, 200, await buildState());
       return;
@@ -371,8 +383,8 @@ export function startServer(onReady?: () => void): void {
     console.error(`Server failed to bind port ${env.port}:`, error.message);
     process.exit(1);
   });
-  server.listen(env.port, "127.0.0.1", () => {
-    console.log(`Portal + API listening on http://127.0.0.1:${env.port}`);
+  server.listen(env.port, env.bind, () => {
+    console.log(`Portal + API listening on http://${env.bind}:${env.port}`);
     onReady?.();
   });
 }
