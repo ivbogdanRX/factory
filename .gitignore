@@ -3,6 +3,20 @@ node_modules/
 *.log
 .DS_Store
 data/
+
+# Ready-made creatives stay on the Mac (can be huge); keep folder + README.
+# (git ignore patterns don't support {a,b} braces — list each extension.)
+ready-made/**/*.mp4
+ready-made/**/*.mov
+ready-made/**/*.webm
+ready-made/**/*.m4v
+ready-made/**/*.MP4
+ready-made/**/*.MOV
+ready-made/**/*.WEBM
+ready-made/**/*.M4V
+!ready-made/**/.gitkeep
+!ready-made/**/README.md
+
 vendor/l_automation/node_modules/
 vendor/l_automation/.browser-profile/
 vendor/l_automation/.venv-whisper/
