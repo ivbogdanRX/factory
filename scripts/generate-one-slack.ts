@@ -5,6 +5,7 @@
  * Usage: tsx scripts/generate-one-slack.ts
  */
 
+import "dotenv/config";
 import { spawn } from "child_process";
 import { readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";

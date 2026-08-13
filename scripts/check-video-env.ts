@@ -3,6 +3,8 @@
  * Check if the environment is properly configured for video generation.
  */
 
+import "dotenv/config";
+
 interface EnvCheck {
   name: string;
   key: string;
