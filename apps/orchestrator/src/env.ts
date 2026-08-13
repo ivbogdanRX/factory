@@ -28,6 +28,12 @@ export const env = {
   /** Vercel glance-portal push target, e.g. https://adfactory.vercel.app/api/push */
   portalPushUrl: (process.env.PORTAL_PUSH_URL ?? "").replace(/\/$/, ""),
   portalPushSecret: process.env.PORTAL_PUSH_SECRET ?? "",
+  /** Write governor (see meta.ts): minimum seconds between Meta write calls. */
+  metaWriteSpacingSeconds: Number(process.env.META_WRITE_SPACING_SECONDS ?? 20),
+  /** Rolling 24h ceiling on Meta write calls (orchestrator + scripts combined). */
+  metaMaxWrites24h: Number(process.env.META_MAX_WRITES_24H ?? 80),
+  /** Rolling 24h ceiling on campaign creations — stops multi-account fanouts. */
+  metaMaxCampaignCreates24h: Number(process.env.META_MAX_CAMPAIGN_CREATES_24H ?? 3),
 };
 
 export const DATA_DIR = join(ROOT, "data");

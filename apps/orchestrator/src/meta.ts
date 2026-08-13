@@ -9,6 +9,8 @@ import { promisify } from "node:util";
 import { tmpdir } from "node:os";
 import { join, basename } from "node:path";
 import { env } from "./env.js";
+import { getSetting, setSetting } from "./db.js";
+import { postSlack } from "./slack.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -42,7 +44,125 @@ async function fetchWithRetry(url: string, init: RequestInit | undefined, label:
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
+// ---------------------------------------------------------------------------
+// Write governor — added after Meta restricted the main ad account for
+// "Account Integrity" (2026-08-13). The trigger pattern was machine-speed bulk
+// creation: 7 identical cloned campaigns (~60 write calls) across 7 ad
+// accounts inside 6 minutes, on top of two daily-run campaigns and a manual
+// batch the same day. Every mutating Graph call now passes gateWrite():
+//   1. Pacing — consecutive writes are spaced env.metaWriteSpacingSeconds
+//      apart, so no burst ever looks like machine-gun bulk activity.
+//   2. Caps — rolling 24h ceilings on total writes and on campaign creations;
+//      hitting one aborts loudly instead of hammering on.
+//   3. Circuit breaker — the first restriction/integrity error from Meta trips
+//      a persistent breaker: all further creation writes are refused (and
+//      Slack alerted once) until the account status is fixed and the breaker
+//      cleared. Pause/kill status changes bypass the governor entirely:
+//      cutting spend off must never be blocked.
+// State lives in the settings table, so one-off scripts (clone-winner etc.)
+// share the same pace and daily budget as the orchestrator process.
+// ---------------------------------------------------------------------------
+
+const BREAKER_KEY = "meta_write_breaker";
+const WRITE_LOG_KEY = "meta_write_log";
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+interface WriteLogEntry {
+  t: number;
+  kind: string;
+}
+
+interface BreakerState {
+  at: string;
+  label: string;
+  message: string;
+}
+
+/** Pause/kill must always go through — never block shutting spend off. */
+function isSafetyWrite(label: string): boolean {
+  return label === "setStatus:PAUSED" || label === "setStatus:DELETED";
+}
+
+export function getWriteBreaker(): BreakerState | null {
+  const raw = getSetting(BREAKER_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as BreakerState;
+  } catch {
+    return { at: "unknown", label: "unknown", message: raw };
+  }
+}
+
+export function clearWriteBreaker(): void {
+  setSetting(BREAKER_KEY, "");
+}
+
+const INTEGRITY_ERROR =
+  /not eligible for write|account.{0,40}(restricted|disabled)|integrity|deemed abusive|unusual activity|policy violation/i;
+
+/** Trip the breaker (once) when Meta signals a restriction, not a normal validation error. */
+function maybeTripBreaker(message: string, label: string): void {
+  if (!INTEGRITY_ERROR.test(message)) return;
+  if (getWriteBreaker()) return;
+  setSetting(BREAKER_KEY, JSON.stringify({ at: new Date().toISOString(), label, message } satisfies BreakerState));
+  console.error(`Meta write breaker TRIPPED by ${label}: ${message}`);
+  void postSlack(
+    `:rotating_light: *Meta write breaker tripped* — \`${label}\` hit a restriction/integrity error:\n> ${message}\n` +
+      `All campaign/ad creation writes are now disabled (pause/kill still work). ` +
+      `Resolve the account status in Business Support, then clear the breaker:\n` +
+      '`sqlite3 data/ad-factory.db "UPDATE settings SET value=\'\' WHERE key=\'meta_write_breaker\'"`',
+  ).catch(() => {});
+}
+
+function loadWriteLog(): WriteLogEntry[] {
+  const cutoff = Date.now() - DAY_MS;
+  try {
+    const entries = JSON.parse(getSetting(WRITE_LOG_KEY) || "[]") as WriteLogEntry[];
+    return entries.filter((e) => Number(e.t) > cutoff);
+  } catch {
+    return [];
+  }
+}
+
+/** Gate every mutating Graph call: breaker check, 24h caps, then pacing. */
+async function gateWrite(label: string): Promise<void> {
+  if (isSafetyWrite(label)) return;
+
+  const breaker = getWriteBreaker();
+  if (breaker) {
+    throw new Error(
+      `Meta writes disabled — breaker tripped ${breaker.at} by ${breaker.label}: ${breaker.message} ` +
+        `Fix the account status, then clear the '${BREAKER_KEY}' settings key.`,
+    );
+  }
+
+  const log = loadWriteLog();
+  if (log.length >= env.metaMaxWrites24h) {
+    throw new Error(
+      `Meta write cap reached (${env.metaMaxWrites24h} writes in 24h) — refusing '${label}'. ` +
+        `This cap exists so automation can never look like bulk machine activity again.`,
+    );
+  }
+  if (label === "createCampaign") {
+    const creates = log.filter((e) => e.kind === "createCampaign").length;
+    if (creates >= env.metaMaxCampaignCreates24h) {
+      throw new Error(
+        `Campaign-creation cap reached (${env.metaMaxCampaignCreates24h} in 24h) — refusing to create another campaign. ` +
+          `Fanning out clones across accounts in one day is what got the main account restricted.`,
+      );
+    }
+  }
+
+  const last = log.reduce((max, e) => Math.max(max, e.t), 0);
+  const waitMs = last + env.metaWriteSpacingSeconds * 1000 - Date.now();
+  if (waitMs > 0) await sleep(waitMs);
+
+  log.push({ t: Date.now(), kind: label });
+  setSetting(WRITE_LOG_KEY, JSON.stringify(log));
+}
+
 async function postForm(path: string, params: Record<string, string>, label: string): Promise<Record<string, unknown>> {
+  await gateWrite(label);
   const body = new URLSearchParams(params);
   const response = await fetchWithRetry(
     `${GRAPH()}/${path}?access_token=${encodeURIComponent(env.metaToken)}`,
@@ -51,7 +171,9 @@ async function postForm(path: string, params: Record<string, string>, label: str
   );
   const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
   if (!response.ok || (data as { error?: unknown }).error) {
-    throw new Error(formatMetaError(data, `${label} failed (${response.status})`));
+    const message = formatMetaError(data, `${label} failed (${response.status})`);
+    maybeTripBreaker(message, label);
+    throw new Error(message);
   }
   return data;
 }
@@ -94,6 +216,7 @@ async function waitForVideoReady(videoId: string): Promise<void> {
 }
 
 export async function uploadVideo(adAccountId: string, filePath: string, title: string): Promise<string> {
+  await gateWrite("uploadVideo");
   const buffer = await readFile(filePath);
   if (buffer.length === 0) throw new Error(`Video file is empty: ${filePath}`);
   const fileName = basename(filePath);
@@ -155,6 +278,7 @@ export async function uploadVideo(adAccountId: string, filePath: string, title: 
       return videoId;
     } catch (error) {
       lastError = error;
+      maybeTripBreaker(error instanceof Error ? error.message : String(error), "uploadVideo");
       if (!isTransientNetworkError(error) || attempt === MAX_ATTEMPTS) throw error;
       console.warn(`Retrying video upload "${fileName}" (attempt ${attempt + 1}/${MAX_ATTEMPTS})`);
     }
@@ -167,6 +291,7 @@ export async function uploadVideo(adAccountId: string, filePath: string, title: 
 // ---------------------------------------------------------------------------
 
 export async function uploadImageFile(adAccountId: string, filePath: string): Promise<{ hash: string; url?: string }> {
+  await gateWrite("adimages");
   const buffer = await readFile(filePath);
   const form = new FormData();
   form.append("filename", new Blob([new Uint8Array(buffer)], { type: "image/jpeg" }), basename(filePath));
@@ -176,7 +301,11 @@ export async function uploadImageFile(adAccountId: string, filePath: string): Pr
     "adimages",
   );
   const data = (await res.json().catch(() => ({}))) as { images?: Record<string, { hash?: string; url?: string }>; error?: unknown };
-  if (!res.ok || data.error) throw new Error(formatMetaError(data, "Failed to upload image"));
+  if (!res.ok || data.error) {
+    const message = formatMetaError(data, "Failed to upload image");
+    maybeTripBreaker(message, "adimages");
+    throw new Error(message);
+  }
   const firstKey = data.images ? Object.keys(data.images)[0] : undefined;
   const info = firstKey ? data.images![firstKey] : undefined;
   if (!info?.hash) throw new Error("Meta accepted the image but returned no hash");
