@@ -82,6 +82,74 @@
       "maxHookSeconds": 8.5
     },
     {
+      "id": "teacher-loans",
+      "name": "Teacher Loans",
+      "vertical": "personal loans / teacher-license grants",
+      "angle": "licensed teachers who may qualify for a short-term government grant paid to them, not the school",
+      "bodyVideo": "./assets/teacher_body.mov",
+      "outputName": "Teacher Loans",
+      "promptContext": "Speak to teachers in a direct, urgent, conversational way. Mention a teacher-license stimulus grant, a two-week window, and $40,000 paychecks without sounding like a polished commercial. Do NOT name the Department of Education. Just say the government. Casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter, NOT a teacher at a desk.",
+      "promptTemplate": "",
+      "hooks": [
+        "The government has given out teacher-license stimulus grants for the next two weeks, and most teachers are getting $40,000 paychecks in just a few minutes."
+      ],
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie (Pretty Woman)",
+          "cameraPrompt": "Talking-head through the lens: a medium close chest-up shot of a pretty young woman talking candidly like a real Instagram story. The camera and phone are invisible — she is NOT holding a phone, and no hands, fingers, wrists, or arms are in frame. Natural lighting, slightly shaky, authentic older-iPhone front-camera look. Sitting in a parked car or at home. Not a news desk. Not a studio. Not a classroom.",
+          "creatorPrompt": "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, looking straight through the camera lens, chest-up with no hands or phone in frame, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A very pretty young woman sitting in her parked car, just found out the news about teacher-license grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice, not a teacher in a classroom, not a news reporter.",
+          "hooks": [
+            "The government has given out teacher-license stimulus grants for the next two weeks, and most teachers are getting $40,000 paychecks in just a few minutes."
+          ],
+          "bubbleHooks": [
+            "Teachers are getting license grants for the next two weeks"
+          ]
+        }
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "Teachers are getting license grants for the next two weeks",
+      "hookBubbleStyle": "card",
+      "maxHookSeconds": 8.5
+    },
+    {
+      "id": "nurse-loans",
+      "name": "Nurse Loans",
+      "vertical": "personal loans / nursing-license grants",
+      "angle": "licensed nurses who may qualify for a short-term government grant paid to them, not the hospital",
+      "bodyVideo": "./assets/nurse_body.mov",
+      "outputName": "Nurse Loans",
+      "promptContext": "Speak to nurses in a direct, urgent, conversational way. Mention a nursing-license stimulus grant, a two-week window, and $40,000 paychecks without sounding like a polished commercial. Do NOT name HHS or any department. Just say the government. Casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter, NOT a nurse on a hospital floor.",
+      "promptTemplate": "",
+      "hooks": [
+        "The government has given out nursing-license stimulus grants for the next two weeks, and most nurses are getting $40,000 paychecks in just a few minutes."
+      ],
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie (Pretty Woman)",
+          "cameraPrompt": "Talking-head through the lens: a medium close chest-up shot of a pretty young woman talking candidly like a real Instagram story. The camera and phone are invisible — she is NOT holding a phone, and no hands, fingers, wrists, or arms are in frame. Natural lighting, slightly shaky, authentic older-iPhone front-camera look. Sitting in a parked car or at home. Not a news desk. Not a studio. Not a hospital.",
+          "creatorPrompt": "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, looking straight through the camera lens, chest-up with no hands or phone in frame, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A very pretty young woman sitting in her parked car, just found out the news about nursing-license grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice, not a nurse in scrubs on a hospital floor, not a news reporter.",
+          "hooks": [
+            "The government has given out nursing-license stimulus grants for the next two weeks, and most nurses are getting $40,000 paychecks in just a few minutes."
+          ],
+          "bubbleHooks": [
+            "Nurses are getting license grants for the next two weeks"
+          ]
+        }
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "Nurses are getting license grants for the next two weeks",
+      "hookBubbleStyle": "card",
+      "maxHookSeconds": 8.5
+    },
+    {
       "id": "bathroom-remodel-seniors",
       "name": "Bathroom Remodel",
       "vertical": "bathroom remodel / walk-in shower upgrades",
