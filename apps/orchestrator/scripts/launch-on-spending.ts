@@ -29,6 +29,15 @@ import { recordLaunch } from "../src/launch-guard.js";
 import { notifyInfo, notifyError, notifyScheduled, notifyAdReview } from "../src/slack.js";
 import { env } from "../src/env.js";
 
+if (!process.argv.includes("--i-know")) {
+  console.error(
+    "Refusing to run. This script fans the same ads onto many ad accounts,\n" +
+      "which looks like automation abuse to Meta. Do not use it.\n" +
+      "One account at a time, by hand, if you ever need this again.",
+  );
+  process.exit(1);
+}
+
 const SPENDING = [
   { id: "act_1580820796744259", label: "Spare ·4259", spend: 183.15 },
   { id: "act_1060126476705741", label: "Spare ·5741", spend: 112.56 },
