@@ -175,6 +175,11 @@ app.command("/adops", async ({ command, ack, respond }) => {
         await api("/api/digest", { method: "POST" });
         break;
       }
+      case "check": {
+        await respond({ response_type: "ephemeral", text: ":mag: Pulling watched-campaign numbers..." });
+        await api("/api/followups/check", { method: "POST" });
+        break;
+      }
       case "skip": {
         await api("/api/settings", {
           method: "POST",
@@ -206,6 +211,7 @@ app.command("/adops", async ({ command, ack, respond }) => {
             "`/adops skip` — skip tomorrow's daily run once",
             "`/adops run [vertical]` — generate + schedule right now",
             "`/adops digest` — post the morning digest to the channel now",
+            "`/adops check` — post current numbers for watched campaigns (e.g. X2275 scale)",
             "`/adops perf` — spend / purchases / CPA for automated campaigns",
             "`/adops angles` — creative angle leaderboard + tomorrow's mix bias",
             "`/adops health` — run the full healthcheck now",

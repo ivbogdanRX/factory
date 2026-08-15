@@ -3,6 +3,7 @@ import { startServer } from "./server.js";
 import { maybeStartDailyRun, activateDueRuns, completeExpiredRuns } from "./runner.js";
 import { maybeRunWeeklyHealthcheck } from "./healthcheck.js";
 import { maybeSendMorningDigest } from "./digest.js";
+import { maybeRunFollowups } from "./followups.js";
 import { maybePollAccountHealth } from "./account-health.js";
 import { maybeWatchRemediations } from "./remediation.js";
 import { maybeEvaluateGuardrails } from "./guardrails.js";
@@ -39,6 +40,7 @@ setInterval(() => {
   void completeExpiredRuns();
   maybeRunWeeklyHealthcheck();
   maybeSendMorningDigest();
+  maybeRunFollowups();
   maybePollAccountHealth();
   maybeWatchRemediations();
   void maybeEvaluateGuardrails();

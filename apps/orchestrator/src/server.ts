@@ -31,6 +31,7 @@ import { monitoredAccountIds } from "./account-health.js";
 import { getAdAccountHealth } from "./meta.js";
 import { globalCooldownMsLeft, accountCooldownMsLeft, recordLaunch } from "./launch-guard.js";
 import { sendDigest } from "./digest.js";
+import { runManualFollowupChecks } from "./followups.js";
 import { studioHealthy } from "./creative.js";
 import { angleStats } from "./angles.js";
 import { buildSnapshot } from "./push.js";
@@ -409,6 +410,17 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (pathname === "/api/digest" && req.method === "POST") {
       const text = await sendDigest();
       sendJson(res, 200, { ok: true, text });
+      return;
+    }
+
+    // Post current numbers for every pending campaign watch (does not consume the due-date check).
+    if (pathname === "/api/followups/check" && req.method === "POST") {
+      const texts = await runManualFollowupChecks();
+      sendJson(res, 200, {
+        ok: true,
+        texts,
+        text: texts.length > 0 ? texts.join("\n\n") : "No pending campaign checks.",
+      });
       return;
     }
 

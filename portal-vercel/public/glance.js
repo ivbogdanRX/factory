@@ -150,6 +150,9 @@ function attentionItems(snap, macAgeMs) {
   if (snap.globalPause) items.push({ t: "Factory is paused", sub: "resume with /adops in Slack" });
   if (snap.skipNext) items.push({ t: "Next drop will be skipped" });
   if (snap.dryRun) items.push({ t: "Dry-run mode", sub: "no real money is being spent" });
+  for (const f of snap.followups || []) {
+    if (f.due) items.push({ t: `Check ${f.campaignName}`, sub: f.note });
+  }
 
   const seen = new Set();
   return items.filter((i) => (seen.has(i.t) ? false : seen.add(i.t)));
@@ -225,6 +228,12 @@ function render(snap) {
       .filter(Boolean).join(" · ");
     parts.push(`<div class="row"><span class="l">Next drop</span>
       <span class="v"><b>${esc(fmtPt(snap.nextRunAt))} PT</b> · ${esc(until(snap.nextRunAt))}${plan ? `<span class="sub">${esc(plan)}</span>` : ""}</span></div>`);
+  }
+
+  const upcoming = (snap.followups || []).filter((f) => !f.due);
+  for (const f of upcoming) {
+    parts.push(`<div class="row"><span class="l">Watching</span>
+      <span class="v"><b>${esc(f.campaignName)}</b><span class="sub">check ${esc(f.dueLabel)} · ${esc(f.note)}</span></span></div>`);
   }
 
   // 4. Ad accounts — summary row, list on tap.

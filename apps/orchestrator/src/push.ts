@@ -17,6 +17,7 @@ import { guardrailAngleSnapshot } from "./guardrails.js";
 import { lastAccountsReport, type GlanceAccount } from "./account-health.js";
 import { accountCooldownMsLeft } from "./launch-guard.js";
 import { listLatestCreatives, loadOffer, prettyMacName } from "./glance-creatives.js";
+import { glanceFollowups } from "./followups.js";
 
 const PERF_TTL_MS = 10 * 60 * 1000;
 // Slightly under the 30s scheduler tick so every tick actually pushes.
@@ -150,6 +151,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     runs,
     angles,
     redtrackAngles: guardrailAngleSnapshot(),
+    followups: glanceFollowups(),
     health: health
       ? { at: health.at, ok: healthOk, checks: healthChecks }
       : null,
