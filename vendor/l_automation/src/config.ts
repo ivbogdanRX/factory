@@ -470,7 +470,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
   if (!flow.prompt) fail("missing flow.prompt");
 
   const video = cfg.video as Partial<VideoConfig> & { outputVideo?: string };
-  if (!video.targetVideo) fail("missing video.targetVideo");
+  // targetVideo is optional for standalone video generation
   // Back-compat: if an old config still sets video.outputVideo (a file path),
   // use its directory as the base output dir.
   const outputDir =
@@ -562,7 +562,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
       resolution: flow.resolution ?? "720p",
     },
     video: {
-      targetVideo: resolvePath(video.targetVideo),
+      targetVideo: video.targetVideo ? resolvePath(video.targetVideo) : "",
       outputDir: resolvePath(outputDir),
       trimSeconds: video.trimSeconds ?? 0.5,
       name: video.name ?? "",
@@ -570,7 +570,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
     campaigns: campaigns.map((campaign, idx) => {
       const c = campaign as Partial<CampaignConfig>;
       if (!c.id) fail(`campaigns[${idx}] is missing id`);
-      if (!c.bodyVideo) fail(`campaigns[${idx}] is missing bodyVideo`);
+      const bodyVideo = (c.bodyVideo ?? "").trim();
       if (!Array.isArray(c.hooks) || c.hooks.length === 0) {
         fail(`campaigns[${idx}] must include at least one hook`);
       }
@@ -579,7 +579,7 @@ export function loadConfig(explicitPath?: string): AppConfig {
         name: c.name ?? c.id,
         vertical: c.vertical ?? "",
         angle: c.angle ?? "",
-        bodyVideo: resolvePath(c.bodyVideo),
+        bodyVideo: bodyVideo ? resolvePath(bodyVideo) : "",
         bodyVideos: Array.isArray(c.bodyVideos)
           ? c.bodyVideos
               .filter((v): v is string => typeof v === "string" && v.trim().length > 0)

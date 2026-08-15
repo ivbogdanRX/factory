@@ -24,12 +24,32 @@ import { getAdStatuses, getAdAccountHealth, listProblemAds, type ProblemAd } fro
 import { startRemediationForAd, progressRemediations } from "./remediation.js";
 import { postSlack } from "./slack.js";
 
+export interface GlanceAccount {
+  id: string;
+  label: string;
+  status: string;
+  ok: boolean;
+}
+
+let lastAccounts: { at: string; accounts: GlanceAccount[] } | null = null;
+
 const POLL_INTERVAL_MS = 10 * 60 * 1000;
+
+function accountLabel(accountId: string): string {
+  const vertical = loadVerticals().find((v) => v.meta.adAccountId === accountId);
+  if (vertical) return vertical.label;
+  const tail = accountId.replace(/^act_/, "").slice(-4);
+  return `Spare ·${tail}`;
+}
+
+export function lastAccountsReport(): { at: string; accounts: GlanceAccount[] } | null {
+  return lastAccounts;
+}
 
 /** Every ad account to monitor: vertical-configured ones plus any extras from
  * EXTRA_META_HEALTH_ACCOUNTS (comma-separated act_… ids) — used for the spare
  * accounts running cloned campaigns that no vertical points at. */
-function monitoredAccountIds(): string[] {
+export function monitoredAccountIds(): string[] {
   const extras = (process.env.EXTRA_META_HEALTH_ACCOUNTS ?? "")
     .split(",")
     .map((s) => s.trim())
@@ -75,6 +95,7 @@ function accountAdvice(accountStatus: number): string {
 
 async function checkAdAccounts(): Promise<void> {
   const accountIds = monitoredAccountIds();
+  const accounts: GlanceAccount[] = [];
   for (const accountId of accountIds) {
     const key = `account:${accountId}`;
     let health;
@@ -82,8 +103,16 @@ async function checkAdAccounts(): Promise<void> {
       health = await getAdAccountHealth(accountId);
     } catch (error) {
       console.warn(`Account health fetch failed for ${accountId}`, error);
+      accounts.push({ id: accountId, label: accountLabel(accountId), status: "UNREACHABLE", ok: false });
       continue;
     }
+    const statusName = ACCOUNT_STATUS_NAMES[health.accountStatus] ?? `status code ${health.accountStatus}`;
+    accounts.push({
+      id: accountId,
+      label: accountLabel(accountId),
+      status: statusName.split(" ")[0] ?? statusName,
+      ok: health.accountStatus === 1,
+    });
     if (health.accountStatus === 1) {
       const previous = getAlertState(key);
       if (previous !== undefined) {
@@ -92,7 +121,6 @@ async function checkAdAccounts(): Promise<void> {
       }
       continue;
     }
-    const statusName = ACCOUNT_STATUS_NAMES[health.accountStatus] ?? `status code ${health.accountStatus}`;
     const reason = health.disableReason
       ? ` Reason: ${DISABLE_REASON_NAMES[health.disableReason] ?? `code ${health.disableReason}`}.`
       : "";
@@ -103,6 +131,7 @@ async function checkAdAccounts(): Promise<void> {
       `:rotating_light: *Ad account ${accountId} is ${statusName}* — ads are not delivering.${reason} ${accountAdvice(health.accountStatus)}`,
     );
   }
+  lastAccounts = { at: new Date().toISOString(), accounts };
 }
 
 /** Above this many rejected ads, swap only a few per cycle (less bursty). */

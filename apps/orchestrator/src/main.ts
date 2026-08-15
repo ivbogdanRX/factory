@@ -3,6 +3,7 @@ import { startServer } from "./server.js";
 import { maybeStartDailyRun, activateDueRuns, completeExpiredRuns } from "./runner.js";
 import { maybeRunWeeklyHealthcheck } from "./healthcheck.js";
 import { maybeSendMorningDigest } from "./digest.js";
+import { maybeRunFollowups } from "./followups.js";
 import { maybePollAccountHealth } from "./account-health.js";
 import { maybeWatchRemediations } from "./remediation.js";
 import { maybeEvaluateGuardrails } from "./guardrails.js";
@@ -25,6 +26,7 @@ startServer(() => {
   // Hook tests / ad drafts can outlive a restart: re-attach to their studio jobs.
   resumeHookTestWatches();
   resumeAdDraftWatches();
+  setTimeout(() => maybePollAccountHealth(), 2_000);
 });
 console.log(
   `Ad Factory orchestrator up. Daily run at ${env.runHourPt}:00 PT (override in portal). ` +
@@ -38,6 +40,7 @@ setInterval(() => {
   void completeExpiredRuns();
   maybeRunWeeklyHealthcheck();
   maybeSendMorningDigest();
+  maybeRunFollowups();
   maybePollAccountHealth();
   maybeWatchRemediations();
   void maybeEvaluateGuardrails();

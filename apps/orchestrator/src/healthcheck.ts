@@ -141,9 +141,20 @@ async function checkChatGPTSession(): Promise<HealthCheckItem> {
 }
 
 async function checkFfmpeg(): Promise<HealthCheckItem> {
+  const bin = existsSync("/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg")
+    ? "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg"
+    : "ffmpeg";
   try {
-    await execFileAsync("ffmpeg", ["-version"], { timeout: 10_000 });
-    return { name: "ffmpeg", status: "ok", detail: "installed" };
+    const { stdout } = await execFileAsync(bin, ["-hide_banner", "-filters"], { timeout: 10_000 });
+    const hasAss = /(^|\s)ass(\s|$)/m.test(stdout) || stdout.includes(" ass ");
+    if (!hasAss) {
+      return {
+        name: "ffmpeg",
+        status: "warn",
+        detail: "installed but missing libass — captions/headlines won't burn in. brew install ffmpeg-full",
+      };
+    }
+    return { name: "ffmpeg", status: "ok", detail: "installed with libass (captions ready)" };
   } catch {
     return { name: "ffmpeg", status: "fail", detail: "not on PATH — brew install ffmpeg" };
   }

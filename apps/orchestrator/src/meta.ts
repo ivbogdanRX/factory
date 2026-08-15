@@ -374,7 +374,40 @@ export interface CreateCampaignParams {
   status?: "ACTIVE" | "PAUSED";
 }
 
+/** Only campaigns whose name contains "(IB)" may be created or mutated. */
+export function isIbCampaignName(name: string): boolean {
+  return /\(IB\)/i.test(name);
+}
+
+async function campaignNameFor(objectId: string): Promise<string> {
+  try {
+    const data = await getJson(`${objectId}?fields=name,campaign{name}`, "assertIbOwned");
+    return String((data.campaign as { name?: string } | undefined)?.name ?? data.name ?? "");
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    // Campaign objects have no nested campaign field — the name *is* the campaign.
+    if (/nonexisting field \(campaign\)/i.test(msg)) {
+      const data = await getJson(`${objectId}?fields=name`, "assertIbOwnedCampaign");
+      return String(data.name ?? "");
+    }
+    throw error;
+  }
+}
+
+async function assertIbOwned(objectId: string): Promise<string> {
+  const campaignName = await campaignNameFor(objectId);
+  if (!isIbCampaignName(campaignName)) {
+    throw new Error(
+      `Refusing to mutate Meta object ${objectId} — campaign "${campaignName || "(unnamed)"}" is not an (IB) campaign`,
+    );
+  }
+  return campaignName;
+}
+
 export async function createCampaign(adAccountId: string, params: CreateCampaignParams): Promise<string> {
+  if (!isIbCampaignName(params.name)) {
+    throw new Error(`Refusing to create campaign "${params.name}" — name must contain (IB)`);
+  }
   const data = await postForm(
     `${adAccountId}/campaigns`,
     {
@@ -405,6 +438,7 @@ export async function getCampaignDailyBudgetCents(campaignId: string): Promise<n
 
 /** Update a CBO campaign's daily budget (used by the guardrail scale ladder). */
 export async function setCampaignDailyBudgetCents(campaignId: string, cents: number): Promise<void> {
+  await assertIbOwned(campaignId);
   await postForm(campaignId, { daily_budget: String(Math.round(cents)) }, "setCampaignBudget");
 }
 
@@ -443,6 +477,40 @@ export async function getCampaignInsights(
     purchases,
     costPerPurchase: purchases > 0 ? spend / purchases : null,
   };
+}
+
+export interface DailyInsight {
+  /** YYYY-MM-DD in the ad account's timezone. */
+  date: string;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  purchases: number;
+}
+
+/**
+ * Per-day breakdown for the glance "last 7 days" table. Works for any insights
+ * object id — an ad account (act_…) captures every campaign on it, manual
+ * clones included, which is what the history table wants.
+ */
+export async function getDailyInsights(objectId: string): Promise<DailyInsight[]> {
+  const data = (await getJson(
+    `${objectId}/insights?fields=spend,impressions,clicks,actions&date_preset=last_14d&time_increment=1`,
+    "dailyInsights",
+  )) as { data?: Array<Record<string, unknown>> };
+  return (data.data ?? []).map((row) => {
+    const actions = (row.actions ?? []) as Array<{ action_type?: string; value?: string }>;
+    const purchases = actions
+      .filter((a) => a.action_type === "purchase" || a.action_type === "offsite_conversion.fb_pixel_purchase")
+      .reduce((max, a) => Math.max(max, Number(a.value ?? 0)), 0);
+    return {
+      date: String(row.date_start ?? ""),
+      spend: Number(row.spend ?? 0),
+      impressions: Number(row.impressions ?? 0),
+      clicks: Number(row.clicks ?? 0),
+      purchases,
+    };
+  }).filter((d) => d.date);
 }
 
 export interface AdInsights {
@@ -784,6 +852,7 @@ export async function createAdFromVideo(options: {
 // ---------------------------------------------------------------------------
 
 export async function setObjectStatus(objectId: string, status: "ACTIVE" | "PAUSED" | "DELETED"): Promise<void> {
+  await assertIbOwned(objectId);
   await postForm(objectId, { status }, `setStatus:${status}`);
 }
 

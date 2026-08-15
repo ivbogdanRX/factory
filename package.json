@@ -14,11 +14,14 @@
     "uploader": "npm --prefix vendor/ads-uploader run dev",
     "run-now": "tsx apps/orchestrator/src/cli.ts run",
     "dry-run": "DRY_RUN=1 tsx apps/orchestrator/src/cli.ts run",
+    "generate-slack": "tsx scripts/generate-one-slack.ts",
+    "check-video-env": "tsx scripts/check-video-env.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@slack/bolt": "^4.2.1",
     "better-sqlite3": "^11.8.1",
+    "dotenv": "^17.4.2",
     "yaml": "^2.7.0"
   },
   "devDependencies": {

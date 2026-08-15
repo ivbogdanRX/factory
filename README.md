@@ -122,7 +122,10 @@ npm run run-now    # full live run (uploads + schedules real ads)
 
 ## Always-on (launchd)
 
-The studio and orchestrator services are already installed and running:
+On this Mac mini the agents live in `~/Library/LaunchAgents/com.adfactory.*.plist`
+and start from `/Users/ivanbogdan/Desktop/factory/factory`. Glance is served
+on the LAN at **http://Ivans-Mac-mini.local:5180** (no Vercel). Write APIs stay
+localhost-only; Slack `/adops` still talks to `127.0.0.1:5180`.
 
 ```bash
 launchctl list | grep adfactory        # check status

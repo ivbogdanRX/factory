@@ -9,7 +9,7 @@ import { generateVeoVideo, shouldFallbackToBrowser } from "./veo-api.js";
 import { generateModelImage } from "./nanobanana.js";
 import { generateModelImageOpenAI } from "./openai-image.js";
 import { generateModelImageChatGPT } from "./chatgpt-image.js";
-import { trimAndSplice } from "./video.js";
+import { trimAndSplice, probe, type SpliceResult } from "./video.js";
 import { addCaptions } from "./captions.js";
 import { applyCampaign, findCampaign, CampaignBatchPicker } from "./campaigns.js";
 import { autoCleanIntermediates } from "./gc.js";
@@ -177,7 +177,7 @@ async function runGenerationInner(opts: RunOptions): Promise<RunResult> {
       };
     };
 
-    if (!campaign && !existsSync(baseCfg.video.targetVideo)) {
+    if (!campaign && baseCfg.video.targetVideo && !existsSync(baseCfg.video.targetVideo)) {
       throw new Error(
         `Target video not found: ${baseCfg.video.targetVideo}. ` +
           `Set video.targetVideo in config.json to the clip you want to splice after.`,
@@ -188,7 +188,7 @@ async function runGenerationInner(opts: RunOptions): Promise<RunResult> {
     if (opts.generatedVideo) {
       log.step("Skipping browser steps; using provided generated video.");
       const { cfg } = configForRun(1);
-      if (!existsSync(cfg.video.targetVideo)) {
+      if (cfg.video.targetVideo && !existsSync(cfg.video.targetVideo)) {
         throw new Error(`Target video not found: ${cfg.video.targetVideo}`);
       }
       let generatedVideo = opts.generatedVideo;
@@ -196,12 +196,25 @@ async function runGenerationInner(opts: RunOptions): Promise<RunResult> {
         generatedVideo = await addCaptions(generatedVideo, cfg);
       }
       const outputVideo = buildNamedOutputPath(cfg.video.outputDir, outputLabel(cfg));
-      const result = await trimAndSplice({
-        generatedVideo,
-        targetVideo: cfg.video.targetVideo,
-        outputVideo,
-        trimSeconds: cfg.video.trimSeconds,
-      });
+      
+      let result: SpliceResult;
+      if (!cfg.video.targetVideo) {
+        log.step("No target video - outputting standalone generated video.");
+        const { copyFile } = await import("node:fs/promises");
+        await copyFile(generatedVideo, outputVideo);
+        const probeInfo = await probe(generatedVideo);
+        result = {
+          output: outputVideo,
+          generatedTrimmedDuration: probeInfo.durationSec,
+        };
+      } else {
+        result = await trimAndSplice({
+          generatedVideo,
+          targetVideo: cfg.video.targetVideo,
+          outputVideo,
+          trimSeconds: cfg.video.trimSeconds,
+        });
+      }
       log.ok(`Done. Output: ${result.output}`);
       return { outputs: [result.output], elapsedMs: Date.now() - startedAt };
     }
@@ -281,7 +294,7 @@ async function runGenerationInner(opts: RunOptions): Promise<RunResult> {
         let reservedOutput: string | undefined;
         try {
           const { cfg, persona, hook, bubble } = configForRun(i);
-          if (!existsSync(cfg.video.targetVideo)) {
+          if (cfg.video.targetVideo && !existsSync(cfg.video.targetVideo)) {
             throw new Error(`Target video not found: ${cfg.video.targetVideo}`);
           }
 
@@ -378,12 +391,26 @@ async function runGenerationInner(opts: RunOptions): Promise<RunResult> {
             outputLabel(cfg),
           );
           reservedOutput = outputVideo;
-          const result = await trimAndSplice({
-            generatedVideo,
-            targetVideo: cfg.video.targetVideo,
-            outputVideo,
-            trimSeconds: cfg.video.trimSeconds,
-          });
+          
+          let result: SpliceResult;
+          if (!cfg.video.targetVideo) {
+            log.step("No target video - outputting standalone generated video.");
+            const { copyFile } = await import("node:fs/promises");
+            await copyFile(generatedVideo, outputVideo);
+            const probeInfo = await probe(generatedVideo);
+            result = {
+              output: outputVideo,
+              generatedTrimmedDuration: probeInfo.durationSec,
+            };
+          } else {
+            result = await trimAndSplice({
+              generatedVideo,
+              targetVideo: cfg.video.targetVideo,
+              outputVideo,
+              trimSeconds: cfg.video.trimSeconds,
+            });
+          }
+          
           if (pinKey) seen.add(pinKey);
           outputs.push(result.output);
           report("run-done", { output: result.output });

@@ -21,6 +21,8 @@ export const env = {
   slackChannelId: process.env.SLACK_CHANNEL_ID ?? "",
   studioUrl: (process.env.STUDIO_URL ?? "http://127.0.0.1:5174").replace(/\/$/, ""),
   port: Number(process.env.ORCHESTRATOR_PORT ?? 5180),
+  /** Bind address for the glance + API server. 0.0.0.0 so the phone can hit this Mac. */
+  bind: process.env.ORCHESTRATOR_BIND ?? "0.0.0.0",
   runHourPt: Number(process.env.RUN_HOUR_PT ?? 10),
   dryRun: process.env.DRY_RUN === "1",
   /** RedTrack API key — conversion/revenue source of truth for guardrails. */

@@ -17,6 +17,7 @@ import { getCampaignInsights, getAdInsights, getObjectName } from "./meta.js";
 import { nowClockInTimeZone, todayInTimeZone, PT } from "./schedule.js";
 import { postSlack } from "./slack.js";
 import { scaleDigestLine } from "./guardrails.js";
+import { followupDigestLines } from "./followups.js";
 
 export const DEFAULT_DIGEST_HOUR_PT = 8;
 
@@ -201,6 +202,7 @@ export async function buildDigestText(): Promise<string> {
     waits.push(`*${ads}* ad(s) in review before go-live ${fmtPtShort(run.go_live_at!)} PT`);
   }
   lines.push(waits.length > 0 ? `*Waiting on you:* ${waits.join(" · ")}` : "*Waiting on you:* nothing — all clear.");
+  lines.push(...followupDigestLines());
 
   return lines.join("\n");
 }

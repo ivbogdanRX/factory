@@ -4,15 +4,20 @@
  * (PORTAL_PUSH_URL + PORTAL_PUSH_SECRET) so the same page works away from the
  * Mac. Perf numbers hit the Meta insights API, so they're cached for 10 min.
  */
+import { existsSync } from "node:fs";
 import { env } from "./env.js";
 import { loadVerticals } from "./verticals.js";
 import { listRuns, listCreatives, getSetting } from "./db.js";
 import { nextRunAtIso } from "./schedule.js";
-import { getPerformanceReport, type PerformanceEntry } from "./perf.js";
+import { getDailyPerformance, getPerformanceReport, type PerformanceEntry } from "./perf.js";
 import { angleStats, type AngleStats } from "./angles.js";
 import { lastHealthReport } from "./healthcheck.js";
 import { studioHealthy } from "./creative.js";
 import { guardrailAngleSnapshot } from "./guardrails.js";
+import { lastAccountsReport, type GlanceAccount } from "./account-health.js";
+import { accountCooldownMsLeft } from "./launch-guard.js";
+import { listLatestCreatives, loadOffer, prettyMacName } from "./glance-creatives.js";
+import { glanceFollowups } from "./followups.js";
 
 const PERF_TTL_MS = 10 * 60 * 1000;
 // Slightly under the 30s scheduler tick so every tick actually pushes.
@@ -38,6 +43,20 @@ async function cachedPerf(): Promise<{ asOf: string; entries: PerformanceEntry[]
   return {
     asOf: new Date(perfCache?.at ?? Date.now()).toISOString(),
     entries: perfCache?.entries ?? [],
+  };
+}
+
+/** Accounts as the health poller saw them, plus manual-launch cooldown info
+ * so the launch picker can grey out accounts that were used recently. */
+function accountsWithCooldowns(): { at: string; accounts: (GlanceAccount & { cooldownUntil: string | null })[] } | null {
+  const report = lastAccountsReport();
+  if (!report) return null;
+  return {
+    at: report.at,
+    accounts: report.accounts.map((a) => {
+      const msLeft = accountCooldownMsLeft(a.id);
+      return { ...a, cooldownUntil: msLeft > 0 ? new Date(Date.now() + msLeft).toISOString() : null };
+    }),
   };
 }
 
@@ -76,6 +95,8 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     // studio config unreadable — glance just skips the angle card
   }
 
+  // Factory-created campaigns only — the glance answers "how are MY automated
+  // ads doing", not what the manual clones on the spare accounts are up to.
   const spendToday = perf.entries.reduce((sum, e) => sum + e.spend, 0);
   const purchasesToday = perf.entries.reduce((sum, e) => sum + e.purchases, 0);
 
@@ -89,6 +110,19 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
   const studioUp = await studioHealthy();
   if (!studioUp) problems.push("creative studio down");
 
+  const offer = loadOffer();
+  const ffmpegFull = existsSync("/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg");
+  const healthChecks = (health?.checks ?? []).filter((c) => {
+    if (c.name === "OpenAI credits" || c.name === "Gemini key (Veo)") return false;
+    return true;
+  }).map((c) => {
+    if (c.name === "ffmpeg" && ffmpegFull) {
+      return { ...c, status: "ok" as const, detail: "ffmpeg-full with libass (captions ready)" };
+    }
+    return c;
+  });
+  const healthOk = healthChecks.every((c) => c.status !== "fail");
+
   return {
     generatedAt: new Date().toISOString(),
     ok: problems.length === 0,
@@ -97,7 +131,15 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     globalPause: getSetting("globalPause") === "1",
     skipNext: getSetting("skipNext") === "1",
     studioHealthy: studioUp,
+    mac: {
+      hostname: prettyMacName(),
+      lastSeen: new Date().toISOString(),
+      online: true,
+    },
     nextRunAt: nextRunAtIso(Number(getSetting("runHourPt") ?? env.runHourPt)),
+    offer,
+    latestCreatives: listLatestCreatives(4),
+    accounts: accountsWithCooldowns(),
     perf: {
       asOf: perf.asOf,
       spendToday,
@@ -105,12 +147,14 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
       cpaToday: purchasesToday > 0 ? spendToday / purchasesToday : null,
       campaigns: perf.entries,
     },
+    daily: getDailyPerformance(),
     runs,
     angles,
-    // Per-angle Meta spend + RedTrack conversions from the last guardrail
-    // pass (null until the first evaluation of a live flight).
     redtrackAngles: guardrailAngleSnapshot(),
-    health: health ? { at: health.at, ok: health.ok, checks: health.checks } : null,
+    followups: glanceFollowups(),
+    health: health
+      ? { at: health.at, ok: healthOk, checks: healthChecks }
+      : null,
   };
 }
 

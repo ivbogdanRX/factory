@@ -3,6 +3,7 @@ import { join } from "node:path";
 import OpenAI from "openai";
 import type { AppConfig } from "./config.js";
 import { buildUgcPrompt, type GeneratedModelImage } from "./nanobanana.js";
+import { IMAGE_GUARDS } from "./prompt-guards.js";
 import { ensureDir, slugify, timestamp } from "./utils.js";
 import { acquireApiSlot } from "./ratelimit.js";
 import { log } from "./logger.js";
@@ -39,7 +40,7 @@ export async function generateModelImageOpenAI(
 ): Promise<GeneratedModelImage> {
   const client = new OpenAI({ apiKey: getApiKey() });
   const oi = cfg.imageSource.openai;
-  const prompt = oi.promptOverride.trim() || buildUgcPrompt();
+  const prompt = (oi.promptOverride.trim() || buildUgcPrompt()) + " " + IMAGE_GUARDS;
   const size = oi.size === "auto" ? sizeForAspect(cfg.imageSource.nanoBanana.aspectRatio) : oi.size;
 
   log.step(`OpenAI ${oi.model}: generating UGC model image (${size}, ${oi.quality}).`);

@@ -1,5 +1,4 @@
-/* Ad Factory glance — read-only mobile hub. Fetches /api/snapshot (served
-   live by the local orchestrator, or from the pushed blob on Vercel). */
+/* VA Loans glance — utility-first status page fed by the Mac's snapshot. */
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -7,16 +6,14 @@ let lastSnap = null;
 let fetching = false;
 const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
 
-const PT_FMT = new Intl.DateTimeFormat("en-US", {
+const PT_SHORT = new Intl.DateTimeFormat("en-US", {
   timeZone: "America/Los_Angeles",
   weekday: "short",
   hour: "numeric",
   minute: "2-digit",
 });
 
-function fmtPt(iso) {
-  return iso ? `${PT_FMT.format(new Date(iso))} PT` : "—";
-}
+const fmtPt = (iso) => (iso ? PT_SHORT.format(new Date(iso)) : "—");
 
 function ago(iso) {
   const s = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 1000));
@@ -34,11 +31,18 @@ function until(iso) {
   return h > 0 ? `in ${h}h ${m}m` : `in ${m}m`;
 }
 
-const money = (n) => `$${Number(n).toFixed(n >= 100 ? 0 : 2)}`;
+const money = (n) => `$${Number(n).toFixed(Number(n) >= 100 ? 0 : 2)}`;
 
-/* Access key: accepted from ?key= in the URL (so a bookmarked / home-screen
-   link self-configures), remembered in localStorage, asked for via an inline
-   form only as a last resort (prompt() is broken in iOS standalone mode). */
+/** "2026-08-14" → "Thu 8/14" without UTC-midnight date shifting. */
+function dayLabel(ymd) {
+  const [y, m, d] = String(ymd).split("-").map(Number);
+  if (!y || !m || !d) return ymd;
+  const wd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(y, m - 1, d).getDay()];
+  return `${wd} ${m}/${d}`;
+}
+
+/* ---- access key (only needed off-LAN) ---- */
+
 (() => {
   const urlKey = new URLSearchParams(location.search).get("key");
   if (urlKey) {
@@ -47,17 +51,14 @@ const money = (n) => `$${Number(n).toFixed(n >= 100 ? 0 : 2)}`;
   }
 })();
 
-let memKey = null; // fallback when localStorage is unavailable
-
+let memKey = null;
 function getKey() {
   try { return localStorage.getItem("adf-key") || memKey; } catch { return memKey; }
 }
-
 function setKey(key) {
   memKey = key;
   try { localStorage.setItem("adf-key", key); } catch { /* private mode */ }
 }
-
 function snapshotUrl() {
   const key = getKey();
   return key ? `/api/snapshot?key=${encodeURIComponent(key)}` : "/api/snapshot";
@@ -67,7 +68,7 @@ function showKeyForm() {
   if ($("#keyform")) return;
   const wrap = document.createElement("div");
   wrap.id = "keyform";
-  wrap.className = "card keyform";
+  wrap.className = "keyform";
   wrap.innerHTML = `
     <div class="kf-title">Access key</div>
     <div class="kf-sub">Enter the dashboard key once — it'll be remembered.</div>
@@ -76,30 +77,24 @@ function showKeyForm() {
       <button type="submit">Unlock</button>
     </form>
     <div class="kf-err" hidden>Wrong key — try again.</div>`;
-  $("#app").prepend(wrap);
+  $("#app").replaceChildren(wrap);
   wrap.querySelector("form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const val = wrap.querySelector("input").value.trim();
     if (!val) return;
     setKey(val);
     const res = await fetch(snapshotUrl(), { cache: "no-store" });
-    if (res.ok) {
-      wrap.remove();
-      render(await res.json());
-    } else {
-      wrap.querySelector(".kf-err").hidden = false;
-    }
+    if (res.ok) render(await res.json());
+    else wrap.querySelector(".kf-err").hidden = false;
   });
 }
+
+/* ---- refresh loop ---- */
 
 async function refresh() {
   if (fetching) return;
   fetching = true;
-  try {
-    await doRefresh();
-  } finally {
-    fetching = false;
-  }
+  try { await doRefresh(); } finally { fetching = false; }
 }
 
 async function doRefresh() {
@@ -107,152 +102,339 @@ async function doRefresh() {
   try {
     const res = await fetch(snapshotUrl(), { cache: "no-store" });
     if (res.status === 401) {
-      $("#updated").textContent = "locked";
-      $("#updated").className = "updated";
-      $("#hero-dot").className = "dot big warn";
-      $("#hero-text").textContent = "Enter access key";
+      setHeader("bad", "locked");
       showKeyForm();
       return;
     }
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     snap = await res.json();
-    const form = $("#keyform");
-    if (form) form.remove();
   } catch (err) {
-    $("#updated").textContent = "unreachable";
-    $("#updated").className = "updated stale";
-    $("#hero-dot").className = "dot big bad";
-    $("#hero-text").textContent = "Can't reach the factory";
-    $("#hero-problems").innerHTML = `<div>${esc(err.message || err)}</div>`;
+    setHeader("bad", "offline");
+    $("#app").innerHTML = `
+      <div class="attn">
+        <div><b>Can't reach the Mac</b><div class="sub">${esc(err.message || err)} — be on the same Wi-Fi as the Mac mini, or connect Tailscale.</div></div>
+      </div>
+      ${lastSnap ? `<div class="row"><span class="l">Last seen</span><span class="v muted">${esc(ago(lastSnap.generatedAt))}</span></div>` : ""}`;
     return;
   }
   render(snap);
 }
 
+function setHeader(state, text) {
+  $("#sdot").className = `sdot${state === "ok" ? "" : ` ${state}`}`;
+  const upd = $("#updated");
+  upd.textContent = text;
+  upd.className = `upd${state === "ok" ? "" : state === "warn" ? " stale" : " off"}`;
+}
+
+/* ---- what actually needs Ivan's eyes ---- */
+
+function attentionItems(snap, macAgeMs) {
+  const items = [];
+  if (macAgeMs > 180_000) {
+    items.push({ t: "Mac mini offline", sub: `last heartbeat ${ago(snap.generatedAt)} — nothing runs until it's back` });
+  }
+  for (const p of snap.problems || []) items.push({ t: p });
+
+  const accts = snap.accounts?.accounts || [];
+  const main = accts.find((a) => a.label === "VA Loans");
+  if (main && !main.ok) {
+    items.push({ t: `Main ad account is ${main.status}`, sub: "tomorrow's drop needs an active account — spares are listed below" });
+  }
+  for (const c of snap.health?.checks || []) {
+    if (c.status === "fail") items.push({ t: `${c.name} is down`, sub: c.detail });
+  }
+  for (const r of snap.runs || []) {
+    if (r.status === "error") items.push({ t: `${r.vertical} flight errored`, sub: r.error || r.note || "" });
+  }
+  if (snap.globalPause) items.push({ t: "Factory is paused", sub: "resume with /adops in Slack" });
+  if (snap.skipNext) items.push({ t: "Next drop will be skipped" });
+  if (snap.dryRun) items.push({ t: "Dry-run mode", sub: "no real money is being spent" });
+  for (const f of snap.followups || []) {
+    if (f.due) items.push({ t: `Check ${f.campaignName}`, sub: f.note });
+  }
+
+  const seen = new Set();
+  return items.filter((i) => (seen.has(i.t) ? false : seen.add(i.t)));
+}
+
+/* ---- render ---- */
+
 function render(snap) {
   lastSnap = snap;
-  // freshness
-  const ageMs = Date.now() - new Date(snap.generatedAt).getTime();
-  const stale = ageMs > 5 * 60 * 1000;
-  const upd = $("#updated");
-  upd.textContent = `updated ${ago(snap.generatedAt)}`;
-  upd.className = stale ? "updated stale" : "updated";
+  const form = $("#keyform");
+  if (form) form.remove();
 
-  // hero
-  const problems = [...(snap.problems || [])];
-  if (stale) problems.unshift("snapshot is stale — is the Mac online?");
-  const ok = problems.length === 0;
-  $("#hero-dot").className = `dot big ${ok ? "ok" : "bad"}`;
-  $("#hero-text").textContent = ok ? "All systems go" : "Needs attention";
-  $("#hero-problems").innerHTML = problems.map((p) => `<div>• ${esc(p)}</div>`).join("");
-  $("#hero-next").innerHTML = `Next batch <b>${fmtPt(snap.nextRunAt)}</b> · ${until(snap.nextRunAt)}`;
-  const flags = [];
-  if (snap.dryRun) flags.push("dry run");
-  if (snap.globalPause) flags.push("global pause");
-  if (snap.skipNext) flags.push("skipping next run");
-  $("#hero-flags").innerHTML = flags.map((f) => `<span class="flag">${esc(f)}</span>`).join("");
+  const macAgeMs = Date.now() - new Date((snap.mac && snap.mac.lastSeen) || snap.generatedAt).getTime();
+  const stale = macAgeMs > 90_000;
+  const attn = attentionItems(snap, macAgeMs);
+  setHeader(attn.length ? "bad" : stale ? "warn" : "ok", stale ? `stale · ${ago(snap.generatedAt)}` : "live");
 
-  // money
-  $("#stat-spend").textContent = money(snap.perf.spendToday);
-  $("#stat-purch").textContent = String(snap.perf.purchasesToday);
-  $("#stat-cpa").textContent = snap.perf.cpaToday !== null ? money(snap.perf.cpaToday) : "—";
+  const parts = [];
 
-  // flights — active runs plus a few recent finished/failed; cancelled runs
-  // are old news and stay out of the glance entirely.
-  const activeStatuses = ["generating", "uploading", "scheduled", "live", "paused"];
-  const runs = (snap.runs || []).filter((r) => activeStatuses.includes(r.status)).concat(
-    (snap.runs || []).filter((r) => r.status === "completed" || r.status === "error").slice(0, 3),
-  );
-  $("#flights").innerHTML = runs.length
-    ? runs.map(flightCard).join("")
-    : `<div class="card empty">No runs yet today.</div>`;
-
-  // angles
-  const angles = [...(snap.angles || [])].sort((a, b) => b.weight - a.weight);
-  const maxW = Math.max(...angles.map((a) => a.weight), 0.0001);
-  $("#angles").innerHTML = angles.length
-    ? angles
-        .map((a) => {
-          const cpa = a.costPerPurchase !== null ? money(a.costPerPurchase) : "—";
-          return `<div class="arow">
-            <span class="an">${esc(a.name)}<small>${a.creatives} ad(s) · ${money(a.spend)} · ${a.purchases} purch</small></span>
-            <span class="abar"><span style="width:${Math.round((a.weight / maxW) * 100)}%"></span></span>
-            <span class="am">CPA<br>${cpa}</span>
-          </div>`;
-        })
-        .join("")
-    : `<div class="empty">No angles configured.</div>`;
-
-  // health — a glance only needs pass/fail; hard failures get one short line,
-  // warnings are just a count (full detail lives in /manage and Slack).
-  const health = snap.health;
-  if (!health) {
-    $("#health").innerHTML = `<div class="empty">No healthcheck yet.</div>`;
+  // 1. Exceptions first — or one quiet all-clear line.
+  if (attn.length) {
+    parts.push(`<div class="attn">${attn.map((i) =>
+      `<div><b>${esc(i.t)}</b>${i.sub ? `<div class="sub">${esc(i.sub)}</div>` : ""}</div>`).join("")}</div>`);
   } else {
-    const fails = health.checks.filter((c) => c.status === "fail");
-    const warns = health.checks.filter((c) => c.status === "warn").length;
-    const summary = [
-      `${health.checks.length - fails.length - warns}/${health.checks.length} passing`,
-      warns ? `${warns} warning${warns > 1 ? "s" : ""}` : "",
-    ].filter(Boolean).join(" · ");
-    const head = `<div class="hrow"><span class="dot ${health.ok ? "ok" : "bad"}"></span>
-      <b>${health.ok ? "Healthy" : "Problems found"}</b>
-      <span class="hd">${esc(ago(health.at))} · ${summary}</span></div>`;
-    const rows = fails
-      .map((c) => {
-        const short = c.detail.length > 70 ? `${c.detail.slice(0, 70)}…` : c.detail;
-        return `<div class="hrow"><span class="dot bad"></span>${esc(c.name)}<span class="hd">${esc(short)}</span></div>`;
-      })
-      .join("");
-    $("#health").innerHTML = head + rows;
+    parts.push(`<div class="allclear">All clear — nothing needs you.</div>`);
   }
 
-  // footer: manage link only when served by the local orchestrator
-  const local = ["localhost", "127.0.0.1"].includes(location.hostname);
-  $("#foot").innerHTML = local
-    ? `<a href="/manage">open management console</a> · controls also in Slack /adops`
-    : `read-only glance · controls in Slack /adops`;
+  // 2. Money today.
+  const spend = snap.perf?.spendToday ?? 0;
+  const purch = snap.perf?.purchasesToday ?? 0;
+  const cpa = snap.perf?.cpaToday;
+  const noSpend = !spend && !purch;
+  parts.push(`<div class="nums">
+    <div><div class="n${noSpend ? " dim" : ""}">${money(spend)}</div><div class="t">spend</div></div>
+    <div><div class="n${noSpend ? " dim" : ""}">${purch}</div><div class="t">purchases</div></div>
+    <div><div class="n${cpa != null ? "" : " dim"}">${cpa != null ? money(cpa) : "—"}</div><div class="t">cpa</div></div>
+  </div>`);
+
+  // 3. Per-day history of factory-launched campaigns, folded into a dropdown.
+  const daily = snap.daily || [];
+  if (daily.length) {
+    const totSpend = daily.reduce((s, d) => s + d.spend, 0);
+    const totBuys = daily.reduce((s, d) => s + d.purchases, 0);
+    parts.push(`<details id="d-days">
+      <summary><div class="row"><span class="l">Last 7 days</span>
+        <span class="v"><b>${money(totSpend)}</b> · ${totBuys} buys</span></div></summary>
+      <div class="days">
+        <div class="dhead"><span>day</span><span>spend</span><span>buys</span><span>cpa</span></div>
+        ${daily.map((d) => `<div class="day${d.spend || d.purchases ? "" : " dim"}">
+          <span class="dt">${esc(dayLabel(d.date))}</span>
+          <span>${money(d.spend)}</span>
+          <span>${d.purchases}</span>
+          <span>${d.cpa != null ? money(d.cpa) : "—"}</span>
+        </div>`).join("")}
+      </div>
+    </details>`);
+  } else {
+    parts.push(`<div class="row"><span class="l">Last 7 days</span><span class="v muted">no factory flights yet</span></div>`);
+  }
+
+  // 4. Flights: live ones get a row each; otherwise just the next drop.
+  const live = (snap.runs || []).filter((r) => ["live", "scheduled", "generating", "uploading"].includes(r.status));
+  for (const r of live) {
+    let v = "";
+    if (r.status === "live") v = `<b class="good">live</b><span class="sub">${r.adCount} ads · auto-off ${esc(until(r.flightEndsAt))}</span>`;
+    else if (r.status === "scheduled") v = `<b>scheduled</b><span class="sub">${r.adCount} ads · live ${esc(fmtPt(r.goLiveAt))} PT</span>`;
+    else v = `<b class="warned">${esc(r.status)}…</b>${r.creativeCount ? `<span class="sub">${r.creativeCount} creatives so far</span>` : ""}`;
+    parts.push(`<div class="row"><span class="l">${esc(r.vertical)}</span><span class="v">${v}</span></div>`);
+  }
+  if (snap.nextRunAt) {
+    const offer = snap.offer || {};
+    const plan = [offer.dailyCount ? `${offer.dailyCount} ads` : null, offer.budgetUsd ? `${money(offer.budgetUsd)}/day` : null]
+      .filter(Boolean).join(" · ");
+    parts.push(`<div class="row"><span class="l">Next drop</span>
+      <span class="v"><b>${esc(fmtPt(snap.nextRunAt))} PT</b> · ${esc(until(snap.nextRunAt))}${plan ? `<span class="sub">${esc(plan)}</span>` : ""}</span></div>`);
+  }
+
+  const upcoming = (snap.followups || []).filter((f) => !f.due);
+  for (const f of upcoming) {
+    parts.push(`<div class="row"><span class="l">Watching</span>
+      <span class="v"><b>${esc(f.campaignName)}</b><span class="sub">check ${esc(f.dueLabel)} · ${esc(f.note)}</span></span></div>`);
+  }
+
+  // 4. Ad accounts — summary row, list on tap.
+  const accts = snap.accounts?.accounts || [];
+  if (accts.length) {
+    const okN = accts.filter((a) => a.ok).length;
+    const badN = accts.length - okN;
+    parts.push(`<details id="d-accounts">
+      <summary><div class="row"><span class="l">Ad accounts</span>
+        <span class="v"><b class="${badN ? "warned" : "good"}">${okN} of ${accts.length} usable</b></span></div></summary>
+      <div class="dlist">${accts.map((a) =>
+        `<div class="drow"><span class="dot ${a.ok ? (a.cooldownUntil ? "warn" : "") : "bad"}"></span><span class="nm">${esc(a.label)}</span><span class="st ${a.ok ? "" : "bad"}">${esc(a.ok && a.cooldownUntil ? `cooldown ${until(a.cooldownUntil)}` : a.status)}</span></div>`).join("")}</div>
+    </details>`);
+  }
+
+  // 5. Ads rendered today — count + tappable thumbs.
+  const creatives = snap.latestCreatives || [];
+  parts.push(`<div class="row"${creatives.length ? ` style="border-bottom:0"` : ""}>
+    <span class="l">Ads today</span>
+    <span class="v">${creatives.length ? `<b>${creatives.length} rendered</b><span class="sub">newest ${esc(ago(creatives[0].createdAt))}</span>` : `<span class="muted">none yet</span>`}</span></div>`);
+  if (creatives.length) {
+    parts.push(`<div class="thumbs" style="border-bottom:1px solid var(--line)">${creatives.map((c, i) => `
+      <a class="thumb" href="${esc(c.videoUrl)}">
+        ${c.posterUrl ? `<img src="${esc(c.posterUrl)}" alt="" loading="lazy" />` : ""}
+        <div class="cap">v${creatives.length - i}</div>
+      </a>`).join("")}</div>`);
+  }
+
+  // 6. Machine — one line unless something is off.
+  const checks = snap.health?.checks || [];
+  const notOk = checks.filter((c) => c.status !== "ok");
+  const macLabel = (snap.mac && snap.mac.hostname) || "Mac mini";
+  parts.push(`<details id="d-machine">
+    <summary><div class="row"><span class="l">Machine</span>
+      <span class="v">${macAgeMs > 180_000
+        ? `<b class="broke">offline</b>`
+        : notOk.length
+          ? `<b class="warned">${notOk.length} warning${notOk.length > 1 ? "s" : ""}</b>`
+          : `<b class="good">healthy</b>`}<span class="sub">${esc(macLabel)}</span></span></div></summary>
+    <div class="dlist">${checks.map((c) =>
+      `<div class="drow"><span class="dot ${c.status === "ok" ? "" : c.status === "warn" ? "warn" : "bad"}"></span><span class="nm">${esc(c.name)}</span><span class="st">${esc(c.detail.length > 34 ? `${c.detail.slice(0, 34)}…` : c.detail)}</span></div>`).join("")}</div>
+  </details>`);
+
+  const local = ["localhost", "127.0.0.1"].includes(location.hostname) || location.hostname.endsWith(".local");
+  parts.push(`<footer>updated ${esc(ago(snap.generatedAt))}${local ? ` · <a href="/manage">manage</a>` : ""} · controls in Slack /adops</footer>`);
+
+  // Keep expanded sections expanded across the 20s re-render.
+  const open = new Set([...document.querySelectorAll("details[open]")].map((d) => d.id));
+  $("#app").innerHTML = parts.join("");
+  for (const id of open) {
+    const d = document.getElementById(id);
+    if (d) d.open = true;
+  }
 }
 
-function flightCard(r) {
-  let sub = "";
-  let bar = "";
-  const now = Date.now();
-  if (r.status === "scheduled" && r.goLiveAt) {
-    sub = `Goes live <b>${fmtPt(r.goLiveAt)}</b> · ${until(r.goLiveAt)} · ${r.adCount} ad(s) ready`;
-  } else if (r.status === "live" && r.goLiveAt && r.flightEndsAt) {
-    const total = new Date(r.flightEndsAt).getTime() - new Date(r.goLiveAt).getTime();
-    const pct = Math.min(100, Math.max(0, Math.round(((now - new Date(r.goLiveAt).getTime()) / total) * 100)));
-    sub = `Live · auto-off ${until(r.flightEndsAt)} · ${r.adCount} ad(s)`;
-    bar = `<div class="bar"><span class="fill" style="width:${pct}%"></span></div>`;
-  } else if (r.status === "generating" || r.status === "uploading") {
-    sub = `${r.status === "generating" ? "Generating creatives" : "Uploading to Meta"}… ${r.creativeCount ? `${r.creativeCount} so far` : ""}`;
-  } else if (r.status === "completed") {
-    sub = r.note ? esc(r.note) : "Flight completed";
-  } else if (r.note) {
-    sub = esc(r.note);
+/* ---- launch control: expand → hold 3s to arm → type LAUNCH → go ---- */
+
+(() => {
+  const panel = $("#launch-panel");
+  const holdBtn = $("#hold-btn");
+  const holdFill = $("#hold-fill");
+  const holdTxt = $("#hold-txt");
+  const armRow = $("#lp-arm");
+  const word = $("#launch-word");
+  const go = $("#launch-go");
+  const msg = $("#lp-msg");
+
+  const acctsBox = $("#lp-accts");
+
+  const HOLD_MS = 3000;
+  let holdStart = 0;
+  let holdTimer = null;
+  let disarmTimer = null;
+  let selectedAccount = null;
+
+  function renderAccounts() {
+    const accounts = (lastSnap && lastSnap.accounts && lastSnap.accounts.accounts) || [];
+    if (!accounts.length) {
+      selectedAccount = null;
+      acctsBox.innerHTML = `<div class="lpa-note">No account health data yet — the run will use the config default.</div>`;
+      return;
+    }
+    const usable = (a) => a.ok && !a.cooldownUntil;
+    if (!selectedAccount || !accounts.some((a) => a.id === selectedAccount && usable(a))) {
+      selectedAccount = (accounts.find(usable) || {}).id || null;
+    }
+    acctsBox.innerHTML = accounts.map((a) => {
+      const cooling = a.cooldownUntil ? `cooldown ${until(a.cooldownUntil)}` : null;
+      const disabled = !usable(a);
+      return `<button type="button" class="lpa${a.id === selectedAccount ? " sel" : ""}" data-id="${esc(a.id)}" ${disabled ? "disabled" : ""}>
+        <span class="dot ${a.ok ? (a.cooldownUntil ? "warn" : "") : "bad"}"></span>
+        <span class="lpa-nm">${esc(a.label)}</span>
+        <span class="lpa-st">${esc(cooling || a.status)}</span>
+      </button>`;
+    }).join("");
+    for (const btn of acctsBox.querySelectorAll(".lpa:not([disabled])")) {
+      btn.addEventListener("click", () => {
+        selectedAccount = btn.dataset.id;
+        renderAccounts();
+      });
+    }
   }
-  return `<div class="card flight">
-    <div class="flight-head"><span class="v">${esc(r.vertical)}</span><span class="chip ${esc(r.status)}">${esc(r.status)}</span></div>
-    ${sub ? `<div class="flight-sub">${sub}</div>` : ""}
-    ${r.error ? `<div class="flight-error">${esc(r.error.length > 90 ? `${r.error.slice(0, 90)}…` : r.error)}</div>` : ""}
-    ${r.angles && r.angles.length ? `<div class="angle-chips">${r.angles.map((a) => `<span class="angle-chip">${esc(a)}</span>`).join("")}</div>` : ""}
-    ${bar}
-  </div>`;
-}
+
+  function reset() {
+    clearInterval(holdTimer);
+    clearTimeout(disarmTimer);
+    holdTimer = null;
+    holdFill.style.width = "0%";
+    holdTxt.textContent = "Hold for 3 seconds to arm";
+    holdBtn.disabled = false;
+    armRow.hidden = true;
+    word.value = "";
+    go.disabled = true;
+  }
+
+  $("#launch-toggle").addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+    msg.hidden = true;
+    if (!panel.hidden) {
+      reset();
+      renderAccounts();
+    }
+  });
+
+  function arm() {
+    clearInterval(holdTimer);
+    holdTimer = null;
+    holdFill.style.width = "100%";
+    holdTxt.textContent = "Armed";
+    holdBtn.disabled = true;
+    armRow.hidden = false;
+    word.focus();
+    // Auto-disarm if nothing happens — no live grenades left lying around.
+    disarmTimer = setTimeout(reset, 60_000);
+  }
+
+  function startHold(e) {
+    e.preventDefault();
+    if (holdBtn.disabled || holdTimer) return;
+    holdStart = Date.now();
+    holdTimer = setInterval(() => {
+      const pct = Math.min(100, ((Date.now() - holdStart) / HOLD_MS) * 100);
+      holdFill.style.width = `${pct}%`;
+      if (pct >= 100) arm();
+    }, 50);
+  }
+
+  function cancelHold() {
+    if (holdBtn.disabled) return;
+    clearInterval(holdTimer);
+    holdTimer = null;
+    holdFill.style.width = "0%";
+  }
+
+  holdBtn.addEventListener("touchstart", startHold, { passive: false });
+  holdBtn.addEventListener("mousedown", startHold);
+  for (const ev of ["touchend", "touchcancel", "mouseup", "mouseleave"]) {
+    holdBtn.addEventListener(ev, cancelHold);
+  }
+  holdBtn.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  word.addEventListener("input", () => {
+    go.disabled = word.value.trim().toUpperCase() !== "LAUNCH";
+  });
+
+  go.addEventListener("click", async () => {
+    if (go.disabled) return;
+    go.disabled = true;
+    go.textContent = "Launching…";
+    try {
+      const payload = { confirm: word.value.trim().toUpperCase() };
+      if (selectedAccount) payload.accountId = selectedAccount;
+      const res = await fetch("/api/launch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      msg.hidden = false;
+      if (res.ok) {
+        msg.className = "lp-msg ok";
+        msg.textContent = data.message || "Production run started.";
+        panel.hidden = true;
+        setTimeout(refresh, 2000);
+      } else {
+        msg.className = "lp-msg err";
+        msg.textContent = data.error || `Failed (HTTP ${res.status})`;
+      }
+    } catch (err) {
+      msg.hidden = false;
+      msg.className = "lp-msg err";
+      msg.textContent = `Couldn't reach the Mac: ${err.message || err}`;
+    }
+    go.textContent = "Launch";
+    reset();
+  });
+})();
 
 refresh();
-
-// Live without reloads: poll continuously, re-poll the instant the app comes
-// back to the foreground (home-screen apps freeze timers in the background),
-// and keep the countdown / "updated Xs ago" labels ticking between polls.
 setInterval(refresh, 20_000);
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) refresh();
-});
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
 window.addEventListener("focus", refresh);
 window.addEventListener("pageshow", refresh);
 window.addEventListener("online", refresh);
-setInterval(() => {
-  if (lastSnap && !$("#keyform")) render(lastSnap);
-}, 5_000);

@@ -3,55 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0c120e" />
+  <meta name="theme-color" content="#0b0c0e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Factory" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Ad Factory</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <title>Factory</title>
   <link rel="stylesheet" href="/glance.css" />
 </head>
 <body>
-  <header class="top">
-    <div class="brand"><span class="mark">AF</span> Ad Factory</div>
-    <div class="updated" id="updated">connecting…</div>
+  <header>
+    <span class="sdot" id="sdot"></span>
+    <h1>VA Loans factory</h1>
+    <span class="upd" id="updated">…</span>
   </header>
-
   <main id="app">
-    <section class="hero card" id="hero">
-      <div class="hero-status" id="hero-status">
-        <span class="dot big" id="hero-dot"></span>
-        <span id="hero-text">Loading…</span>
-      </div>
-      <div class="hero-problems" id="hero-problems"></div>
-      <div class="hero-next" id="hero-next"></div>
-      <div class="hero-flags" id="hero-flags"></div>
-    </section>
-
-    <section class="stats" id="stats">
-      <div class="stat card"><div class="k" id="stat-spend">—</div><div class="l">spend today</div></div>
-      <div class="stat card"><div class="k" id="stat-purch">—</div><div class="l">purchases</div></div>
-      <div class="stat card"><div class="k" id="stat-cpa">—</div><div class="l">CPA</div></div>
-    </section>
-
-    <section>
-      <h2>Flights</h2>
-      <div id="flights"></div>
-    </section>
-
-    <section>
-      <h2>Angles</h2>
-      <div class="card" id="angles"></div>
-    </section>
-
-    <section>
-      <h2>Health</h2>
-      <div class="card" id="health"></div>
-    </section>
-
-    <footer id="foot"></footer>
+    <div class="row"><span class="l">Loading</span><span class="v muted">connecting to the Mac…</span></div>
   </main>
+
+  <!-- Launch control lives outside #app so the 20s re-render can't reset it mid-confirmation. -->
+  <div class="launch" id="launch">
+    <button class="launch-toggle" id="launch-toggle" type="button">Start a production run…</button>
+    <div class="launch-panel" id="launch-panel" hidden>
+      <div class="lp-warn">
+        This is <b>not a test</b>. It generates today's ads, uploads them to Meta,
+        and spends the real daily budget once live.
+      </div>
+      <div class="lp-accts-label">Launch on</div>
+      <div class="lp-accts" id="lp-accts"></div>
+      <button class="hold" id="hold-btn" type="button">
+        <span class="hold-fill" id="hold-fill"></span>
+        <span class="hold-txt" id="hold-txt">Hold for 3 seconds to arm</span>
+      </button>
+      <div class="lp-arm" id="lp-arm" hidden>
+        <input id="launch-word" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Type LAUNCH to confirm" />
+        <button id="launch-go" type="button" disabled>Launch</button>
+      </div>
+      <div class="lp-msg" id="lp-msg" hidden></div>
+    </div>
+  </div>
 
   <script src="/glance.js"></script>
 </body>

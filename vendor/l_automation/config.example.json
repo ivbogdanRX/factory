@@ -28,7 +28,7 @@
     "backend": "api",
     "browserFallback": true,
     "url": "https://labs.google/fx/tools/flow",
-    "prompt": "Slow cinematic camera push-in, gentle parallax, soft natural light",
+    "prompt": "Handheld iPhone talking-head selfie of a pretty young woman speaking directly to camera about a VA loan / DD214 grant. Casual at-home selfie, slightly shaky, older-iPhone look. Not a news reporter, not a studio, not a commercial.",
     "generationTimeoutMs": 600000,
     "model": "Veo 3.1 - Lite",
     "mode": "Ingredients",
@@ -54,15 +54,100 @@
       "angle": "U.S. veterans with DD214 paperwork who may qualify for a short-term grant",
       "bodyVideo": "./assets/body.mp4",
       "outputName": "VA Loans",
-      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial.",
+      "promptContext": "Speak to veterans in a direct, urgent, conversational way. Mention DD214, VA grant eligibility, and a short deadline without sounding like a polished commercial. Casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter at a desk.",
       "promptTemplate": "",
       "hooks": [
-        "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.",
-        "If you have a DD 214, you need to check this before the VA grant window closes.",
-        "Most veterans have no idea this DD 214 grant is still open, and it only takes a few minutes to check."
+        "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes."
+      ],
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie (Pretty Woman)",
+          "cameraPrompt": "Talking-head through the lens: a medium close chest-up shot of a pretty young woman talking candidly like a real Instagram story. The camera and phone are invisible — she is NOT holding a phone, and no hands, fingers, wrists, or arms are in frame. Natural lighting, slightly shaky, authentic older-iPhone front-camera look. Sitting in a parked car or at home. Not a news desk. Not a studio.",
+          "creatorPrompt": "",
+          "scenePrompt": "A very pretty young woman sitting in her parked car, just found out the news about veteran grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice, not a news reporter.",
+          "hooks": [
+            "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes."
+          ],
+          "bubbleHooks": [
+            "Veterans are getting DD 214 grants for the next two weeks"
+          ]
+        }
       ],
       "trimSeconds": 0.2,
-      "captionVerticalPosition": 0.85
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "Veterans are getting DD 214 grants for the next two weeks",
+      "hookBubbleStyle": "card",
+      "maxHookSeconds": 8.5
+    },
+    {
+      "id": "teacher-loans",
+      "name": "Teacher Loans",
+      "vertical": "personal loans / teacher-license grants",
+      "angle": "licensed teachers who may qualify for a short-term government grant paid to them, not the school",
+      "bodyVideo": "./assets/teacher_body.mov",
+      "outputName": "Teacher Loans",
+      "promptContext": "Speak to teachers in a direct, urgent, conversational way. Mention a teacher-license stimulus grant, a two-week window, and $40,000 paychecks without sounding like a polished commercial. Do NOT name the Department of Education. Just say the government. Casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter, NOT a teacher at a desk.",
+      "promptTemplate": "",
+      "hooks": [
+        "The government has given out teacher-license stimulus grants for the next two weeks, and most teachers are getting $40,000 paychecks in just a few minutes."
+      ],
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie (Pretty Woman)",
+          "cameraPrompt": "Talking-head through the lens: a medium close chest-up shot of a pretty young woman talking candidly like a real Instagram story. The camera and phone are invisible — she is NOT holding a phone, and no hands, fingers, wrists, or arms are in frame. Natural lighting, slightly shaky, authentic older-iPhone front-camera look. Sitting in a parked car or at home. Not a news desk. Not a studio. Not a classroom.",
+          "creatorPrompt": "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, looking straight through the camera lens, chest-up with no hands or phone in frame, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A very pretty young woman sitting in her parked car, just found out the news about teacher-license grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice, not a teacher in a classroom, not a news reporter.",
+          "hooks": [
+            "The government has given out teacher-license stimulus grants for the next two weeks, and most teachers are getting $40,000 paychecks in just a few minutes."
+          ],
+          "bubbleHooks": [
+            "Teachers are getting license grants for the next two weeks"
+          ]
+        }
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "Teachers are getting license grants for the next two weeks",
+      "hookBubbleStyle": "card",
+      "maxHookSeconds": 8.5
+    },
+    {
+      "id": "nurse-loans",
+      "name": "Nurse Loans",
+      "vertical": "personal loans / nursing-license grants",
+      "angle": "licensed nurses who may qualify for a short-term government grant paid to them, not the hospital",
+      "bodyVideo": "./assets/nurse_body.mov",
+      "outputName": "Nurse Loans",
+      "promptContext": "Speak to nurses in a direct, urgent, conversational way. Mention a nursing-license stimulus grant, a two-week window, and $40,000 paychecks without sounding like a polished commercial. Do NOT name HHS or any department. Just say the government. Casual iPhone selfie from a pretty young woman, NOT a news segment, NOT a studio, NOT a reporter, NOT a nurse on a hospital floor.",
+      "promptTemplate": "",
+      "hooks": [
+        "The government has given out nursing-license stimulus grants for the next two weeks, and most nurses are getting $40,000 paychecks in just a few minutes."
+      ],
+      "variants": [
+        {
+          "id": "ugc-selfie",
+          "name": "UGC Selfie (Pretty Woman)",
+          "cameraPrompt": "Talking-head through the lens: a medium close chest-up shot of a pretty young woman talking candidly like a real Instagram story. The camera and phone are invisible — she is NOT holding a phone, and no hands, fingers, wrists, or arms are in frame. Natural lighting, slightly shaky, authentic older-iPhone front-camera look. Sitting in a parked car or at home. Not a news desk. Not a studio. Not a hospital.",
+          "creatorPrompt": "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, looking straight through the camera lens, chest-up with no hands or phone in frame, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.",
+          "scenePrompt": "A very pretty young woman sitting in her parked car, just found out the news about nursing-license grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice, not a nurse in scrubs on a hospital floor, not a news reporter.",
+          "hooks": [
+            "The government has given out nursing-license stimulus grants for the next two weeks, and most nurses are getting $40,000 paychecks in just a few minutes."
+          ],
+          "bubbleHooks": [
+            "Nurses are getting license grants for the next two weeks"
+          ]
+        }
+      ],
+      "trimSeconds": 0.2,
+      "captionVerticalPosition": 0.85,
+      "hookBubbleEnabled": "true",
+      "hookBubbleText": "Nurses are getting license grants for the next two weeks",
+      "hookBubbleStyle": "card",
+      "maxHookSeconds": 8.5
     },
     {
       "id": "bathroom-remodel-seniors",
@@ -198,7 +283,7 @@
           "id": "peer",
           "name": "Retiree Story",
           "cameraPrompt": "Handheld talking-head selfie: a medium close shot of an older retiree sitting at a kitchen table at home, talking candidly to the camera like a real personal story. Natural home lighting, slightly shaky, authentic.",
-          "creatorPrompt": "A vertical 9:16 photo of an older retiree sitting at a kitchen table in a modest, lived-in home, holding the phone at arm's length and speaking candidly to the camera. Natural window light, homey background, believable and warm. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "creatorPrompt": "A vertical 9:16 photo of an older retiree sitting at a kitchen table in a modest, lived-in home, looking straight through the camera lens and speaking candidly, chest-up with no hands or phone in frame. Natural window light, homey background, believable and warm. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
           "scenePrompt": "Personal story style: the retiree sounds genuine and relieved, sharing what helped with their debt like advice to a friend—honest, warm, not salesy.",
           "hooks": [
             "I am retired on a fixed income, and checking my debt relief options changed everything for me.",
@@ -307,7 +392,7 @@
           "id": "peer",
           "name": "Teacher Story",
           "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a schoolteacher in an empty classroom after hours, talking candidly to the camera like a real personal story. Natural classroom lighting, slightly shaky, authentic.",
-          "creatorPrompt": "A vertical 9:16 photo of a tired but warm schoolteacher standing in an empty classroom after hours with desks and a whiteboard behind them, holding the phone at arm's length and speaking candidly. Natural fluorescent classroom light, believable and relatable. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired but warm schoolteacher standing in an empty classroom after hours with desks and a whiteboard behind them, looking straight through the camera lens and speaking candidly, chest-up with no hands or phone in frame. Natural fluorescent classroom light, believable and relatable. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
           "scenePrompt": "Personal story style: the teacher sounds genuine and a little frustrated, sharing how they handled their debt like advice to a fellow teacher—honest, real, not salesy.",
           "hooks": [
             "I teach full time, and checking my debt relief options finally gave me breathing room.",
@@ -416,7 +501,7 @@
           "id": "peer",
           "name": "Tradesworker Story",
           "cameraPrompt": "Handheld talking-head selfie: a medium shot of a union tradesperson near a job site or in a garage, talking bluntly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
-          "creatorPrompt": "A vertical 9:16 photo of a blue-collar union tradesperson in a work jacket or hi-vis standing near a job site or garage, holding the phone at arm's length and speaking candidly to the camera. Natural outdoor or shop lighting, believable and rugged. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "creatorPrompt": "A vertical 9:16 photo of a blue-collar union tradesperson in a work jacket or hi-vis standing near a job site or garage, looking straight through the camera lens and speaking candidly, chest-up with no hands or phone in frame. Natural outdoor or shop lighting, believable and rugged. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
           "scenePrompt": "Personal story style: the union worker sounds blunt and real, sharing how they dealt with their debt like advice to a buddy on the crew—plain talk, no sales pitch.",
           "hooks": [
             "I work the trades, and checking my debt relief options finally got me out from under it.",
@@ -525,7 +610,7 @@
           "id": "peer",
           "name": "Nurse Story",
           "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a nurse in scrubs after a shift, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
-          "creatorPrompt": "A vertical 9:16 photo of a tired nurse in scrubs sitting in their car or a hospital break room after a long shift, holding the phone at arm's length and speaking candidly to the camera. Natural dim lighting, believable and weary. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
+          "creatorPrompt": "A vertical 9:16 photo of a tired nurse in scrubs sitting in their car or a hospital break room after a long shift, looking straight through the camera lens and speaking candidly, chest-up with no hands or phone in frame. Natural dim lighting, believable and weary. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos.",
           "scenePrompt": "Personal story style: the nurse sounds exhausted but genuine, sharing how they handled their debt like advice to a coworker—honest, warm, not salesy.",
           "hooks": [
             "I am a nurse, and checking my debt relief options finally gave me room to breathe.",
@@ -634,7 +719,7 @@
           "id": "peer",
           "name": "Veteran Story",
           "cameraPrompt": "Handheld talking-head selfie: a medium close shot of a military veteran at home, talking candidly to the camera like a real personal story. Natural lighting, slightly shaky, authentic.",
-          "creatorPrompt": "A vertical 9:16 photo of a U.S. military veteran in a casual shirt or ball cap sitting at home, holding the phone at arm's length and speaking candidly to the camera. Natural home lighting, believable and grounded. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos, no insignia.",
+          "creatorPrompt": "A vertical 9:16 photo of a U.S. military veteran in a casual shirt or ball cap sitting at home, looking straight through the camera lens and speaking candidly, chest-up with no hands or phone in frame. Natural home lighting, believable and grounded. Older-phone softness. Absolutely no text, no numbers, no overlays, no logos, no insignia.",
           "scenePrompt": "Personal story style: the veteran sounds straightforward and genuine, sharing how they handled their debt like advice to a fellow vet—honest, no-nonsense, not salesy. Frame it as general debt relief, never a VA payout.",
           "hooks": [
             "I am a veteran, and checking my debt relief options finally got me out from under it.",

@@ -10,7 +10,7 @@ const CONFIG = new URL("../vendor/l_automation/config.json", import.meta.url).pa
 const PARKED = new URL("../vendor/l_automation/config.parked.json", import.meta.url).pathname;
 
 const LOCKED_SCRIPT =
-  "VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.";
+  "The VA has given out DD 214 stimulus grants for the next two weeks, and most veterans are getting $70,000 paychecks in just a few minutes.";
 
 // Same serialization the studio + hook approvals use → minimal diffs.
 const stableStringify = (value) =>
@@ -61,7 +61,7 @@ for (const v of keptVariants) {
 const ugc = keptVariants.find((v) => v.id === "ugc-selfie");
 ugc.name = "UGC Selfie (Pretty Woman)";
 ugc.creatorPrompt =
-  "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, holding the phone at arm's length, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.";
+  "Candid selfie-style photo of a very pretty young woman in her mid 20s, long natural hair, light everyday makeup, wearing a casual hoodie or sweater, sitting in the driver's seat of a parked car in daylight, looking straight through the camera lens, chest-up with no hands or phone in frame, excited genuine expression, shot on an older smartphone front camera, slightly soft, natural light.";
 ugc.scenePrompt =
   "A very pretty young woman sitting in her parked car, just found out the news about veteran grants, excitedly sharing it selfie style like a TikTok story time, girl next door energy, real and personal, not a commercial voice.";
 

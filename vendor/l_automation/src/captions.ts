@@ -41,6 +41,26 @@ function run(
   });
 }
 
+async function ffmpegBinary(): Promise<string> {
+  const candidates = [
+    process.env.FFMPEG_PATH,
+    "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg",
+    "/usr/local/opt/ffmpeg-full/bin/ffmpeg",
+    "ffmpeg",
+    "/opt/homebrew/bin/ffmpeg",
+  ].filter((v): v is string => Boolean(v));
+
+  for (const bin of candidates) {
+    try {
+      const { code, stdout } = await run(bin, ["-hide_banner", "-filters"]);
+      if (code === 0 && /\bass\b/.test(stdout)) return bin;
+    } catch {
+      // try next
+    }
+  }
+  return "ffmpeg";
+}
+
 async function commandExists(cmd: string): Promise<boolean> {
   try {
     const { code } = await run("which", [cmd]);
@@ -559,10 +579,15 @@ function fillGaps(
     .filter((idx) => idx >= 0);
 
   if (known.length === 0) {
-    // No alignment at all: distribute evenly across the whole clip.
-    const slice = totalDuration / Math.max(n, 1);
+    // No alignment at all: distribute evenly, but leave a tiny start pad so
+    // the first word is not burned in at t=0 while the speaker is still
+    // inhaling (Veo often swallows the opening syllable if captions start
+    // on frame zero).
+    const startPad = Math.min(0.18, Math.max(0, totalDuration * 0.025));
+    const usable = Math.max(0.1, totalDuration - startPad);
+    const slice = usable / Math.max(n, 1);
     for (let k = 0; k < n; k++) {
-      out[k] = { start: k * slice, end: (k + 1) * slice };
+      out[k] = { start: startPad + k * slice, end: startPad + (k + 1) * slice };
     }
     return out;
   }
@@ -1004,6 +1029,12 @@ export async function addCaptions(
     p.start = Math.max(0, Math.min(p.start + off, info.durationSec - 0.05));
     p.end = Math.max(p.start + 0.05, Math.min(p.end + off, info.durationSec));
   }
+  // If the opening word is pinned to frame zero, slide it a hair later so
+  // "The" isn't burned in before audio actually starts.
+  if (perToken[0] && perToken[0].start < 0.08) {
+    perToken[0].start = 0.08;
+    perToken[0].end = Math.max(perToken[0].end, perToken[0].start + 0.12);
+  }
 
   log.ok(
     whisper
@@ -1037,17 +1068,20 @@ export async function addCaptions(
   );
 
   log.step("Burning captions onto the generated clip...");
-  const assArg = assPath.replace(/\\/g, "/").replace(/:/g, "\\:");
+  // ffmpeg 8 requires named filter options (filename= / fontsdir=). Quote
+  // paths so colons in timestamps don't split the option list.
+  const assArg = assPath.replace(/\\/g, "/").replace(/'/g, "\\'");
   const fontsDir = "fonts";
   const assFilter = existsSync(fontsDir)
-    ? `ass=${assArg}:fontsdir=${fontsDir.replace(/:/g, "\\:")}`
-    : `ass=${assArg}`;
+    ? `ass=filename='${assArg}':fontsdir='${fontsDir}'`
+    : `ass=filename='${assArg}'`;
   if (cfg.captions.layout === "3:4") {
     log.info(
       "Text placement: 3:4 safe zone on full 9:16 frame (hook top / captions bottom inside zone).",
     );
   }
-  const { code, stderr } = await run("ffmpeg", [
+  const ffmpeg = await ffmpegBinary();
+  const { code, stderr } = await run(ffmpeg, [
     "-y",
     "-i",
     clipPath,
