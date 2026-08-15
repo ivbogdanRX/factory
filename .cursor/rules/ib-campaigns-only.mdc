@@ -1,0 +1,19 @@
+---
+description: Never mutate Meta campaigns that are not named (IB)
+alwaysApply: true
+---
+
+# (IB) campaigns only
+
+Never create, pause, resume, kill, edit, or change budget on a Meta campaign whose name does **not** contain `(IB)`.
+
+Those are someone else's (e.g. `(J) V LN`). Read-only stats are fine. Writes are not.
+
+```
+✅ (IB) LNV 3 X4259
+✅ (IB) LNV AF 8-15
+❌ (J) V LN
+❌ anything without (IB)
+```
+
+If asked to "turn off the losers" or similar, filter to `(IB)` names first. Factory-created campaigns already use `(IB)` — keep it that way.

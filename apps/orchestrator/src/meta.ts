@@ -245,7 +245,40 @@ export interface CreateCampaignParams {
   status?: "ACTIVE" | "PAUSED";
 }
 
+/** Only campaigns whose name contains "(IB)" may be created or mutated. */
+export function isIbCampaignName(name: string): boolean {
+  return /\(IB\)/i.test(name);
+}
+
+async function campaignNameFor(objectId: string): Promise<string> {
+  try {
+    const data = await getJson(`${objectId}?fields=name,campaign{name}`, "assertIbOwned");
+    return String((data.campaign as { name?: string } | undefined)?.name ?? data.name ?? "");
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    // Campaign objects have no nested campaign field — the name *is* the campaign.
+    if (/nonexisting field \(campaign\)/i.test(msg)) {
+      const data = await getJson(`${objectId}?fields=name`, "assertIbOwnedCampaign");
+      return String(data.name ?? "");
+    }
+    throw error;
+  }
+}
+
+async function assertIbOwned(objectId: string): Promise<string> {
+  const campaignName = await campaignNameFor(objectId);
+  if (!isIbCampaignName(campaignName)) {
+    throw new Error(
+      `Refusing to mutate Meta object ${objectId} — campaign "${campaignName || "(unnamed)"}" is not an (IB) campaign`,
+    );
+  }
+  return campaignName;
+}
+
 export async function createCampaign(adAccountId: string, params: CreateCampaignParams): Promise<string> {
+  if (!isIbCampaignName(params.name)) {
+    throw new Error(`Refusing to create campaign "${params.name}" — name must contain (IB)`);
+  }
   const data = await postForm(
     `${adAccountId}/campaigns`,
     {
@@ -276,6 +309,7 @@ export async function getCampaignDailyBudgetCents(campaignId: string): Promise<n
 
 /** Update a CBO campaign's daily budget (used by the guardrail scale ladder). */
 export async function setCampaignDailyBudgetCents(campaignId: string, cents: number): Promise<void> {
+  await assertIbOwned(campaignId);
   await postForm(campaignId, { daily_budget: String(Math.round(cents)) }, "setCampaignBudget");
 }
 
@@ -689,6 +723,7 @@ export async function createAdFromVideo(options: {
 // ---------------------------------------------------------------------------
 
 export async function setObjectStatus(objectId: string, status: "ACTIVE" | "PAUSED" | "DELETED"): Promise<void> {
+  await assertIbOwned(objectId);
   await postForm(objectId, { status }, `setStatus:${status}`);
 }
 
