@@ -19,6 +19,8 @@ export const env = {
   graphVersion: process.env.META_GRAPH_VERSION ?? "v23.0",
   slackBotToken: process.env.SLACK_BOT_TOKEN ?? "",
   slackChannelId: process.env.SLACK_CHANNEL_ID ?? "",
+  /** 1 = no outbound Slack posts (slash commands still work). */
+  slackMutePosts: process.env.SLACK_MUTE_POSTS === "1",
   studioUrl: (process.env.STUDIO_URL ?? "http://127.0.0.1:5174").replace(/\/$/, ""),
   port: Number(process.env.ORCHESTRATOR_PORT ?? 5180),
   /** Bind address for the glance + API server. 0.0.0.0 so the phone can hit this Mac. */

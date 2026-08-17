@@ -32,6 +32,10 @@ function alreadyPosted(text: string): boolean {
 }
 
 export async function postSlack(text: string, blocks?: Block[]): Promise<void> {
+  if (env.slackMutePosts) {
+    console.log(`[slack muted] ${text.slice(0, 160)}`);
+    return;
+  }
   if (!env.slackBotToken || !env.slackChannelId) {
     console.log(`[slack skipped] ${text}`);
     return;
