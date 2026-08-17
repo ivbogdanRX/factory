@@ -8,16 +8,36 @@ import { basename, join } from "node:path";
 import { tmpdir } from "node:os";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { createHash } from "node:crypto";
 import { env } from "./env.js";
 import { PT } from "./schedule.js";
+import { getSetting, setSetting } from "./db.js";
 
 const execFileAsync = promisify(execFile);
 
 type Block = Record<string, unknown>;
 
+const SLACK_DEDUPE_MS = 24 * 60 * 60 * 1000;
+
+function slackFingerprint(text: string): string {
+  return createHash("sha1").update(text).digest("hex").slice(0, 16);
+}
+
+function alreadyPosted(text: string): boolean {
+  const key = `slackDedupe:${slackFingerprint(text)}`;
+  const last = Number(getSetting(key) ?? 0);
+  if (last > 0 && Date.now() - last < SLACK_DEDUPE_MS) return true;
+  setSetting(key, String(Date.now()));
+  return false;
+}
+
 export async function postSlack(text: string, blocks?: Block[]): Promise<void> {
   if (!env.slackBotToken || !env.slackChannelId) {
     console.log(`[slack skipped] ${text}`);
+    return;
+  }
+  if (alreadyPosted(text)) {
+    console.log(`[slack deduped] ${text.slice(0, 120)}`);
     return;
   }
   try {
@@ -30,6 +50,8 @@ export async function postSlack(text: string, blocks?: Block[]): Promise<void> {
       body: JSON.stringify({
         channel: env.slackChannelId,
         text,
+        unfurl_links: false,
+        unfurl_media: false,
         ...(blocks ? { blocks } : {}),
       }),
     });
@@ -411,10 +433,18 @@ export function notifyScheduled(options: {
 
 const lastErrorByRun = new Map<string, string>();
 
+/** Dead-account / flight-off loops must never hit Slack. Log only. */
+const SILENT_ERROR = /flight auto-off|not eligible for write|only active accounts can create or edit/i;
+
 export function notifyError(runId: string, verticalLabel: string, message: string): void {
   if (lastErrorByRun.get(runId) === message) return;
   lastErrorByRun.set(runId, message);
-  void postSlack(`:rotating_light: *${verticalLabel}* — run \`${runId}\` failed:\n> ${message}`);
+  const line = `:rotating_light: *${verticalLabel}* — run \`${runId}\` failed:\n> ${message}`;
+  if (SILENT_ERROR.test(message)) {
+    console.warn(`[slack silenced] ${line.replace(/\n/g, " ")}`);
+    return;
+  }
+  void postSlack(line);
 }
 
 export function notifyInfo(message: string): void {
