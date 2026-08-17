@@ -445,7 +445,19 @@ export async function activateDueRuns(): Promise<void> {
  * End-of-flight: pause campaigns that have been live for the vertical's
  * flightDays, pull final per-ad numbers, and report the angle breakdown.
  */
+let completingExpired = false;
+
 export async function completeExpiredRuns(): Promise<void> {
+  if (completingExpired) return;
+  completingExpired = true;
+  try {
+    await completeExpiredRunsOnce();
+  } finally {
+    completingExpired = false;
+  }
+}
+
+async function completeExpiredRunsOnce(): Promise<void> {
   for (const run of listRunsByStatus("live")) {
     if (!run.go_live_at) continue;
     const vertical = getVertical(run.vertical_id);
@@ -505,7 +517,15 @@ export async function completeExpiredRuns(): Promise<void> {
       pushNow();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
+      // Disabled / unsettled accounts cannot accept writes. Stay "live" and
+      // Slack every 30s tick used to spam #ad-factory. Close the run once.
+      updateRun(run.id, {
+        status: "completed",
+        error: `Flight auto-off failed: ${message}`,
+        note: "Flight ended; Meta refused the pause (account likely disabled). Not retrying.",
+      });
       notifyError(run.id, run.vertical_id, `Flight auto-off failed: ${message}`);
+      pushNow();
     }
   }
 }

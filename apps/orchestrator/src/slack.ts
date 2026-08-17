@@ -409,7 +409,11 @@ export function notifyScheduled(options: {
   void postSlack(text, blocks);
 }
 
+const lastErrorByRun = new Map<string, string>();
+
 export function notifyError(runId: string, verticalLabel: string, message: string): void {
+  if (lastErrorByRun.get(runId) === message) return;
+  lastErrorByRun.set(runId, message);
   void postSlack(`:rotating_light: *${verticalLabel}* — run \`${runId}\` failed:\n> ${message}`);
 }
 

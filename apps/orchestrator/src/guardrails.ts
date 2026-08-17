@@ -373,7 +373,15 @@ export async function evaluateGuardrails(): Promise<void> {
         void maybePushSnapshot(true);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        void postSlack(`:rotating_light: Guardrail tried to pause campaign for run \`${run.id}\` (${cpaText}) but Meta refused: ${message}`);
+        if (!hasEvent("campaign-cpa", run.id)) {
+          recordEvent(
+            "campaign-cpa",
+            run.id,
+            { metaSpend: campaign.metaSpend, rtConversions: campaign.rtConversions, rtCpa: campaign.rtCpa, refused: message },
+            "meta refused pause",
+          );
+          void postSlack(`:rotating_light: Guardrail tried to pause campaign for run \`${run.id}\` (${cpaText}) but Meta refused: ${message}`);
+        }
       }
       continue; // campaign handled; no point evaluating its ads
     }
@@ -433,7 +441,10 @@ export async function evaluateGuardrails(): Promise<void> {
         void maybePushSnapshot(true);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        void postSlack(`:rotating_light: Guardrail tried to pause ad *${label}* (${fmtUsd(adSpend)} spent, 0 conversions) but Meta refused: ${message}`);
+        if (!hasEvent("ad-kill", creative.ad_id)) {
+          recordEvent("ad-kill", creative.ad_id, { metaSpend: adSpend, rtConversions, refused: message }, "meta refused pause");
+          void postSlack(`:rotating_light: Guardrail tried to pause ad *${label}* (${fmtUsd(adSpend)} spent, 0 conversions) but Meta refused: ${message}`);
+        }
       }
     }
   }
