@@ -45,6 +45,7 @@ import {
   type AdStatusInfo,
 } from "./meta.js";
 import { postSlack } from "./slack.js";
+import { recordRejectionForAd } from "./reject-log.js";
 
 export const PUPPY_IMAGE_PATH = join(ROOT, "apps", "orchestrator", "assets", "puppy.jpg");
 
@@ -109,6 +110,7 @@ export interface RemediationTarget {
 export async function startRemediationForAd(target: RemediationTarget): Promise<void> {
   const { adId, adName, campaignName, isOurs, adAccountId } = target;
   if (getRemediation(adId)) return; // already handled (any state)
+  recordRejectionForAd(adId, "DISAPPROVED", adAccountId);
   clearAlertState(`ad:${adId}`); // remediation owns this ad's messaging now
   const tag = campaignTag(campaignName, isOurs);
 

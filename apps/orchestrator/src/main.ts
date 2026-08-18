@@ -12,11 +12,14 @@ import { nowClockInTimeZone, PT } from "./schedule.js";
 import { listRunsByStatus, updateRun } from "./db.js";
 import { resumeHookTestWatches } from "./hook-tests.js";
 import { resumeAdDraftWatches } from "./ad-drafts.js";
+import { seedKnownRejectedCreatives } from "./reject-log.js";
 
 // Runs that were mid-flight when the process died can never finish — fail them
 // visibly instead of leaving them stuck in "generating"/"uploading" forever.
 // This runs only AFTER we own the port: a stray second instance dies on
 // EADDRINUSE before it can wrongly mark the live instance's runs as dead.
+seedKnownRejectedCreatives();
+
 startServer(() => {
   for (const status of ["generating", "uploading"] as const) {
     for (const run of listRunsByStatus(status)) {

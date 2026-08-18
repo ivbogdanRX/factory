@@ -37,8 +37,11 @@ import {
   setObjectStatus,
   defaultUsTargeting,
   listCampaignNames,
+  getAdAccountHealth,
 } from "./meta.js";
 import { notifyAdDraftReview, notifyManualBatchStarted, notifyInfo } from "./slack.js";
+import { assertOneAccountPerDay, recordLaunch, warmupLimits } from "./launch-guard.js";
+import { isBurnedCreative } from "./reject-log.js";
 import { maybePushSnapshot } from "./push.js";
 
 /**
@@ -159,10 +162,10 @@ function requirePendingDraft(id: string): AdDraftRow {
 }
 
 /** Next ad number in the run, so published drafts continue v1..vN naming. */
-function nextAdName(vertical: Vertical, run: RunRow, angle: string): string {
+function nextAdName(vertical: Vertical, run: RunRow, _angle: string): string {
   const n = listCreatives(run.id).length + 1;
   const base = formatName(taggedTemplate(vertical.meta.naming.ad, run.name_tag), vertical, runNameDateIso(run), n);
-  return `${base} [${angle}]`;
+  return base;
 }
 
 /**
@@ -193,6 +196,9 @@ async function doPublishAdDraft(id: string, userId?: string): Promise<AdDraftRow
   const run = draft.target_run_id ? getRun(draft.target_run_id) : findPublishTargetRun(draft.vertical_id);
   if (!run || !run.meta_adset_id || !["scheduled", "live"].includes(run.status)) {
     throw new Error(`No scheduled or live campaign found for ${vertical.label} — run the daily pipeline first`);
+  }
+  if (draft.video_path && isBurnedCreative(draft.video_path)) {
+    throw new Error(`Refusing to publish ${basename(draft.video_path)} — Meta already rejected this file`);
   }
 
   // Guard against double-clicks: only one publish can move it out of pending.
@@ -282,6 +288,16 @@ export async function startManualLaunchBatch(
   }
   if (angleIds.length === 0) throw new Error("At least one angle is required");
 
+  const health = await getAdAccountHealth(vertical.meta.adAccountId);
+  if (health.accountStatus !== 1) {
+    throw new Error(`Ad account is not ACTIVE (status ${health.accountStatus})`);
+  }
+  assertOneAccountPerDay(vertical.meta.adAccountId);
+  const warm = warmupLimits(health.lifetimeSpendUsd);
+  if (warm.warmup && angleIds.length > warm.maxAds) {
+    throw new Error(`Cold account — max ${warm.maxAds} ads (got ${angleIds.length})`);
+  }
+
   const run = createRun(vertical.id, "new-campaign");
   try {
     // Pick the first free letter tag against the account's existing names.
@@ -297,11 +313,12 @@ export async function startManualLaunchBatch(
       name: campaignName,
       objective: vertical.meta.objective,
       specialAdCategories: vertical.meta.specialAdCategories,
-      dailyBudget: vertical.meta.cboDailyBudgetCents,
+      dailyBudget: warm.warmup ? Math.min(vertical.meta.cboDailyBudgetCents, warm.budgetCents) : vertical.meta.cboDailyBudgetCents,
       bidStrategy: vertical.meta.bidStrategy,
       status: "PAUSED",
     });
     updateRun(run.id, { meta_campaign_id: campaignId });
+    recordLaunch(vertical.meta.adAccountId);
 
     // Ad set is ACTIVE with no start_time: the paused campaign is the only
     // gate, so flipping it to ACTIVE at launch starts delivery immediately.
