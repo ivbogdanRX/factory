@@ -38,16 +38,16 @@ verticals:
       specialAdCategories:
         - FINANCIAL_PRODUCTS_SERVICES
       adSettings:
-        headline: "vets need to see this!"
-        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
-        description: "2.3M Views"
+        headline: "A note for veterans"
+        primaryText: "Sharing this in case it helps someone I know."
+        description: ""
         callToAction: LEARN_MORE
         websiteUrl: "https://visit.instfunds.com/6a7637e09275ed0cb84381e0?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
         displayUrl: ""
       naming:
-        campaign: "(IB) LNV AF {date}"
-        adSet: "(IB) LNV AF {date}"
-        ad: "(IB) LNV AF {date} v{n}"
+        campaign: "(IB) Veterans {date}"
+        adSet: "(IB) US Video"
+        ad: "(IB) Veterans {date} {n}"
     schedule:
       startHourPt: 5
       # Auto-pause the campaign after this many days live.

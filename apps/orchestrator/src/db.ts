@@ -137,6 +137,53 @@ const MIGRATIONS = [
   `ALTER TABLE runs ADD COLUMN name_tag TEXT`,
   `ALTER TABLE ad_drafts ADD COLUMN target_run_id TEXT`,
 ];
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS rejected_creatives (
+  fingerprint TEXT PRIMARY KEY,
+  file_name TEXT NOT NULL,
+  reason TEXT,
+  ad_id TEXT,
+  ad_name TEXT,
+  account_id TEXT,
+  created_at INTEGER NOT NULL
+);
+`);
+
+export interface RejectedCreativeRow {
+  fingerprint: string;
+  file_name: string;
+  reason: string | null;
+  ad_id: string | null;
+  ad_name: string | null;
+  account_id: string | null;
+  created_at: number;
+}
+
+export function upsertRejectedCreative(row: Omit<RejectedCreativeRow, "created_at"> & { created_at?: number }): void {
+  db.prepare(
+    `INSERT INTO rejected_creatives (fingerprint, file_name, reason, ad_id, ad_name, account_id, created_at)
+     VALUES (@fingerprint, @file_name, @reason, @ad_id, @ad_name, @account_id, @created_at)
+     ON CONFLICT(fingerprint) DO UPDATE SET
+       reason = excluded.reason,
+       ad_id = excluded.ad_id,
+       ad_name = excluded.ad_name,
+       account_id = excluded.account_id`,
+  ).run({
+    ...row,
+    created_at: row.created_at ?? Date.now(),
+  });
+}
+
+export function getRejectedCreative(fingerprint: string): RejectedCreativeRow | undefined {
+  return db.prepare(`SELECT * FROM rejected_creatives WHERE fingerprint = ?`).get(fingerprint) as
+    | RejectedCreativeRow
+    | undefined;
+}
+
+export function listRejectedCreatives(): RejectedCreativeRow[] {
+  return db.prepare(`SELECT * FROM rejected_creatives ORDER BY created_at DESC`).all() as RejectedCreativeRow[];
+}
 for (const migration of MIGRATIONS) {
   try {
     db.exec(migration);

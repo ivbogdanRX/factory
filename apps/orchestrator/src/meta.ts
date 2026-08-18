@@ -574,13 +574,16 @@ export interface AdAccountHealth {
   /** Meta numeric code: 1=ACTIVE, 2=DISABLED, 3=UNSETTLED, 9=IN_GRACE_PERIOD, ... */
   accountStatus: number;
   disableReason: number;
+  /** Lifetime billed spend in dollars (amount_spent is cents). */
+  lifetimeSpendUsd: number;
 }
 
 export async function getAdAccountHealth(adAccountId: string): Promise<AdAccountHealth> {
-  const data = await getJson(`${adAccountId}?fields=account_status,disable_reason`, "adAccountHealth");
+  const data = await getJson(`${adAccountId}?fields=account_status,disable_reason,amount_spent`, "adAccountHealth");
   return {
     accountStatus: Number(data.account_status ?? 0),
     disableReason: Number(data.disable_reason ?? 0),
+    lifetimeSpendUsd: Number(data.amount_spent ?? 0) / 100,
   };
 }
 

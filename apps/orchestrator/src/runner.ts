@@ -38,8 +38,11 @@ import {
   setObjectStatus,
   defaultUsTargeting,
   getAdInsights,
+  getAdAccountHealth,
 } from "./meta.js";
 import { nextDayStartIso, PT, todayInTimeZone } from "./schedule.js";
+import { assertOneAccountPerDay, recordLaunch, warmupLimits } from "./launch-guard.js";
+import { isBurnedCreative, seedKnownRejectedCreatives } from "./reject-log.js";
 import { maybeExtendFlight, flightExtensionDays } from "./guardrails.js";
 import { notifyRunStarted, notifyCreativesReady, notifyScheduled, notifyAdReview, notifyError, notifyInfo } from "./slack.js";
 
@@ -94,18 +97,40 @@ export async function runVertical(vertical: Vertical): Promise<string> {
     const invalid = validateVertical(vertical);
     if (invalid) throw new Error(`Vertical "${vertical.id}" is not configured: ${invalid}`);
 
-    notifyRunStarted(run.id, vertical.label, vertical.dailyCount);
+    seedKnownRejectedCreatives();
+    let lifetimeSpendUsd = 999;
+    if (!env.dryRun) {
+      const health = await getAdAccountHealth(vertical.meta.adAccountId);
+      if (health.accountStatus !== 1) {
+        throw new Error(`Ad account is not ACTIVE (status ${health.accountStatus}) — not launching`);
+      }
+      assertOneAccountPerDay(vertical.meta.adAccountId);
+      lifetimeSpendUsd = health.lifetimeSpendUsd;
+    }
+    const warm = warmupLimits(lifetimeSpendUsd);
+    const dailyCount = Number.isFinite(warm.maxAds) ? Math.min(vertical.dailyCount, warm.maxAds) : vertical.dailyCount;
+    const cboBudgetCents = Number.isFinite(warm.budgetCents)
+      ? Math.min(vertical.meta.cboDailyBudgetCents, warm.budgetCents)
+      : vertical.meta.cboDailyBudgetCents;
+    if (warm.warmup) {
+      notifyInfo(
+        `:snowflake: *${vertical.label}* — account is cold ($${lifetimeSpendUsd.toFixed(0)} lifetime). Capping this run at ${dailyCount} ad(s) / $${cboBudgetCents / 100}/day.`,
+      );
+    }
+
+    notifyRunStarted(run.id, vertical.label, dailyCount);
 
     // 1. Generate creatives through the vendored studio. When the campaign
     // defines angle variants, pick today's mix weighted by past performance
     // and run one attributable job per creative.
-    const angles = pickAngles(vertical.id, vertical.creativeCampaignId, vertical.dailyCount, vertical.angles);
+    const angles = pickAngles(vertical.id, vertical.creativeCampaignId, dailyCount, vertical.angles);
     const outputs: string[] = [];
     const outputAngles: (string | null)[] = [];
     if (angles.length === 0) {
-      const job = await queueCreativeJob(vertical.creativeCampaignId, vertical.dailyCount);
+      const job = await queueCreativeJob(vertical.creativeCampaignId, dailyCount);
       const finished = await waitForStudioJob(job.id);
       for (const output of finished.outputs ?? []) {
+        if (isBurnedCreative(output)) continue;
         outputs.push(output);
         outputAngles.push(null);
         addCreative(run.id, output);
@@ -123,6 +148,10 @@ export async function runVertical(vertical: Vertical): Promise<string> {
         const angle = angles[i]!;
         if (result.status === "fulfilled") {
           for (const output of result.value.outputs ?? []) {
+            if (isBurnedCreative(output)) {
+              notifyInfo(`:no_entry: skipped burned creative ${basename(output)}`);
+              continue;
+            }
             outputs.push(output);
             outputAngles.push(angle.id);
             addCreative(run.id, output, angle.id);
@@ -196,11 +225,12 @@ export async function runVertical(vertical: Vertical): Promise<string> {
         name: campaignName,
         objective: vertical.meta.objective,
         specialAdCategories: vertical.meta.specialAdCategories,
-        dailyBudget: vertical.meta.cboDailyBudgetCents,
+        dailyBudget: cboBudgetCents,
         bidStrategy: vertical.meta.bidStrategy,
         status: "ACTIVE",
       });
       updateRun(run.id, { meta_campaign_id: campaignId });
+      recordLaunch(vertical.meta.adAccountId);
 
       adSetId = await createAdSet(vertical.meta.adAccountId, {
         name: formatName(vertical.meta.naming.adSet, vertical, goLiveAt, 0),
@@ -240,9 +270,7 @@ export async function runVertical(vertical: Vertical): Promise<string> {
     let created = 0;
     for (let i = 0; i < uploaded.length; i++) {
       const item = uploaded[i]!;
-      const baseName = formatName(vertical.meta.naming.ad, vertical, goLiveAt, i + 1);
-      // Angle tag in the ad name so performance is attributable in Ads Manager too.
-      const name = item.angle ? `${baseName} [${item.angle}]` : baseName;
+      const name = formatName(vertical.meta.naming.ad, vertical, goLiveAt, i + 1);
       try {
         const adId = await createAdFromVideo({
           adAccountId: vertical.meta.adAccountId,
