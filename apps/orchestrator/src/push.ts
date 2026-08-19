@@ -7,6 +7,7 @@
 import { existsSync } from "node:fs";
 import { env } from "./env.js";
 import { loadVerticals } from "./verticals.js";
+import { familyOf } from "./family.js";
 import { listRuns, listCreatives, getSetting } from "./db.js";
 import { nextRunAtIso } from "./schedule.js";
 import { getDailyPerformance, getPerformanceReport, type PerformanceEntry } from "./perf.js";
@@ -72,6 +73,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
     return {
       id: run.id,
       vertical: vertical?.label ?? run.vertical_id,
+      family: vertical ? familyOf(vertical) : undefined,
       status: run.status,
       createdAt: run.created_at,
       goLiveAt: run.go_live_at,
@@ -99,6 +101,16 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
   // ads doing", not what the manual clones on the spare accounts are up to.
   const spendToday = perf.entries.reduce((sum, e) => sum + e.spend, 0);
   const purchasesToday = perf.entries.reduce((sum, e) => sum + e.purchases, 0);
+  const byFamily: Record<string, { spendToday: number; purchasesToday: number; cpaToday: number | null }> = {};
+  for (const e of perf.entries) {
+    const vertical = verticals.find((v) => v.id === e.verticalId);
+    const fam = vertical ? familyOf(vertical) : e.verticalId;
+    const cur = byFamily[fam] ?? { spendToday: 0, purchasesToday: 0, cpaToday: null };
+    cur.spendToday += e.spend;
+    cur.purchasesToday += e.purchases;
+    cur.cpaToday = cur.purchasesToday > 0 ? cur.spendToday / cur.purchasesToday : null;
+    byFamily[fam] = cur;
+  }
 
   const problems: string[] = [];
   if (health && !health.ok) problems.push("healthcheck failing");
@@ -145,6 +157,7 @@ export async function buildSnapshot(): Promise<Record<string, unknown>> {
       spendToday,
       purchasesToday,
       cpaToday: purchasesToday > 0 ? spendToday / purchasesToday : null,
+      byFamily,
       campaigns: perf.entries,
     },
     daily: getDailyPerformance(),

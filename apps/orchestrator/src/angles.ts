@@ -8,6 +8,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { VENDOR_STUDIO_DIR } from "./env.js";
 import { listMeasuredCreatives } from "./db.js";
+import { familyFromId } from "./family.js";
 import type { AngleMixConfig } from "./verticals.js";
 
 export interface Angle {
@@ -19,6 +20,8 @@ export interface Angle {
 export interface AngleStats {
   id: string;
   name: string;
+  verticalId: string;
+  family: string;
   creatives: number;
   spend: number;
   purchases: number;
@@ -57,6 +60,8 @@ export function angleStats(verticalId: string, creativeCampaignId: string): Angl
     return {
       id: angle.id,
       name: angle.name,
+      verticalId,
+      family: familyFromId(verticalId) === "other" ? familyFromId(creativeCampaignId) : familyFromId(verticalId),
       creatives: rows.length,
       spend,
       purchases,

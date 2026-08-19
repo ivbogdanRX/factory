@@ -209,10 +209,18 @@ function renderVerticals() {
       <div class="card vertical-card" data-vertical="${v.id}">
         <div class="vertical-head">
           <span class="title">${escapeHtml(v.label)}</span>
+          <span class="pill">${escapeHtml(v.family ?? "")}</span>
           <label class="inline toggle"><input type="checkbox" name="enabled" ${v.enabled ? "checked" : ""}/> enabled</label>
           <span class="pill">${escapeHtml(v.creativeCampaignId)}</span>
         </div>
         <div class="vgrid">
+          <label>Family
+            <select name="family">
+              <option value="loans" ${v.family === "loans" ? "selected" : ""}>loans</option>
+              <option value="debt" ${v.family === "debt" ? "selected" : ""}>debt</option>
+              <option value="other" ${v.family === "other" ? "selected" : ""}>other</option>
+            </select>
+          </label>
           ${field("Daily count", "dailyCount", v.dailyCount, "number")}
           ${field("Ad account (act_…)", "adAccountId", v.meta.adAccountId)}
           ${field("Page ID", "pageId", v.meta.pageId)}
@@ -260,6 +268,7 @@ function renderVerticals() {
       const get = (name) => card.querySelector(`[name="${name}"]`);
       const patch = {
         enabled: get("enabled").checked,
+        family: get("family").value,
         dailyCount: Number(get("dailyCount").value || 1),
         schedule: {
           startHourPt: Number(get("startHourPt").value || 5),

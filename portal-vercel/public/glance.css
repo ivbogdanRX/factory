@@ -109,6 +109,15 @@ h1 { font-size: 15px; font-weight: 600; flex: 1; letter-spacing: -0.01em; }
   letter-spacing: 0.07em;
 }
 
+.fam-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px 0;
+  font: 12px/1.3 var(--mono);
+  color: var(--mut);
+}
+
 /* ---- per-day performance table ---- */
 
 .days { padding: 0 16px 12px; }

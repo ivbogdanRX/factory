@@ -6,6 +6,7 @@
  * demand via POST /api/digest (→ /adops digest).
  */
 import { loadVerticals } from "./verticals.js";
+import { familyOf } from "./family.js";
 import {
   listRuns,
   listCreatives,
@@ -80,14 +81,27 @@ export async function buildDigestText(): Promise<string> {
   let yPurchases = 0;
   let fSpend = 0;
   let fPurchases = 0;
+  const byFamily = new Map<string, { ySpend: number; yPurchases: number; fSpend: number; fPurchases: number }>();
   for (const run of weekRuns) {
     try {
       const y = await getCampaignInsights(run.meta_campaign_id!, "yesterday");
       const f = await getCampaignInsights(run.meta_campaign_id!, "maximum");
-      ySpend += y?.spend ?? 0;
-      yPurchases += y?.purchases ?? 0;
-      fSpend += f?.spend ?? 0;
-      fPurchases += f?.purchases ?? 0;
+      const ys = y?.spend ?? 0;
+      const yp = y?.purchases ?? 0;
+      const fs = f?.spend ?? 0;
+      const fp = f?.purchases ?? 0;
+      ySpend += ys;
+      yPurchases += yp;
+      fSpend += fs;
+      fPurchases += fp;
+      const vertical = verticals.find((v) => v.id === run.vertical_id);
+      const fam = vertical ? familyOf(vertical) : run.vertical_id;
+      const cur = byFamily.get(fam) ?? { ySpend: 0, yPurchases: 0, fSpend: 0, fPurchases: 0 };
+      cur.ySpend += ys;
+      cur.yPurchases += yp;
+      cur.fSpend += fs;
+      cur.fPurchases += fp;
+      byFamily.set(fam, cur);
     } catch (error) {
       console.warn(`Digest insights failed for campaign ${run.meta_campaign_id}`, error);
     }
@@ -101,7 +115,7 @@ export async function buildDigestText(): Promise<string> {
       try {
         const m = await getAdInsights(c.ad_id);
         if (m.spend === 0 && m.purchases === 0) continue;
-        const key = c.angle ?? "untagged";
+        const key = `${run.vertical_id}/${c.angle ?? "untagged"}`;
         const cur = byAngle.get(key) ?? { spend: 0, purchases: 0 };
         cur.spend += m.spend;
         cur.purchases += m.purchases;
@@ -127,6 +141,13 @@ export async function buildDigestText(): Promise<string> {
   } else {
     lines.push(`*Yesterday:* *${money(ySpend)}* · *${yPurchases}* purchase(s) · CPA *${cpaOf(ySpend, yPurchases)}*`);
     lines.push(`*Flight-to-date:* *${money(fSpend)}* · *${fPurchases}* purchase(s) · CPA *${cpaOf(fSpend, fPurchases)}*`);
+    if (byFamily.size > 1) {
+      for (const [fam, t] of [...byFamily.entries()].sort()) {
+        lines.push(
+          `  _${fam}_ yesterday ${money(t.ySpend)} / ${t.yPurchases}p · flight ${money(t.fSpend)} / ${t.fPurchases}p / ${cpaOf(t.fSpend, t.fPurchases)}`,
+        );
+      }
+    }
     const angleLine = [...byAngle.entries()]
       .sort((a, b) => b[1].spend - a[1].spend)
       .map(([angle, t]) => `\`${angle}\` ${money(t.spend)} / ${t.purchases}p / ${cpaOf(t.spend, t.purchases)}`)

@@ -190,6 +190,15 @@ function render(snap) {
     <div><div class="n${noSpend ? " dim" : ""}">${purch}</div><div class="t">purchases</div></div>
     <div><div class="n${cpa != null ? "" : " dim"}">${cpa != null ? money(cpa) : "—"}</div><div class="t">cpa</div></div>
   </div>`);
+  const byFamily = snap.perf?.byFamily || {};
+  const famKeys = Object.keys(byFamily);
+  if (famKeys.length > 1) {
+    parts.push(`<div class="fam-split">${famKeys.map((k) => {
+      const t = byFamily[k];
+      const fcpa = t.purchasesToday > 0 ? money(t.spendToday / t.purchasesToday) : "—";
+      return `<span>${esc(k)} ${money(t.spendToday)} · ${t.purchasesToday}p · ${fcpa}</span>`;
+    }).join("")}</div>`);
+  }
 
   // 3. Per-day history of factory-launched campaigns, folded into a dropdown.
   const daily = snap.daily || [];

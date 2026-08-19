@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { parse, stringify } from "yaml";
 import { VERTICALS_PATH } from "./env.js";
+import { familyFromId, type ProductFamily } from "./family.js";
 
 export interface AdSettings {
   headline: string;
@@ -72,6 +73,8 @@ export interface AngleMixConfig {
 
 export interface Vertical {
   id: string;
+  /** Product line this vertical belongs to. Loans and debt must never share pixel, link, or studio campaign. */
+  family: ProductFamily;
   label: string;
   enabled: boolean;
   creativeCampaignId: string;
@@ -92,8 +95,15 @@ export function loadVerticals(): Vertical[] {
 }
 
 function normalize(v: Partial<Vertical> & { id: string }): Vertical {
+  const family: ProductFamily =
+    v.family === "loans" || v.family === "debt" || v.family === "other"
+      ? v.family
+      : familyFromId(v.id) !== "other"
+        ? familyFromId(v.id)
+        : familyFromId(v.creativeCampaignId ?? "");
   return {
     id: v.id,
+    family,
     label: v.label ?? v.id,
     enabled: Boolean(v.enabled),
     creativeCampaignId: v.creativeCampaignId ?? "",
@@ -188,6 +198,10 @@ export function patchVertical(id: string, patch: Record<string, unknown>): Verti
     schedule: { ...current.schedule, ...((patch.schedule as Partial<Vertical["schedule"]>) ?? {}) },
     guardrails: { ...current.guardrails, ...((patch.guardrails as Partial<GuardrailConfig>) ?? {}) },
     id: current.id,
+    family:
+      patch.family === "loans" || patch.family === "debt" || patch.family === "other"
+        ? patch.family
+        : current.family,
   };
   all[idx] = merged;
   saveVerticals(all);

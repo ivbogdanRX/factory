@@ -19,7 +19,8 @@ import { loadAngles } from "./angles.js";
 import { notifyHookTestReview, notifyInfo } from "./slack.js";
 import { stripDashes } from "./text.js";
 
-/** Persona to clone imagery from when the target angle doesn't exist yet. */
+/** Persona to clone imagery from when the target angle doesn't exist yet.
+ * Loans-only; debt campaigns fall through to the campaign's first variant. */
 const FALLBACK_VARIANT_ID = "ugc-selfie";
 
 const CONFIG_PATH = join(VENDOR_STUDIO_DIR, "config.json");
@@ -86,7 +87,9 @@ export function promoteHookToConfig(
   let variant = variants.find((v) => v.id === angle);
   if (!variant) {
     const template =
-      variants.find((v) => v.id === FALLBACK_VARIANT_ID) ?? variants[0];
+      campaignId.startsWith("debt-")
+        ? variants[0]
+        : (variants.find((v) => v.id === FALLBACK_VARIANT_ID) ?? variants[0]);
     if (!template) throw new Error(`Campaign "${campaignId}" has no variants to clone from`);
     variant = {
       id: angle,
@@ -137,8 +140,11 @@ function resolveVariantIndex(campaignId: string, angle: string): number {
   if (angles.length === 0) throw new Error(`Campaign "${campaignId}" has no variants`);
   const exact = angles.find((a) => a.id === angle);
   if (exact) return exact.index;
-  const fallback = angles.find((a) => a.id === FALLBACK_VARIANT_ID);
-  return (fallback ?? angles[0]!).index;
+  const fallback =
+    campaignId.startsWith("debt-")
+      ? angles[0]
+      : (angles.find((a) => a.id === FALLBACK_VARIANT_ID) ?? angles[0]);
+  return fallback!.index;
 }
 
 /**

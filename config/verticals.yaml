@@ -1,5 +1,6 @@
 verticals:
   - id: va-loans
+    family: loans
     label: VA Loans
     enabled: true
     creativeCampaignId: va-loans-veterans
@@ -67,7 +68,9 @@ verticals:
       # Rule C: at flight end, extend by 1 day (instead of pausing) while
       # RedTrack CPA is under this. Capped at maxExtensionDays total.
       extendUnderCpaUsd: 80
-      maxExtensionDays: 2
+      # Effectively unlimited: keep winners alive as long as they stay under
+      # the CPA threshold — each day is re-earned, losers still get paused.
+      maxExtensionDays: 365
       # Rule D: budget ladder. Once flight-to-date Meta spend reaches
       # scaleMinSpendUsd AND RedTrack revenue / Meta spend >= scaleAtRoas,
       # raise the campaign daily budget to the next step (max one step per
@@ -79,3 +82,336 @@ verticals:
         - 100
         - 250
         - 500
+
+  # Debt is a separate product family from loans: different studio campaigns,
+  # Meta pixel, RedTrack link, naming, and output folder. Isolation is enforced
+  # at run time — enabling these while still pointing at the loans pixel or
+  # instfunds loans campaign will fail closed.
+  # Premade / inbox launches use id: debt (kept disabled so daily generation does not fire).
+
+  - id: debt
+    family: debt
+    label: Debt
+    enabled: false
+    creativeCampaignId: debt-seniors
+    dailyCount: 3
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT AF {date}"
+        adSet: "(IB) DEBT AF {date}"
+        ad: "(IB) DEBT AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+
+  - id: debt-seniors
+    family: debt
+    label: Debt Seniors
+    enabled: false
+    creativeCampaignId: debt-seniors
+    dailyCount: 4
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      # Fresh BM - Debt (shared by all debt audiences; never the loans pixel).
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        # Debt RedTrack link — do not reuse the loans instfunds campaign.
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT SR AF {date}"
+        adSet: "(IB) DEBT SR AF {date}"
+        ad: "(IB) DEBT SR AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+
+  - id: debt-teachers
+    family: debt
+    label: Debt Teachers
+    enabled: false
+    creativeCampaignId: debt-teachers
+    dailyCount: 4
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT TH AF {date}"
+        adSet: "(IB) DEBT TH AF {date}"
+        ad: "(IB) DEBT TH AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+
+  - id: debt-union-workers
+    family: debt
+    label: Debt Union Workers
+    enabled: false
+    creativeCampaignId: debt-union-workers
+    dailyCount: 4
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT UN AF {date}"
+        adSet: "(IB) DEBT UN AF {date}"
+        ad: "(IB) DEBT UN AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+
+  - id: debt-nurses
+    family: debt
+    label: Debt Nurses
+    enabled: false
+    creativeCampaignId: debt-nurses
+    dailyCount: 4
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT NR AF {date}"
+        adSet: "(IB) DEBT NR AF {date}"
+        ad: "(IB) DEBT NR AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+
+  - id: debt-veterans
+    family: debt
+    label: Debt Veterans
+    enabled: false
+    creativeCampaignId: debt-veterans
+    dailyCount: 4
+    angles:
+      ugcShare: 0.8
+      ugcAngleIds: []
+    meta:
+      adAccountId: act_1060126476705741
+      pageId: "1268897542969382"
+      mode: new-campaign
+      parentCampaignId: ""
+      existingAdSetId: ""
+      templateAdSetId: ""
+      objective: OUTCOME_SALES
+      cboDailyBudgetCents: 10000
+      bidStrategy: LOWEST_COST_WITH_BID_CAP
+      bidCapCents: 2500
+      pixelId: "1945550816114354"
+      pixelEvent: PURCHASE
+      dailyBudgetCents: 5000
+      optimizationGoal: OFFSITE_CONVERSIONS
+      specialAdCategories:
+        - FINANCIAL_PRODUCTS_SERVICES
+      adSettings:
+        headline: "you need to see this!"
+        primaryText: "i tried this myself and it worked! sharing this to help some friends!"
+        description: "2.3M Views"
+        callToAction: LEARN_MORE
+        websiteUrl: "https://go.rhelp.org/6a29cce66c20b37e19f6ac69?sub1={{ad.id}}&sub2={{adset.id}}&sub3={{campaign.id}}&sub4={{ad.name}}&sub5={{adset.name}}&sub6={{campaign.name}}&sub7={{placement}}&sub8={{site_source_name}}&utm_source=facebook&utm_medium=paid"
+        displayUrl: ""
+      naming:
+        campaign: "(IB) DEBT VT AF {date}"
+        adSet: "(IB) DEBT VT AF {date}"
+        ad: "(IB) DEBT VT AF {date} v{n}"
+    schedule:
+      startHourPt: 5
+      flightDays: 3
+    guardrails:
+      enabled: true
+      adKillSpendUsd: 50
+      campaignGuardMinSpendUsd: 100
+      maxCpaUsd: 120
+      extendUnderCpaUsd: 80
+      maxExtensionDays: 365
+      scaleMinSpendUsd: 75
+      scaleAtRoas: 1.0
+      scaleSteps:
+        - 100
+        - 250
+        - 500
+

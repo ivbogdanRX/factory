@@ -1,6 +1,7 @@
 import type { AppConfig, CampaignConfig } from "./config.js";
 import { DEFAULT_MAX_HOOK_SECONDS } from "./hook-duration.js";
 import { IMAGE_GUARDS, NO_HANDS, NO_SCREEN_UI, NO_ZOOM } from "./prompt-guards.js";
+import { isolatedOutputDir } from "./family.js";
 
 export interface CampaignRunChoices {
   hook: string;
@@ -191,6 +192,7 @@ export function applyCampaign(
     video: {
       ...cfg.video,
       targetVideo: bodyVideo,
+      outputDir: isolatedOutputDir(cfg.video.outputDir, campaign.id),
       trimSeconds: campaign.trimSeconds > 0 ? campaign.trimSeconds : cfg.video.trimSeconds,
       name: campaign.outputName || campaign.name || campaign.vertical || cfg.video.name,
     },

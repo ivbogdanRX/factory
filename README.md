@@ -70,7 +70,14 @@ cd vendor/l_automation && npm run login
 
 ### Vertical config
 
-`config/verticals.yaml` — one block per vertical (VA loans is set up first).
+`config/verticals.yaml` — one block per vertical. Each vertical belongs to a
+**product family** (`loans` or `debt`). Families share the factory process but
+are isolated: they cannot share a studio campaign, Meta pixel, or RedTrack
+landing link, and finished videos land in `vendor/l_automation/output/<family>/<campaign-id>/`.
+VA loans is enabled; debt audiences (`debt-seniors`, `debt-teachers`,
+`debt-union-workers`, `debt-nurses`, `debt-veterans`) are wired but off until
+you fill each one's debt pixel and RedTrack URL.
+
 All editable in the portal too. Three posting modes:
 
 - **new-campaign** (default, used by VA loans): a fresh CBO campaign every day.

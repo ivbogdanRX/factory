@@ -39,3 +39,9 @@ vendor/l_automation/assets/*
 !vendor/l_automation/assets/.gitkeep
 vendor/l_automation/examples/**/*.mov
 vendor/l_automation/examples/**/*.mp4
+
+# Premade creatives dropped for the factory to post (keep local; too large for git)
+inbox/**/*.mp4
+inbox/**/*.mov
+inbox/**/*.webm
+inbox/**/*.m4v

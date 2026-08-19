@@ -394,7 +394,7 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
         } catch {
           // studio config unreadable — return empty stats for this vertical
         }
-        return { verticalId: v.id, label: v.label, angles: stats };
+          return { verticalId: v.id, label: v.label, family: v.family, angles: stats };
       });
       sendJson(res, 200, { ok: true, verticals: byVertical });
       return;

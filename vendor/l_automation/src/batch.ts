@@ -1,13 +1,13 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { loadConfig } from "./config.js";
 import { runGeneration } from "./pipeline.js";
-import { titleSlug, formatDuration } from "./utils.js";
+import { isolatedOutputDir } from "./family.js";
+import { formatDuration } from "./utils.js";
 import { log } from "./logger.js";
 
 /**
  * Batch runner: produce N randomized videos for EVERY campaign (vertical) and
- * file them under output/<Vertical>/<YYYY-MM-DD>/.
+ * file them under output/<family>/<campaignId>/<YYYY-MM-DD>/.
  *
  *   npm run batch                 # 10 of each vertical
  *   npm run batch -- --count 5    # 5 of each
@@ -50,11 +50,6 @@ function loadEnvFile(): void {
   } catch {
     /* No .env file (or unsupported Node) — env vars may still be set directly. */
   }
-}
-
-/** Folder name for a campaign, e.g. "Debt Nurses" -> "Debt_Nurses". */
-function verticalFolder(label: string): string {
-  return titleSlug(label);
 }
 
 async function main(): Promise<void> {
@@ -103,8 +98,7 @@ async function main(): Promise<void> {
   if (args.dryRun) {
     log.info(`Plan (dry run — nothing will be generated):`);
     for (const c of runnable) {
-      const label = c.outputName || c.name || c.vertical;
-      const folder = join(cfg.video.outputDir, verticalFolder(label));
+      const folder = isolatedOutputDir(cfg.video.outputDir, c.id);
       log.info(`  ${c.id}: ${args.count} -> ${folder}/<date>/`);
     }
     log.info(
@@ -116,8 +110,7 @@ async function main(): Promise<void> {
   const summary: { id: string; produced: number; expected: number }[] = [];
 
   for (const campaign of runnable) {
-    const label = campaign.outputName || campaign.name || campaign.vertical;
-    const folder = join(cfg.video.outputDir, verticalFolder(label));
+    const folder = isolatedOutputDir(cfg.video.outputDir, campaign.id);
     log.step(
       `=== Vertical "${campaign.id}" -> ${folder}/<date>/ (${args.count} run(s)) ===`,
     );
@@ -128,7 +121,6 @@ async function main(): Promise<void> {
         count: args.count,
         interval: args.interval,
         randomSelection: args.random,
-        outputDir: folder,
         // Always drive the Flow web UI for batch runs (never the Veo API).
         backend: "browser",
         // Never block the batch on a manual download prompt; skip & continue.

@@ -6,7 +6,8 @@
 import { basename } from "node:path";
 import { unlink } from "node:fs/promises";
 import { env } from "./env.js";
-import { loadVerticals, type Vertical } from "./verticals.js";
+import { loadVerticals, getVertical, type Vertical } from "./verticals.js";
+import { familyIsolationProblems, familyOf } from "./family.js";
 import {
   createRun,
   updateRun,
@@ -24,7 +25,6 @@ import {
 } from "./db.js";
 import { queueCreativeJob, waitForStudioJob } from "./creative.js";
 import { pickAngles, angleStats } from "./angles.js";
-import { getVertical } from "./verticals.js";
 import { getPerformanceReport, formatPerformanceReport } from "./perf.js";
 import { maybePushSnapshot } from "./push.js";
 import {
@@ -63,10 +63,15 @@ export function formatName(template: string, vertical: Vertical, goLiveIso: stri
 
 function validateVertical(v: Vertical): string | null {
   if (!v.creativeCampaignId) return "creativeCampaignId is not set";
+  const mix = familyIsolationProblems(loadVerticals(), v);
+  if (mix.length > 0) return mix.join("; ");
   if (env.dryRun) return null;
   if (!env.metaToken) return "META_SYSTEM_USER_TOKEN is not set";
   if (!v.meta.adAccountId) return "meta.adAccountId is not set";
   if (!v.meta.pageId) return "meta.pageId is not set";
+  if (v.meta.mode === "new-campaign" && !v.meta.adSettings.websiteUrl) {
+    return "meta.adSettings.websiteUrl is required (family-specific RedTrack link)";
+  }
   if (v.meta.mode === "new-campaign") {
     if (!v.meta.pixelId) return "meta.pixelId is required for new-campaign mode";
     if (!v.meta.objective) return "meta.objective is required for new-campaign mode";
@@ -94,7 +99,7 @@ export async function runVertical(vertical: Vertical): Promise<string> {
     const invalid = validateVertical(vertical);
     if (invalid) throw new Error(`Vertical "${vertical.id}" is not configured: ${invalid}`);
 
-    notifyRunStarted(run.id, vertical.label, vertical.dailyCount);
+    notifyRunStarted(run.id, `${vertical.label} [${familyOf(vertical)}]`, vertical.dailyCount);
 
     // 1. Generate creatives through the vendored studio. When the campaign
     // defines angle variants, pick today's mix weighted by past performance

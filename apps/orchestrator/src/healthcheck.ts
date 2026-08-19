@@ -10,6 +10,7 @@ import { join } from "node:path";
 import { env, ROOT, VENDOR_STUDIO_DIR } from "./env.js";
 import { getSetting, setSetting } from "./db.js";
 import { loadVerticals } from "./verticals.js";
+import { familyIsolationProblems } from "./family.js";
 import { studioHealthy } from "./creative.js";
 import { whoAmI } from "./meta.js";
 import { postSlack } from "./slack.js";
@@ -181,9 +182,14 @@ function checkVerticalConfig(): HealthCheckItem {
     if (!v.meta.adAccountId) missing.push("adAccountId");
     if (!v.meta.pageId) missing.push("pageId");
     if (v.meta.mode === "new-campaign" && !v.meta.pixelId) missing.push("pixelId");
+    if (v.meta.mode === "new-campaign" && !v.meta.adSettings.websiteUrl) missing.push("websiteUrl");
     if (v.meta.mode === "new-adset" && !v.meta.parentCampaignId) missing.push("parentCampaignId");
     if (v.meta.mode === "existing-adset" && !v.meta.existingAdSetId) missing.push("existingAdSetId");
     if (missing.length) problems.push(`${v.id}: missing ${missing.join(", ")}`);
+  }
+  const isolation = familyIsolationProblems(loadVerticals());
+  if (isolation.length) {
+    return { name: "Vertical config", status: "fail", detail: isolation.join(" · ") };
   }
   return problems.length
     ? { name: "Vertical config", status: "warn", detail: problems.join(" · ") }
